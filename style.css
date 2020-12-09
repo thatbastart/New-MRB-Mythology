@@ -1,0 +1,162 @@
+a{
+    color: #00a104 !important;
+}
+
+h1{
+    color: #00a104 !important;
+    font-family: georgia;
+    text-shadow: 0 0 4px rgba(0,0,0,0.5);
+    text-align: center;
+}
+
+textarea{
+    width: 100%; 
+    resize: none;
+    color: #fff;
+    background: #000;
+    border: 1px solid #fff;
+}
+
+
+/* leaflet popup */
+.leaflet-popup-content{
+    width: 90% !important;
+    height: 95% !important;
+    margin: 5%;
+}
+
+.leaflet-popup-content-wrapper {
+    width: 500px;
+    height: 600px;
+    background: #000000;
+    color: #ffffff;
+    border: 2px solid;
+    border-color: #00a104;
+    border-radius: 0px;
+    box-shadow: none;
+}
+
+.leaflet-popup-tip-container {
+	width: 490px;
+    height: 50px;
+    background: transparent;
+    margin: -2px;
+    border: none;
+    border-top: 2px solid;
+    border-color: #00a104;
+    box-shadow: none;
+}
+    
+.leaflet-popup-tip {     
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    }
+
+/* attribution style */
+.leaflet-control-attribution{
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    color: #ffffff;
+    font-size: 14px !important;
+}
+
+/* fix seams between tiles */
+.leaflet-tile-container img {
+    width: 256.5px !important;
+    height: 256.5px !important;
+}
+
+
+
+
+/* CONTROLS */
+/* Buttons */
+button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: #fff;
+    border: 1px solid #ccc;
+}
+
+button:hover {
+    background: #00a104;
+    cursor: pointer;
+}
+
+/* Slider */
+#ctrl_rotate {
+    border-radius: 8px;
+    height: 6px;
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+
+#ctrl_rotate::-webkit-slider-thumb{
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    cursor: ew-resize;
+    background: #fff;
+    border: 1px solid;
+    border-color: #ccc;
+}
+
+/* Edit Toggle */
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+  
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+  
+/* slider style */
+.ctrl_edit {
+    position: absolute;
+    cursor: pointer;
+    top: 7;
+    left: 8;
+    height: 20px;
+    width: 40px;
+    border-radius: 34px;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+  
+.ctrl_edit:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 2px;
+    border-radius: 50%;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+  
+input:checked + .ctrl_edit {
+    background-color: #00a104;
+}
+  
+input:focus + .ctrl_edit {
+    box-shadow: 0 0 1px #00a104;
+}
+  
+input:checked + .ctrl_edit:before {
+    -webkit-transform: translateX(20px);
+    -ms-transform: translateX(20px);
+    transform: translateX(20px);
+}
+
+
