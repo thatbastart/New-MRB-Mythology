@@ -1,6 +1,8 @@
 {
   description = "The New MRB Mythology";
 
+  inputs.nixpkgs.url = "github:NixOS/Nixpkgs/nixos-unstable";
+
   outputs =
     { self
     , nixpkgs
@@ -15,6 +17,8 @@
       );
     in
     rec {
+
+      nixosModules.backend = import ./backend/module.nix;
 
       packages = forAllSystems (system:
         let
@@ -33,19 +37,10 @@
                 };
             in
             node.package.override {
-              # src = pkgs.lib.sourceByRegex ./. [
-              #   "^index.html$"
-              #   "^index.js$"
-              #   "^Leaflet.Control.Custom.js$"
-              #   "^Leaflet.MousePosition.*"
-              #   "^marker_green.png$"
-              #   "^style.css$"
-              #   "^package.json$"
-              #   "^Tiles.*"
-              # ];
               src = builtins.filterSource
                 (path: type:
                   (type != "directory" || baseNameOf path != ".git") &&
+                  (type != "directory" || baseNameOf path != "Tiles") &&
                   (type != "directory" || baseNameOf path != "backend") &&
                   (type != "regular" || baseNameOf path != "flake.nix") &&
                   (type != "regular" || baseNameOf path != "node-packages.nix") &&
@@ -53,7 +48,15 @@
                   (type != "symlink")
                 )
                 ./.;
+              postInstall = ''
+                ln -s ${./Tiles} Tiles
+              '';
             };
+          backend =
+            let
+              crates = import ./backend/Cargo.nix { inherit pkgs; };
+            in
+            crates.workspaceMembers.mrb-mythology-backend.build;
         });
       devShell = forAllSystems (
         system:
@@ -64,6 +67,9 @@
           buildInputs = with pkgs; [
             darkhttpd
             nodePackages.node2nix
+            rustc
+            cargo
+            sqlite
           ];
         }
       );

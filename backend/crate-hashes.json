@@ -1,0 +1,10 @@
+{
+  "cookie 0.15.0-dev (git+https://github.com/SergioBenitez/cookie-rs.git?rev=1c3ca83#1c3ca838543b60a4448d279dc4b903cc7a2bc22a)": "1syi5fi3k1nmxg2502wyyjr51gab5sr0sd7649zrbgdiasvb2hzv",
+  "devise 0.3.0 (git+https://github.com/SergioBenitez/Devise.git?rev=3648468#3648468a9ede9ca896cd35bc1eb818c7a9fb3047)": "17vdx9y7k9qqp287pgdc04m7m8cdxb58jz3psqxd7081x0kd2ymi",
+  "devise_codegen 0.3.0 (git+https://github.com/SergioBenitez/Devise.git?rev=3648468#3648468a9ede9ca896cd35bc1eb818c7a9fb3047)": "17vdx9y7k9qqp287pgdc04m7m8cdxb58jz3psqxd7081x0kd2ymi",
+  "devise_core 0.3.0 (git+https://github.com/SergioBenitez/Devise.git?rev=3648468#3648468a9ede9ca896cd35bc1eb818c7a9fb3047)": "17vdx9y7k9qqp287pgdc04m7m8cdxb58jz3psqxd7081x0kd2ymi",
+  "rocket 0.5.0-dev (git+https://github.com/SergioBenitez/Rocket#1f1f44f336e5a172361fc1860461bb03667b1ed2)": "049j529n4fpzma84zmnzcg676gyyrcxqwxjvg15j0i65j9jx5394",
+  "rocket_codegen 0.5.0-dev (git+https://github.com/SergioBenitez/Rocket#1f1f44f336e5a172361fc1860461bb03667b1ed2)": "049j529n4fpzma84zmnzcg676gyyrcxqwxjvg15j0i65j9jx5394",
+  "rocket_contrib 0.5.0-dev (git+https://github.com/SergioBenitez/Rocket#1f1f44f336e5a172361fc1860461bb03667b1ed2)": "049j529n4fpzma84zmnzcg676gyyrcxqwxjvg15j0i65j9jx5394",
+  "rocket_http 0.5.0-dev (git+https://github.com/SergioBenitez/Rocket#1f1f44f336e5a172361fc1860461bb03667b1ed2)": "049j529n4fpzma84zmnzcg676gyyrcxqwxjvg15j0i65j9jx5394"
+}
