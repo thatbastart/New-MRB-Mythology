@@ -16,6 +16,29 @@
     in
     rec {
 
+      packages = forAllSystems (system:
+        let
+          pkgs = nixpkgsFor.${system};
+        in
+        {
+          homepage = pkgs.stdenv.mkDerivation {
+            name = "mrb-mythology-homepage";
+            src = pkgs.lib.sourceByRegex ./. [
+              "^index.html$"
+              "^index.js$"
+              "^Leaflet.Control.Custom.js$"
+              "^Leaflet.MousePosition"
+              "^marker_green.png$"
+              "^style.css$"
+              "^Tiles"
+            ];
+            installPhase = ''
+              mkdir -p $out
+              cp -r * $out/
+            '';
+          };
+
+        });
       devShell = forAllSystems (
         system:
         let
@@ -24,6 +47,7 @@
         pkgs.mkShell {
           buildInputs = with pkgs; [
             darkhttpd
+            nodePackages.node2nix
           ];
         }
       );
