@@ -4,13 +4,13 @@
   "description": "",
   "main": "index.html",
   "dependencies": {
-    "leaflet-rotate-map": "^0.2.2"
+    "leaflet-rotate-map": "^0.2.2",
+    "@clr/icons": "^4.0.7"
   },
   "devDependencies": {
     "http-server": "^0.11.1",
     "reload": "^3.0.1",
-    "mysql": "^2.18.1",
-    "@clr/icons": "^4.0.7"
+    "mysql": "^2.18.1"
   },
   "scripts": {
     "start": "echo \"running on http://localhost:1000\" && http-server -a localhost -p 1000 -c-1",

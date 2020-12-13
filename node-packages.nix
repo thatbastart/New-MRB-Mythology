@@ -4,6 +4,15 @@
 
 let
   sources = {
+    "@clr/icons-4.0.8" = {
+      name = "_at_clr_slash_icons";
+      packageName = "@clr/icons";
+      version = "4.0.8";
+      src = fetchurl {
+        url = "https://registry.npmjs.org/@clr/icons/-/icons-4.0.8.tgz";
+        sha512 = "zrr47GgmK+AhM6yHG1GwXn8rsqpdnJVtr6NaJP8CMDfpwq+GvJY0JB8XNPE/d/Ujg8/RQeKwVYzsqmUltBSzoQ==";
+      };
+    };
     "@types/geojson-7946.0.7" = {
       name = "_at_types_slash_geojson";
       packageName = "@types/geojson";
@@ -38,6 +47,7 @@ let
     version = "1.0.0";
     src = ./.;
     dependencies = [
+      sources."@clr/icons-4.0.8"
       sources."@types/geojson-7946.0.7"
       sources."@types/leaflet-1.5.19"
       sources."leaflet-rotate-map-0.2.2"
