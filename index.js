@@ -49,13 +49,44 @@ map.on('popupopen', function(e) {
     view_reset(marker._latlng.lat,marker._latlng.lng);
 });
 
+
 let arr_marker = [];
+
+// Fetch all notes from the database and add them to the map.
+fetch("/api/get_notes", {
+    cache: "no-cache"
+})
+.then(response => response.json())
+.then(json => json.map(note => {
+    let marker = new L.marker({ lat: note.lat, lng: note.lon }, {icon: greenIcon}).addTo(map);
+    marker.bindPopup("<h1>" + note.title + "</h1><br>" + note.content);
+    arr_marker.push(marker);
+}))
+.catch(err => console.log(err));
 
 // popup (pu) submit function
 function pu_submit(){
     let title = L.DomUtil.get("pu_title").value;
     let content = L.DomUtil.get("pu_content").value;
+    let latlng = arr_marker[arr_marker.length-1]._latlng;
     arr_marker[arr_marker.length-1].bindPopup("<h1>" + title + "</h1><br>" + content);
+
+    // push the created note to the database.
+    fetch("/api/add_note", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      cache: "no-cache",
+      // The backend only accepts this very request structure. Ping Kerstin for more fields etc.
+      body: JSON.stringify( {
+        title: title,
+        content: content,
+        lat: latlng.lat,
+        lon: latlng.lng
+      } )
+    })
+    .then(response => response.json())
+    .then(json => console.log(json))
+    .catch(err => console.log(err));
 }
 
 // adding marker
