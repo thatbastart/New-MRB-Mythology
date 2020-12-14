@@ -66,6 +66,7 @@
         pkgs.mkShell {
           buildInputs = with pkgs; [
             darkhttpd
+            lighttpd
             nodePackages.node2nix
             rustc
             cargo
