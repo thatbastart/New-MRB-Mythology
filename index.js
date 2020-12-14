@@ -81,7 +81,8 @@ function pu_submit(){
         title: title,
         content: content,
         lat: latlng.lat,
-        lon: latlng.lng
+        lon: latlng.lng,
+        kind: ""
       } )
     })
     .then(response => response.json())

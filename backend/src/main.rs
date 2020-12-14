@@ -36,6 +36,7 @@ struct Note {
     content: String,
     lat: f64,
     lon: f64,
+    kind: String,
 }
 
 type ApiResult = Result<JsonValue, JsonValue>;
@@ -47,11 +48,12 @@ fn add_note(db: State<'_, DbConnection>, msg: Json<Note>) -> ApiResult {
         title,
         lat,
         lon,
+        kind,
     } = msg.into_inner();
     let db_conn = db.lock().expect("db connection lock");
     let insert_op = db_conn.execute(
-        "INSERT INTO notes (title, content, lat, lon) VALUES ($1, $2, $3, $4)",
-        params![title, content, lat, lon],
+        "INSERT INTO notes (title, content, lat, lon, kind) VALUES ($1, $2, $3, $4, $5)",
+        params![title, content, lat, lon, kind],
     );
     match insert_op {
         Ok(_) => ApiResult::Ok(json!("ok")),
@@ -66,7 +68,7 @@ fn add_note(db: State<'_, DbConnection>, msg: Json<Note>) -> ApiResult {
 fn get_notes(db: State<'_, DbConnection>) -> Json<Vec<Note>> {
     let db_conn = db.lock().expect("db connection lock");
     let mut query = db_conn
-        .prepare("SELECT title, content, lat, lon FROM notes")
+        .prepare("SELECT title, content, lat, lon, kind FROM notes")
         .unwrap();
     let notes: Vec<Note> = query
         .query_map(params![], |row| {
@@ -75,6 +77,7 @@ fn get_notes(db: State<'_, DbConnection>) -> Json<Vec<Note>> {
                 content: row.get(1)?,
                 lat: row.get(2)?,
                 lon: row.get(3)?,
+                kind: row.get(4)?,
             })
         })
         .unwrap()
@@ -97,7 +100,8 @@ fn rocket() -> Rocket {
           , title TEXT NOT NULL
           , content TEXT
           , lat REAL NOT NULL
-          , lon REAL NOT NULL)",
+          , lon REAL NOT NULL
+          , kind TEXT NOT NULL)",
         params![],
     )
     .unwrap();
