@@ -1404,6 +1404,29 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" "std" ];
       };
+      "kdtree" = rec {
+        crateName = "kdtree";
+        version = "0.6.1-alpha.0";
+        edition = "2015";
+        workspace_member = null;
+        src = pkgs.fetchgit {
+          url = "https://github.com/mrhooray/kdtree-rs";
+          rev = "26596430d0d02aa2ab941737d8c919996b37e23f";
+          sha256 = "0n0qlxqlrs6rwfkd7g6ihqn5v5r5rrn8ldw49hmqn45iqdys5kzh";
+        };
+        authors = [
+          "Rui Hu <code@mrhooray.com>"
+        ];
+        dependencies = [
+          {
+            name = "num-traits";
+            packageId = "num-traits";
+          }
+        ];
+        features = {
+          "serialize" = [ "serde" "serde_derive" ];
+        };
+      };
       "kernel32-sys" = rec {
         crateName = "kernel32-sys";
         version = "0.2.2";
@@ -1686,12 +1709,16 @@ rec {
         ];
         dependencies = [
           {
-            name = "chrono";
-            packageId = "chrono";
-          }
-          {
             name = "docopt";
             packageId = "docopt";
+          }
+          {
+            name = "kdtree";
+            packageId = "kdtree";
+          }
+          {
+            name = "log";
+            packageId = "log";
           }
           {
             name = "rocket";
@@ -1792,6 +1819,7 @@ rec {
         features = {
           "default" = [ "std" ];
         };
+        resolvedDefaultFeatures = [ "default" "std" ];
       };
       "num_cpus" = rec {
         crateName = "num_cpus";

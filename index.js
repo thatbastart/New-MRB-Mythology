@@ -59,7 +59,10 @@ fetch("/api/get_notes", {
 .then(response => response.json())
 .then(json => json.map(note => {
     let marker = new L.marker({ lat: note.lat, lng: note.lon }, {icon: greenIcon}).addTo(map);
-    marker.bindPopup("<h1>" + note.title + "</h1><br>" + note.content);
+    let title = note.versions[note.versions.length-1].title;
+    let text =  note.versions[note.versions.length-1].text;
+    marker.bindPopup("<h1>" + title + "</h1><br>" + text);
+    marker.noteVersions = note.versions;
     arr_marker.push(marker);
 }))
 .catch(err => console.log(err));
@@ -67,7 +70,7 @@ fetch("/api/get_notes", {
 // popup (pu) submit function
 function pu_submit(){
     let title = L.DomUtil.get("pu_title").value;
-    let content = L.DomUtil.get("pu_content").value;
+    let text = L.DomUtil.get("pu_content").value;
     let latlng = arr_marker[arr_marker.length-1]._latlng;
     arr_marker[arr_marker.length-1].bindPopup("<h1>" + title + "</h1><br>" + content);
 
@@ -78,8 +81,10 @@ function pu_submit(){
       cache: "no-cache",
       // The backend only accepts this very request structure. Ping Kerstin for more fields etc.
       body: JSON.stringify( {
-        title: title,
-        content: content,
+        versions: [ {
+          title: title,
+          text: text
+        } ],
         lat: latlng.lat,
         lon: latlng.lng,
         kind: ""

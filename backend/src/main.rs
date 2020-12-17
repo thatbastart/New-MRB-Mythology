@@ -2,8 +2,12 @@
 extern crate rocket;
 #[macro_use]
 extern crate rocket_contrib;
+#[macro_use]
+extern crate log;
 
 use docopt::Docopt;
+use kdtree::distance::squared_euclidean;
+use kdtree::KdTree;
 use rocket::{Rocket, State};
 use rocket_contrib::json::{Json, JsonValue};
 use rusqlite::{params, Connection};
@@ -30,31 +34,48 @@ struct CliArgs {
 
 type DbConnection = Mutex<Connection>;
 
-#[derive(Serialize, Deserialize, Debug)]
-struct Note {
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+struct NoteContent {
     title: String,
-    content: String,
+    text: String,
+    creation_date: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+struct Note {
     lat: f64,
     lon: f64,
     kind: String,
+    versions: Vec<NoteContent>,
 }
 
 type ApiResult = Result<JsonValue, JsonValue>;
 
+/// Add a new note, or a revision of an existing note.
 #[post("/", data = "<msg>")]
 fn add_note(db: State<'_, DbConnection>, msg: Json<Note>) -> ApiResult {
     let Note {
-        content,
-        title,
+        versions,
         lat,
         lon,
         kind,
     } = msg.into_inner();
+
+    if versions.len() != 1 {
+        return ApiResult::Err(json!(
+            "Error: versions array muss genau ein Element enthalten."
+        ));
+    }
+
+    let NoteContent { title, text, .. } = versions.get(0).unwrap();
+
     let db_conn = db.lock().expect("db connection lock");
     let insert_op = db_conn.execute(
-        "INSERT INTO notes (title, content, lat, lon, kind) VALUES ($1, $2, $3, $4, $5)",
-        params![title, content, lat, lon, kind],
+        "INSERT INTO notes (creation_date, title, content, lat, lon, kind)
+            VALUES (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'), $1, $2, $3, $4, $5)",
+        params![title, text, lat, lon, kind],
     );
+
     match insert_op {
         Ok(_) => ApiResult::Ok(json!("ok")),
         Err(e) => ApiResult::Err(json!(format!(
@@ -64,26 +85,105 @@ fn add_note(db: State<'_, DbConnection>, msg: Json<Note>) -> ApiResult {
     }
 }
 
+/// Get all notes in the database.
 #[get("/")]
 fn get_notes(db: State<'_, DbConnection>) -> Json<Vec<Note>> {
     let db_conn = db.lock().expect("db connection lock");
     let mut query = db_conn
-        .prepare("SELECT title, content, lat, lon, kind FROM notes")
+        .prepare("SELECT creation_date, title, content, lat, lon, kind FROM notes")
         .unwrap();
-    let notes: Vec<Note> = query
-        .query_map(params![], |row| {
-            Ok(Note {
-                title: row.get(0)?,
-                content: row.get(1)?,
-                lat: row.get(2)?,
-                lon: row.get(3)?,
-                kind: row.get(4)?,
+
+    // Coordinates are our primary key here. But Rust doesn't have Eq for f64 (for good reasons),
+    // so we have to use some heuristic to determine wether two coordinate pairs are equal.
+    // KdTrees are an representation for point clouds with great efficience regarding the question
+    // "Which points are not father than 0.01 from this point?".
+    let mut notes_locations: KdTree<f64, (String, NoteContent, usize), _> = KdTree::new(2);
+
+    // We need this extra data structure, as apparently kdtree doesn't allow for retrieval of the
+    // point coordinates...
+    let mut notes_coordinates: Vec<(f64, f64)> = Vec::new();
+
+    // And this one so we don't use the same NoteContent twice.
+    let mut notes_already_in_result: Vec<bool> = Vec::new();
+
+    // Get all rows and populate the data structures from it.
+    {
+        let mut current_id: usize = 0;
+        query
+            .query_map(params![], |row| {
+                let (lat, lon) = (row.get(3)?, row.get(4)?);
+                let kind: String = row.get(5)?;
+                notes_locations
+                    .add(
+                        [lat, lon],
+                        (
+                            kind,
+                            NoteContent {
+                                title: row.get(1)?,
+                                text: row.get(2)?,
+                                creation_date: row.get(0)?,
+                            },
+                            current_id,
+                        ),
+                    )
+                    .unwrap();
+                notes_coordinates.push((lat, lon));
+                notes_already_in_result.push(false);
+                current_id += 1;
+                Ok(())
             })
-        })
+            .unwrap()
+            .count();
+    }
+
+    let mut notes: Vec<Note> = Vec::new();
+
+    debug!("KdTree contents: {:?}", notes_locations);
+
+    // Iterate over KdTree and build clusters of points, that are not father away from each other
+    // than a certain distance.
+    const EPSILON_DISTANCE: f64 = 0.001;
+    for (_, (kind, _, id)) in notes_locations
+        .nearest(&[0.0, 0.0], usize::MAX, &squared_euclidean)
         .unwrap()
-        .into_iter()
-        .filter_map(|r| r.ok())
-        .collect();
+    {
+        debug!("{{ kind: {}, id: {} }}", kind, id);
+
+        if *notes_already_in_result.get(*id).unwrap() {
+            debug!("Skip id {}.", id);
+            continue;
+        }
+        debug!("Do not skip id {}.", id);
+
+        let (lat, lon) = notes_coordinates.get(*id).unwrap();
+
+        let versions: Vec<NoteContent> = {
+            let mut versions = Vec::new();
+            for (_, (_, note_content, id)) in notes_locations
+                .within(&[*lat, *lon], EPSILON_DISTANCE, &squared_euclidean)
+                .unwrap()
+            {
+                debug!("{{ note_content: {:?}, id: {} }}", note_content, id);
+                versions.push(note_content.clone());
+                *notes_already_in_result.get_mut(*id).unwrap() = true;
+            }
+            versions.sort_by(|a, b| {
+                a.creation_date
+                    .as_ref()
+                    .unwrap()
+                    .cmp(&b.creation_date.as_ref().unwrap())
+            });
+            versions
+        };
+
+        notes.push(Note {
+            lat: *lat,
+            lon: *lon,
+            kind: kind.to_string(),
+            versions,
+        });
+    }
+
     Json(notes)
 }
 
@@ -96,9 +196,9 @@ fn rocket() -> Rocket {
     let db = Connection::open(args.flag_db).unwrap();
     db.execute(
         "CREATE TABLE IF NOT EXISTS notes 
-          (createtime DATETIME
+          (creation_date DATETIME NOT NULL
           , title TEXT NOT NULL
-          , content TEXT
+          , content TEXT NOT NULL
           , lat REAL NOT NULL
           , lon REAL NOT NULL
           , kind TEXT NOT NULL)",
