@@ -70,6 +70,25 @@ textarea{
 
 
 /* CONTROLS */
+/* Table */
+table { 
+    margin: 10px;
+    border-collapse: collapse; 
+    text-align: center; 
+    vertical-align: center; 
+    background-color:rgba(0, 0, 0, 0.5); 
+}
+tr { 
+    border: none; 
+}
+td {
+    padding: 5px;
+    border-right: solid 1px #fff; 
+    border-left: solid 1px #fff;
+}
+
+
+
 /* Buttons */
 button {
     -webkit-appearance: none;

@@ -1,6 +1,6 @@
 // initialize map
 let map = L.map('map', {minZoom: 10, maxZoom: 14, rotate: true, zoomControl: false});
-map.setView([43.0, -91.0], 8);
+map.setView([43.18, -91.15], 12);
 
 // custom tiles
 L.tileLayer('/Tiles/{z}/{x}/{y}.png', {
@@ -12,12 +12,13 @@ L.tileLayer('/Tiles/{z}/{x}/{y}.png', {
 // control panel zoom, rotation, edit mode
 L.control.custom({
     position: "topleft",
-    content: "<table style='text-align: center; vertical-align: center; background-color:rgba(0, 0, 0, 0.5); padding:5px;'><tr>" +
-                "<td>Zoom</td><td>Rotation</td><td>Edit Mode</td></tr>" +
+    content: "<table><tr>" +
+                "<td>Zoom</td><td>Rotation</td><td>Edit Mode</td><td>Overview</td></tr>" +
                 "<tr><td><button type='button' id='ctrl_zp' class='ctrl_zoom' style='width: 30px; height: 20px;' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' style='color: #000'></clr-icon></button>"+
                 "<button type='button' id='ctrl_zm' class='ctrl_zoom' style='width: 30px; height: 20px;' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' style='color: #000'></clr-icon></button></td>"+
                 "<td><input type='range' min='0' max='360' value='0' step='1' name='rotation' id='ctrl_rotate' class='ctrl_rotate'/></td>" +
                 "<td><label class='switch'><input type='checkbox' id='ctrl_edit'><span class='ctrl_edit'></span></label></td>" +
+                "<td><label class='switch'><input type='checkbox' id='ctrl_ov' onclick='overview();'><span class='ctrl_edit'></span></label></td>" +
                 "</tr></table>",
     style:
     {
@@ -35,12 +36,17 @@ L.control.custom({
 // Lat and Lng at cursor
 L.control.mousePosition({prefix: "Lat ", separator: "\nLng ", numDigits: 2}).addTo(map);
 
-// intialize marker icons; green=community; blue=editorial
+// intialize marker icons; green=community; blue=editorial; red=position
 let greenIcon = L.icon({
     iconUrl: 'marker_green.png',
     iconSize:     [30, 30], 
     iconAnchor:   [15, 15], 
     popupAnchor:  [-500, 15] 
+});
+let redIcon = L.icon({
+    iconUrl: 'marker_red.png',
+    iconSize:     [16, 16], 
+    iconAnchor:   [8, 8], 
 });
 
 // reset view when marker is selected
@@ -155,3 +161,24 @@ function view_reset(lt,ln){
 document.getElementById("ctrl_rotate").oninput = function() {
     this.style.background = 'linear-gradient(to right, #00a104 0%, #00a104 ' + this.value/3.6 + '%, #fff ' + this.value/3.6 + '%, white 100%)'
 };
+
+let curr_view=[0.0,0.0,0]
+let curr_pos=undefined;
+// overview
+function overview(){
+    if(document.getElementById("ctrl_ov").checked==true){
+        curr_view[0]=map.getCenter().lat;
+        curr_view[1]=map.getCenter().lng;
+        curr_view[2]=map.getZoom();
+        curr_pos=L.marker([curr_view[0], curr_view[1]], {icon: redIcon}).addTo(map);
+        
+        map.options.minZoom=6;
+        map.options.maxZoom=6;
+        map.setView([curr_view[0], curr_view[1]], 6);
+    } else {
+        map.removeLayer(curr_pos);
+        map.options.minZoom=10;
+        map.options.maxZoom=14;
+        map.setView([curr_view[0], curr_view[1]], curr_view[2]);
+    }
+}
