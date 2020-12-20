@@ -48,9 +48,6 @@
                   (type != "symlink")
                 )
                 ./.;
-              postInstall = ''
-                ln -s ${./Tiles} Tiles
-              '';
             };
           backend =
             let
