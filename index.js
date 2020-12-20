@@ -209,6 +209,7 @@ function overview(){
         curr_view[2]=map.getZoom();
         curr_pos=L.marker([curr_view[0], curr_view[1]], {icon: redIcon}).addTo(map);
         
+        setIcon(greenIcon,16);
         map.options.minZoom=6;
         map.options.maxZoom=6;
         map.setView([curr_view[0], curr_view[1]], 6);
@@ -216,8 +217,21 @@ function overview(){
     } else {
         document.getElementById("ctrl_edit").checked=curr_edit;
         map.removeLayer(curr_pos);
+
+        setIcon(greenIcon,30);
         map.options.minZoom=10;
         map.options.maxZoom=14;
         map.setView([curr_view[0], curr_view[1]], curr_view[2]);
+    }
+}
+
+
+// redefine icon size
+function setIcon(ico,size){
+    ico.options.iconSize=[size, size];
+    ico.options.iconAnchor=[size/2, size/2];
+
+    for(let i=0;i<arr_marker.length;i++){
+        arr_marker[i].setIcon(ico);
     }
 }
