@@ -81,7 +81,7 @@ function pu_submit(){
     let title = L.DomUtil.get("pu_title").value;
     let text = L.DomUtil.get("pu_content").value;
     let latlng = arr_marker[arr_marker.length-1]._latlng;
-    arr_marker[arr_marker.length-1].bindPopup("<h1>" + title + "</h1><br>" + content);
+    arr_marker[arr_marker.length-1].bindPopup("<h1>" + title + "</h1><br>" + text);
 
     // push the created note to the database.
     fetch("/api/add_note", {
@@ -105,20 +105,42 @@ function pu_submit(){
 }
 
 // adding marker
+let marker=undefined;
+function add_marker(pos,title,content){
+    marker = new L.marker(pos, {icon: greenIcon}).addTo(map);
+    
+    title = (typeof title !== 'undefined') ?  title : "";
+    content = (typeof content !== 'undefined') ?  content : "";
+    marker.bindPopup("<textarea id='pu_title' rows='1' style='text-align: center'>" + title + "</textarea><br><br>" +
+                    "<textarea id='pu_content' rows='32'>" + content + "</textarea><br><br>" +
+                    "<button type='button' style='width:80px; height: 20px;' onclick='pu_submit()'>Submit</button>")
+    
+    arr_marker.push(marker);
+    marker.openPopup();
+    view_reset(pos.lat,pos.lng);
+}
+
 map.on('click', function(e){
     if(document.getElementById("ctrl_edit").checked==true && document.getElementById("ctrl_ov").checked==false){
-        let marker = new L.marker(e.latlng, {icon: greenIcon}).addTo(map);
-        
-        marker.bindPopup("<textarea id='pu_title' rows='1' style='text-align: center'></textarea><br><br>" +
-                        "<textarea id='pu_content' rows='32'></textarea><br><br>" +
-                        "<button type='button' style='width:80px; height: 20px;' onclick='pu_submit()'>Submit</button>")
-        
-        arr_marker.push(marker);
-        marker.openPopup();
-        view_reset(e.latlng.lat,e.latlng.lng);
+        add_marker(e.latlng);
     }
-
 });
+
+map.on("popupclose", function() {
+    if(document.getElementById("pu_title")!=null && document.getElementById("pu_content")!=null){
+        if(document.getElementById("pu_title").value=="" && document.getElementById("pu_content").value==""){
+            map.removeLayer(marker);
+            arr_marker.pop();
+        } else {
+            if (confirm("The content of this marker is not submitted yet. Are you sure you want to close it? All content will be lost!")){
+                map.removeLayer(marker);
+                arr_marker.pop();
+            } else {
+                add_marker(marker._latlng,document.getElementById("pu_title").value,document.getElementById("pu_content").value);
+            }
+        }
+    }
+}), function(){console.log("hello");};
 
 // set rotation on slider change (continous)
 window.onload = function() {
@@ -176,9 +198,9 @@ function edit(){
 // overview
 let curr_view=[0.0,0.0,0]
 let curr_pos=undefined;
-let curr_edit=undefined;
 
 function overview(){
+    let curr_edit=false;
     if(document.getElementById("ctrl_ov").checked==true){
         curr_edit=document.getElementById("ctrl_edit").checked;
         document.getElementById("ctrl_edit").checked=false;
@@ -190,6 +212,7 @@ function overview(){
         map.options.minZoom=6;
         map.options.maxZoom=6;
         map.setView([curr_view[0], curr_view[1]], 6);
+        map.closePopup();
     } else {
         document.getElementById("ctrl_edit").checked=curr_edit;
         map.removeLayer(curr_pos);
