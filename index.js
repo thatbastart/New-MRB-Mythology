@@ -1,5 +1,8 @@
 // initialize map
-let map = L.map('map', {minZoom: 10, maxZoom: 14, rotate: true, zoomControl: false});
+let southWest = L.latLng(25, -118),
+    northEast = L.latLng(54, -74),
+    mybounds = L.latLngBounds(southWest, northEast);
+let map = L.map('map', {maxBounds: mybounds, minZoom: 10, maxZoom: 14, rotate: true, zoomControl: false});
 map.setView([43.18, -91.15], 12);
 
 // custom tiles
@@ -17,7 +20,7 @@ L.control.custom({
                 "<tr><td><button type='button' id='ctrl_zp' class='ctrl_zoom' style='width: 30px; height: 20px;' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' style='color: #000'></clr-icon></button>"+
                 "<button type='button' id='ctrl_zm' class='ctrl_zoom' style='width: 30px; height: 20px;' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' style='color: #000'></clr-icon></button></td>"+
                 "<td><input type='range' min='0' max='360' value='0' step='1' name='rotation' id='ctrl_rotate' class='ctrl_rotate'/></td>" +
-                "<td><label class='switch'><input type='checkbox' id='ctrl_edit'><span class='ctrl_edit'></span></label></td>" +
+                "<td><label class='switch'><input type='checkbox' id='ctrl_edit' onclick='edit()'><span class='ctrl_edit'></span></label></td>" +
                 "<td><label class='switch'><input type='checkbox' id='ctrl_ov' onclick='overview();'><span class='ctrl_edit'></span></label></td>" +
                 "</tr></table>",
     style:
@@ -103,7 +106,7 @@ function pu_submit(){
 
 // adding marker
 map.on('click', function(e){
-    if(document.getElementById("ctrl_edit").checked==true){
+    if(document.getElementById("ctrl_edit").checked==true && document.getElementById("ctrl_ov").checked==false){
         let marker = new L.marker(e.latlng, {icon: greenIcon}).addTo(map);
         
         marker.bindPopup("<textarea id='pu_title' rows='1' style='text-align: center'></textarea><br><br>" +
@@ -162,11 +165,23 @@ document.getElementById("ctrl_rotate").oninput = function() {
     this.style.background = 'linear-gradient(to right, #00a104 0%, #00a104 ' + this.value/3.6 + '%, #fff ' + this.value/3.6 + '%, white 100%)'
 };
 
+
+// edit
+function edit(){
+    if(document.getElementById("ctrl_ov").checked==true){
+        document.getElementById("ctrl_edit").checked=false;
+    }
+}
+
+// overview
 let curr_view=[0.0,0.0,0]
 let curr_pos=undefined;
-// overview
+let curr_edit=undefined;
+
 function overview(){
     if(document.getElementById("ctrl_ov").checked==true){
+        curr_edit=document.getElementById("ctrl_edit").checked;
+        document.getElementById("ctrl_edit").checked=false;
         curr_view[0]=map.getCenter().lat;
         curr_view[1]=map.getCenter().lng;
         curr_view[2]=map.getZoom();
@@ -176,6 +191,7 @@ function overview(){
         map.options.maxZoom=6;
         map.setView([curr_view[0], curr_view[1]], 6);
     } else {
+        document.getElementById("ctrl_edit").checked=curr_edit;
         map.removeLayer(curr_pos);
         map.options.minZoom=10;
         map.options.maxZoom=14;
