@@ -151,16 +151,15 @@ map.on('click', function(e){
     }
 });
 
-
 // set rotation on slider change (continous)
 window.onload = function() {
     let slider = document.getElementById("ctrl_rotate");
     slider.addEventListener('input', function () {
-        let a=document.getElementById("ctrl_rotate").value;
-        map.setBearing(a);
+        let rot=document.getElementById("ctrl_rotate").value;
         if(pu_flag==true){
             setAnchor();
         }
+        map.setBearing(rot);
     });
 }
 
@@ -263,6 +262,7 @@ let rot_matrix={0: [-500,15],
     300: [-378,-495],
     330: [-505,-255],
     360: [-500,15]} 
+    
 // redefine pu anchor
 function setAnchor(){
     let rot=document.getElementById("ctrl_rotate").value;
