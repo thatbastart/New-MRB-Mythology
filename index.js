@@ -134,14 +134,23 @@ map.on("popupclose", function(e) {
     pu_flag=false;
     if(document.getElementById("pu_title")!=null && document.getElementById("pu_content")!=null){
         if(document.getElementById("pu_title").value=="" && document.getElementById("pu_content").value==""){
-            map.removeLayer(marker);
+            map.removeLayer( arr_marker[arr_marker.length-1]);
             arr_marker.pop();
         } else {
             if (confirm("The content of this marker is not submitted yet. Are you sure you want to close it? All content will be lost!")){
-                map.removeLayer(marker);
+                document.getElementById("pu_title").value="";
+                document.getElementById("pu_content").value="";
+                map.removeLayer(arr_marker[arr_marker.length-1]);
                 arr_marker.pop();
             } else {
-                add_marker(marker._latlng,document.getElementById("pu_title").value,document.getElementById("pu_content").value);
+                let pu_ll=marker._latlng;
+                let pu_t=document.getElementById("pu_title").value;
+                let pu_c=document.getElementById("pu_content").value;
+                document.getElementById("pu_title").value="";
+                document.getElementById("pu_content").value="";
+                map.removeLayer( arr_marker[arr_marker.length-1]);
+                arr_marker.pop();
+                add_marker(pu_ll,pu_t,pu_c);
             }
         }
     }
