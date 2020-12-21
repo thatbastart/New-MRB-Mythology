@@ -23,7 +23,7 @@ p{
     margin: 0px !important;
 }
 #pu_content_ld{
-    height: 85%; 
+    height: 83%; 
     width: 100%;
     background: #000;
     overflow: auto;
@@ -106,7 +106,7 @@ button {
     -webkit-appearance: none;
     -moz-appearance: none;
     background: #fff;
-    border: 1px solid #ccc;
+    border: 0px solid #ccc;
 }
 
 button:hover {

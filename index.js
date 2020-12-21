@@ -100,6 +100,9 @@ function edit(){
     if(document.getElementById("ctrl_ov").checked==true){
         document.getElementById("ctrl_edit").checked=false;
     }
+    if(document.getElementById("ctrl_edit").checked==false){
+        popup_close_check();
+    }
 }
 
 
@@ -132,9 +135,13 @@ map.on('popupopen', function(e) {
 // POPUP CLOSE
 map.on("popupclose", function(e) {
     pu_flag=false;
+    popup_close_check();
+});
+
+function popup_close_check(){
     if(document.getElementById("pu_title")!=null && document.getElementById("pu_content")!=null){
         if(document.getElementById("pu_title").value=="" && document.getElementById("pu_content").value==""){
-            map.removeLayer( arr_marker[arr_marker.length-1]);
+            map.removeLayer(arr_marker[arr_marker.length-1]);
             arr_marker.pop();
         } else {
             if (confirm("The content of this marker is not submitted yet. Are you sure you want to close it? All content will be lost!")){
@@ -148,13 +155,16 @@ map.on("popupclose", function(e) {
                 let pu_c=document.getElementById("pu_content").value;
                 document.getElementById("pu_title").value="";
                 document.getElementById("pu_content").value="";
-                map.removeLayer( arr_marker[arr_marker.length-1]);
+                map.removeLayer(arr_marker[arr_marker.length-1]);
                 arr_marker.pop();
                 add_marker(pu_ll,pu_t,pu_c);
+                document.getElementById("ctrl_edit").checked=true;
             }
         }
     }
-});
+}
+
+
 
 let arr_marker = [];
 
@@ -167,7 +177,7 @@ fetch("/api/get_notes", {
     let marker = new L.marker({ lat: note.lat, lng: note.lon }, {icon: greenIcon}).addTo(map);
     let title = note.versions[note.versions.length-1].title;
     let content =  note.versions[note.versions.length-1].text;
-    marker.bindPopup("<h1>" + title + "</h1><br><div id='pu_content_ld'>" + content +"</div>");
+    marker.bindPopup(popupString(title, content, 2));
     marker.noteVersions = note.versions;
     arr_marker.push(marker);
 }))
@@ -183,7 +193,9 @@ function pu_submit(){
         let latlng = arr_marker[arr_marker.length-1]._latlng;
         let converter = new showdown.Converter({extensions: ["htmlescape"]});
         let content= converter.makeHtml(text);
-        arr_marker[arr_marker.length-1].bindPopup("<h1>" + title + "</h1><br><div id='pu_content_ld'>" + content +"</div>");
+        arr_marker[arr_marker.length-1].title=title;
+        arr_marker[arr_marker.length-1].content=content;
+        arr_marker[arr_marker.length-1].bindPopup(popupString(title, content, 2));
 
         // push the created note to the database.
         fetch("/api/add_note", {
@@ -207,6 +219,31 @@ function pu_submit(){
     }
 }
 
+function popupString(title, content, n){ // n1: edit layout; n2: final layout
+    switch(n){
+        case 1:
+            return "<textarea id='pu_title' rows='1' style='text-align: center'>" + title + "</textarea><br><br>" +
+            "<textarea id='pu_content' rows='30'>" + content + "</textarea><br><br>" +
+            "<div class='tooltip'>You can use Markdown to format the text." + 
+            "<span class='tooltiptext'>Heading 1: # <br>Heading 2: ## <br>Italics: *Text* <br>Bold: **Text** <br>Blockquote: < Text <br>Horizontal Line: --- <br>Links: [Text](URL) <br>Paragraph: Empty Line</span></div><br><br>" +
+            "<button type='button' style='width:80px; height: 20px;' onclick='pu_submit()'><clr-icon shape='check' style='color: #000'></clr-icon> Submit</button>"
+        case 2:
+            return "<h1 id='pu_title_ld'>" + title + "</h1><br><div id='pu_content_ld'>" + content +"</div><br>" +
+            "<button type='button' style='width:40px; height: 20px;' onClick='invoke_pu_edit()' ><clr-icon shape='pencil' class='is-solid' style='color: #000'></clr-icon></button>" +
+            "<button type='button' style='width:40px; height: 20px;' ><clr-icon shape='history' style='color: #000'></clr-icon></button>";
+    }
+  
+    
+}
+
+function invoke_pu_edit(){
+    let title =  curr_pu.title;
+    let content =  curr_pu.content;
+    let converter = new showdown.Converter({extensions: ["htmlescape"]});
+    content= converter.makeMarkdown(content);
+    curr_pu.bindPopup(popupString(title, content, 1));
+}
+
 // ADDING MARKER FUNCTION
 let marker=undefined;
 function add_marker(pos,title,content){
@@ -214,11 +251,7 @@ function add_marker(pos,title,content){
     
     title = (typeof title !== 'undefined') ?  title : "";
     content = (typeof content !== 'undefined') ?  content : "";
-    marker.bindPopup("<textarea id='pu_title' rows='1' style='text-align: center'>" + title + "</textarea><br><br>" +
-                    "<textarea id='pu_content' rows='30'>" + content + "</textarea><br><br>" +
-                    "<div class='tooltip'>You can use Markdown to format the text." + 
-                    "<span class='tooltiptext'>Heading 1: # <br>Heading 2: ## <br>Italics: *Text* <br>Bold: **Text** <br>Blockquote: < Text <br>Horizontal Line: --- <br>Links: [Text](URL) <br>Paragraph: Empty Line</span></div><br><br>" +
-                    "<button type='button' style='width:80px; height: 20px;' onclick='pu_submit()'>Submit</button>")
+    marker.bindPopup(popupString(title, content, 1));
     
     arr_marker.push(marker);
     view_reset(pos.lat,pos.lng);
