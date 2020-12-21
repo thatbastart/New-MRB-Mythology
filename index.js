@@ -168,30 +168,34 @@ fetch("/api/get_notes", {
 function pu_submit(){
     let title = L.DomUtil.get("pu_title").value;
     let text = L.DomUtil.get("pu_content").value;
-    let latlng = arr_marker[arr_marker.length-1]._latlng;
-    let converter = new showdown.Converter({extensions: ["htmlescape"]});
-    let content= converter.makeHtml(text);
-    arr_marker[arr_marker.length-1].bindPopup("<h1>" + title + "</h1><br><div id='pu_content_ld'>" + content +"</div>");
+    if (title=="" || text==""){
+        alert("Please enter a title and some content.");
+    } else {
+        let latlng = arr_marker[arr_marker.length-1]._latlng;
+        let converter = new showdown.Converter({extensions: ["htmlescape"]});
+        let content= converter.makeHtml(text);
+        arr_marker[arr_marker.length-1].bindPopup("<h1>" + title + "</h1><br><div id='pu_content_ld'>" + content +"</div>");
 
-    // push the created note to the database.
-    fetch("/api/add_note", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      cache: "no-cache",
-      // The backend only accepts this very request structure. Ping Kerstin for more fields etc.
-      body: JSON.stringify( {
-        versions: [ {
-          title: title,
-          text: content
-        } ],
-        lat: latlng.lat,
-        lon: latlng.lng,
-        kind: ""
-      } )
-    })
-    .then(response => response.json())
-    .then(json => console.log(json))
-    .catch(err => console.log(err));
+        // push the created note to the database.
+        fetch("/api/add_note", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        cache: "no-cache",
+        // The backend only accepts this very request structure. Ping Kerstin for more fields etc.
+        body: JSON.stringify( {
+            versions: [ {
+            title: title,
+            text: content
+            } ],
+            lat: latlng.lat,
+            lon: latlng.lng,
+            kind: ""
+        } )
+        })
+        .then(response => response.json())
+        .then(json => console.log(json))
+        .catch(err => console.log(err));
+    }
 }
 
 // ADDING MARKER FUNCTION
