@@ -19,7 +19,7 @@ L.control.custom({
                 "<td>Zoom</td><td>Rotation</td><td>Edit Mode</td><td>Overview</td></tr>" +
                 "<tr><td><button type='button' id='ctrl_zm' class='ctrl_zoom' style='width: 30px; height: 20px;' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' style='color: #000'></clr-icon></button>"+
                 "<button type='button' id='ctrl_zp' class='ctrl_zoom' style='width: 30px; height: 20px;' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' style='color: #000'></clr-icon></button></td>"+
-                "<td><input type='range' min='0' max='360' value='0' step='1' name='rotation' id='ctrl_rotate' class='ctrl_rotate'/></td>" +
+                "<td><input type='range' min='0' max='360' value='0' step='30' name='rotation' id='ctrl_rotate' class='ctrl_rotate'/></td>" +
                 "<td><label class='switch'><input type='checkbox' id='ctrl_edit' onclick='edit()'><span class='ctrl_edit'></span></label></td>" +
                 "<td><label class='switch'><input type='checkbox' id='ctrl_ov' onclick='overview();'><span class='ctrl_edit'></span></label></td>" +
                 "</tr></table>",
@@ -54,12 +54,15 @@ let redIcon = L.icon({
 
 // reset view when marker is selected
 let curr_pu=undefined;
+let pu_flag=false;
 map.on('popupopen', function(e) {
+    setAnchor();
     curr_pu = e.popup._source;
-    view_reset(marker._latlng.lat,marker._latlng.lng);
+    pu_flag=true;
 });
 
 map.on("popupclose", function(e) {
+    pu_flag=false;
     if(document.getElementById("pu_title")!=null && document.getElementById("pu_content")!=null){
         if(document.getElementById("pu_title").value=="" && document.getElementById("pu_content").value==""){
             map.removeLayer(marker);
@@ -136,8 +139,10 @@ function add_marker(pos,title,content){
                     "<button type='button' style='width:80px; height: 20px;' onclick='pu_submit()'>Submit</button>")
     
     arr_marker.push(marker);
-    marker.openPopup();
     view_reset(pos.lat,pos.lng);
+    let rot=document.getElementById("ctrl_rotate").value;
+    setAnchor();
+    marker.openPopup();
 }
 
 map.on('click', function(e){
@@ -151,9 +156,11 @@ map.on('click', function(e){
 window.onload = function() {
     let slider = document.getElementById("ctrl_rotate");
     slider.addEventListener('input', function () {
-        let rot=document.getElementById("ctrl_rotate").value;
-        map.closePopup();
-        map.setBearing(rot);
+        let a=document.getElementById("ctrl_rotate").value;
+        map.setBearing(a);
+        if(pu_flag==true){
+            setAnchor();
+        }
     });
 }
 
@@ -240,5 +247,28 @@ function setIcon(ico,size){
 
     for(let i=0;i<arr_marker.length;i++){
         arr_marker[i].setIcon(ico);
+    }
+}
+
+let rot_matrix={0: [-500,15],
+    30: [-360,245],
+    60: [-121,370],
+    90: [145,370],
+    120: [375,225],
+    150: [505, -10],
+    180: [500,-280],
+    210: [360, -510],
+    240: [125,-640],
+    270: [-145,-635],
+    300: [-378,-495],
+    330: [-505,-255],
+    360: [-500,15]} 
+// redefine pu anchor
+function setAnchor(){
+    let rot=document.getElementById("ctrl_rotate").value;
+    console.log(rot);
+    greenIcon.options.popupAnchor=rot_matrix[rot];
+    for(let i=0;i<arr_marker.length;i++){
+        arr_marker[i].setIcon(greenIcon);
     }
 }
