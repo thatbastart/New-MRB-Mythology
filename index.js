@@ -53,11 +53,27 @@ let redIcon = L.icon({
 });
 
 // reset view when marker is selected
+let curr_pu=undefined;
 map.on('popupopen', function(e) {
-    let marker = e.popup._source;
+    curr_pu = e.popup._source;
     view_reset(marker._latlng.lat,marker._latlng.lng);
 });
 
+map.on("popupclose", function(e) {
+    if(document.getElementById("pu_title")!=null && document.getElementById("pu_content")!=null){
+        if(document.getElementById("pu_title").value=="" && document.getElementById("pu_content").value==""){
+            map.removeLayer(marker);
+            arr_marker.pop();
+        } else {
+            if (confirm("The content of this marker is not submitted yet. Are you sure you want to close it? All content will be lost!")){
+                map.removeLayer(marker);
+                arr_marker.pop();
+            } else {
+                add_marker(marker._latlng,document.getElementById("pu_title").value,document.getElementById("pu_content").value);
+            }
+        }
+    }
+});
 
 let arr_marker = [];
 
@@ -81,7 +97,9 @@ function pu_submit(){
     let title = L.DomUtil.get("pu_title").value;
     let text = L.DomUtil.get("pu_content").value;
     let latlng = arr_marker[arr_marker.length-1]._latlng;
-    arr_marker[arr_marker.length-1].bindPopup("<h1>" + title + "</h1><br>" + text);
+    let converter = new showdown.Converter({extensions: ["htmlescape"]});
+    let content= converter.makeHtml(text);
+    arr_marker[arr_marker.length-1].bindPopup("<h1>" + title + "</h1><br><div id='pu_content_ld'>" + content +"</div>");
 
     // push the created note to the database.
     fetch("/api/add_note", {
@@ -112,7 +130,9 @@ function add_marker(pos,title,content){
     title = (typeof title !== 'undefined') ?  title : "";
     content = (typeof content !== 'undefined') ?  content : "";
     marker.bindPopup("<textarea id='pu_title' rows='1' style='text-align: center'>" + title + "</textarea><br><br>" +
-                    "<textarea id='pu_content' rows='32'>" + content + "</textarea><br><br>" +
+                    "<textarea id='pu_content' rows='30'>" + content + "</textarea><br><br>" +
+                    "<div class='tooltip'>You can use Markdown to format the text." + 
+                    "<span class='tooltiptext'>Heading 1: # <br>Heading 2: ## <br>Italics: *Text* <br>Bold: **Text** <br>Blockquote: < Text <br>Horizontal Line: --- <br>Links: [Text](URL) <br>Paragraph: Empty Line</span></div><br><br>" +
                     "<button type='button' style='width:80px; height: 20px;' onclick='pu_submit()'>Submit</button>")
     
     arr_marker.push(marker);
@@ -126,28 +146,14 @@ map.on('click', function(e){
     }
 });
 
-map.on("popupclose", function() {
-    if(document.getElementById("pu_title")!=null && document.getElementById("pu_content")!=null){
-        if(document.getElementById("pu_title").value=="" && document.getElementById("pu_content").value==""){
-            map.removeLayer(marker);
-            arr_marker.pop();
-        } else {
-            if (confirm("The content of this marker is not submitted yet. Are you sure you want to close it? All content will be lost!")){
-                map.removeLayer(marker);
-                arr_marker.pop();
-            } else {
-                add_marker(marker._latlng,document.getElementById("pu_title").value,document.getElementById("pu_content").value);
-            }
-        }
-    }
-}), function(){console.log("hello");};
 
 // set rotation on slider change (continous)
 window.onload = function() {
     let slider = document.getElementById("ctrl_rotate");
     slider.addEventListener('input', function () {
+        let rot=document.getElementById("ctrl_rotate").value;
         map.closePopup();
-        map.setBearing(document.getElementById("ctrl_rotate").value);
+        map.setBearing(rot);
     });
 }
 
@@ -198,9 +204,10 @@ function edit(){
 // overview
 let curr_view=[0.0,0.0,0]
 let curr_pos=undefined;
+let curr_edit=false;
 
 function overview(){
-    let curr_edit=false;
+    
     if(document.getElementById("ctrl_ov").checked==true){
         curr_edit=document.getElementById("ctrl_edit").checked;
         document.getElementById("ctrl_edit").checked=false;
@@ -209,7 +216,7 @@ function overview(){
         curr_view[2]=map.getZoom();
         curr_pos=L.marker([curr_view[0], curr_view[1]], {icon: redIcon}).addTo(map);
         
-        setIcon(greenIcon,16);
+        setIcon(greenIcon,12);
         map.options.minZoom=6;
         map.options.maxZoom=6;
         map.setView([curr_view[0], curr_view[1]], 6);

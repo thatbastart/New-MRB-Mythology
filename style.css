@@ -7,6 +7,7 @@ h1{
     font-family: georgia;
     text-shadow: 0 0 4px rgba(0,0,0,0.5);
     text-align: center;
+    margin: 5px !important;
 }
 
 textarea{
@@ -15,6 +16,17 @@ textarea{
     color: #fff;
     background: #000;
     border: 1px solid #fff;
+}
+
+p{
+    vertical-align: top;
+    margin: 0px !important;
+}
+#pu_content_ld{
+    height: 85%; 
+    width: 100%;
+    background: #000;
+    overflow: auto;
 }
 
 
@@ -179,3 +191,38 @@ input:checked + .ctrl_edit:before {
 }
 
 
+/* Markdown Info Tooltip */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+  }
+  
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: #fff;
+    color: #000;
+    text-align: left;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    top: 150%;
+    left: 50%;
+    margin-left: -60px;
+  }
+  
+  .tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent black transparent;
+  }
+
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+  }
