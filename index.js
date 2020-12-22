@@ -103,6 +103,10 @@ function edit(){
     if(document.getElementById("ctrl_edit").checked==false){
         popup_close_check();
     }
+    // redraw popup to show/hide edit button
+    let title =  curr_pu.title;
+    let content =  curr_pu.content;
+    curr_pu.bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").checked));
 }
 
 
@@ -181,7 +185,7 @@ fetch("/api/get_notes", {
     let content =  note.versions[note.versions.length-1].text;
     marker.title=title;
     marker.content=content;
-    marker.bindPopup(popupString(title, content, 2));
+    marker.bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").checked));
     marker.noteVersions = note.versions;
     arr_marker.push(marker);
 }))
@@ -199,7 +203,7 @@ function pu_submit(){
         let content= converter.makeHtml(text);
         arr_marker[arr_marker.length-1].title=title;
         arr_marker[arr_marker.length-1].content=content;
-        arr_marker[arr_marker.length-1].bindPopup(popupString(title, content, 2));
+        arr_marker[arr_marker.length-1].bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").checked));
 
         // push the created note to the database.
         fetch("/api/add_note", {
@@ -223,32 +227,40 @@ function pu_submit(){
     }
 }
 
-function popupString(title, content, n){ // n1: edit layout; n2: final layout
+function popupString(title, content, n, edit){ // n1: edit layout; n2: final layout
+    let disp="";
+    if(edit==true){
+        disp="inline";
+    } else {
+        disp="none";
+    }
     switch(n){
         case 1:
-            return "<textarea id='pu_title' rows='1' style='text-align: center'>" + title + "</textarea><br><br>" +
-            "<textarea id='pu_content' rows='30'>" + content + "</textarea><br><br>" +
+            return "<textarea id='pu_title' rows='1' style='text-align: center' maxlength='40' class='title_ta'>" + title + "</textarea><br><br>" +
+            "<textarea id='pu_content' rows='30' class='content_ta'>" + content + "</textarea><br><br>" +
             "<div class='tooltip'>You can use Markdown to format the text." + 
             "<span class='tooltiptext'>Heading 1: # <br>Heading 2: ## <br>Italics: *Text* <br>Bold: **Text** <br>Blockquote: < Text <br>Horizontal Line: --- <br>Links: [Text](URL) <br>Paragraph: Empty Line</span></div><br><br>" +
             "<button type='button' style='width:80px; height: 20px;' onclick='pu_submit()'><clr-icon shape='check' style='color: #000'></clr-icon> Submit</button>"
         case 2:
-            return "<h1 id='pu_title_ld'>" + title + "</h1><br><div id='pu_content_ld'>" + content +"</div><br>" +
-            "<button type='button' style='width:40px; height: 20px;' onClick='invoke_pu_edit()' ><clr-icon shape='pencil' class='is-solid' style='color: #000'></clr-icon></button>" +
-            "<button type='button' style='width:40px; height: 20px;' onClick='show_history()' ><clr-icon shape='history' style='color: #000'></clr-icon></button>" +
+            return "<h1 id='pu_title_ld' class='title'>" + title + "</h1><br><div id='pu_content_ld' class='content'>" + content +"</div><br>" +
+            "<button type='button' id='btn_edit' style='width:40px; height: 20px; display:" + disp + ";' onClick='invoke_pu_edit()' ><clr-icon shape='pencil' style='color: #000'></clr-icon></button>" +
+            "<button type='button' id='btn_history' style='width:40px; height: 20px;' onClick='show_history()' ><clr-icon shape='history' style='color: #000'></clr-icon></button>" +
             "<select id='dd_ver' style='width:180px;height:20px;visibility:hidden;' onChange='change_version()'></select>";
     }
   
     
 }
 
+// edit button for popup
 function invoke_pu_edit(){
     let title =  curr_pu.title;
     let content =  curr_pu.content;
     let converter = new showdown.Converter();
     content = converter.makeMarkdown(content);
-    curr_pu.bindPopup(popupString(title, content, 1));
+    curr_pu.bindPopup(popupString(title, content, 1,document.getElementById("ctrl_edit").checked));
 }
 
+// shows the versions dropdown
 function show_history(){
     hist_c+=1;
     if(hist_c % 2 == 1){
@@ -266,10 +278,11 @@ function show_history(){
     }
 }
 
+// changes the version after dropdown select
 function change_version(){
     title=curr_pu.noteVersions[document.getElementById("dd_ver").value].title;
     content=curr_pu.noteVersions[document.getElementById("dd_ver").value].text;
-    curr_pu.bindPopup(popupString(title, content, 2));
+    curr_pu.bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").checked));
 }
 
 // ADDING MARKER FUNCTION
@@ -279,12 +292,13 @@ function add_marker(pos,title,content){
     
     title = (typeof title !== 'undefined') ?  title : "";
     content = (typeof content !== 'undefined') ?  content : "";
-    marker.bindPopup(popupString(title, content, 1));
+    marker.bindPopup(popupString(title, content, 1,document.getElementById("ctrl_edit").checked));
     
     arr_marker.push(marker);
     view_reset(pos.lat,pos.lng);
     setAnchor();
     marker.openPopup();
+    set_edit_btn();
 }
 
 // onClick Event -> adding marker

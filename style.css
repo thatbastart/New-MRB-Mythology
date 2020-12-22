@@ -22,13 +22,32 @@ p{
     vertical-align: top;
     margin: 0px !important;
 }
-#pu_content_ld{
-    height: 83%; 
+.content{
+    height: 84%; 
     width: 100%;
     background: #000;
     overflow: auto;
 }
 
+.content_ta{
+    height: 80%; 
+    width: 100%;
+    background: #000;
+    overflow: auto;
+}
+
+.title{
+    height: 5%; 
+    width: 100%;
+    background: #000;
+}
+
+.title_ta{
+    height: 5%; 
+    width: 100%;
+    background: #000;
+    padding-top: 1.25%;
+}
 
 /* leaflet popup */
 .leaflet-popup-content{
@@ -195,34 +214,35 @@ input:checked + .ctrl_edit:before {
 .tooltip {
     position: relative;
     display: inline-block;
+    height: 2%;
     border-bottom: 1px dotted black;
   }
   
-  .tooltip .tooltiptext {
-    visibility: hidden;
-    width: 200px;
-    background-color: #fff;
-    color: #000;
-    text-align: left;
-    padding: 5px;
-    position: absolute;
-    z-index: 1;
-    top: 150%;
-    left: 50%;
-    margin-left: -60px;
-  }
-  
-  .tooltip .tooltiptext::after {
-    content: "";
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: transparent transparent black transparent;
-  }
+.tooltip .tooltiptext {
+visibility: hidden;
+width: 200px;
+background-color: #fff;
+color: #000;
+text-align: left;
+padding: 5px;
+position: absolute;
+z-index: 1;
+top: 150%;
+left: 50%;
+margin-left: -60px;
+}
 
-  .tooltip:hover .tooltiptext {
-    visibility: visible;
-  }
+.tooltip .tooltiptext::after {
+content: "";
+position: absolute;
+bottom: 100%;
+left: 50%;
+margin-left: -5px;
+border-width: 5px;
+border-style: solid;
+border-color: transparent transparent black transparent;
+}
+
+.tooltip:hover .tooltiptext {
+visibility: visible;
+}
