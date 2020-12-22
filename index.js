@@ -126,10 +126,12 @@ let redIcon = L.icon({
 // POPUP OPEN
 let curr_pu=undefined;
 let pu_flag=false;
+let hist_c=undefined;
 map.on('popupopen', function(e) {
     setAnchor();
     curr_pu = e.popup._source;
     pu_flag=true;
+    hist_c=0;
 });
 
 // POPUP CLOSE
@@ -177,6 +179,8 @@ fetch("/api/get_notes", {
     let marker = new L.marker({ lat: note.lat, lng: note.lon }, {icon: greenIcon}).addTo(map);
     let title = note.versions[note.versions.length-1].title;
     let content =  note.versions[note.versions.length-1].text;
+    marker.title=title;
+    marker.content=content;
     marker.bindPopup(popupString(title, content, 2));
     marker.noteVersions = note.versions;
     arr_marker.push(marker);
@@ -230,7 +234,8 @@ function popupString(title, content, n){ // n1: edit layout; n2: final layout
         case 2:
             return "<h1 id='pu_title_ld'>" + title + "</h1><br><div id='pu_content_ld'>" + content +"</div><br>" +
             "<button type='button' style='width:40px; height: 20px;' onClick='invoke_pu_edit()' ><clr-icon shape='pencil' class='is-solid' style='color: #000'></clr-icon></button>" +
-            "<button type='button' style='width:40px; height: 20px;' ><clr-icon shape='history' style='color: #000'></clr-icon></button>";
+            "<button type='button' style='width:40px; height: 20px;' onClick='show_history()' ><clr-icon shape='history' style='color: #000'></clr-icon></button>" +
+            "<select id='dd_ver' style='width:180px;height:20px;visibility:hidden;' onChange='change_version()'></select>";
     }
   
     
@@ -239,9 +244,32 @@ function popupString(title, content, n){ // n1: edit layout; n2: final layout
 function invoke_pu_edit(){
     let title =  curr_pu.title;
     let content =  curr_pu.content;
-    let converter = new showdown.Converter({extensions: ["htmlescape"]});
-    content= converter.makeMarkdown(content);
+    let converter = new showdown.Converter();
+    content = converter.makeMarkdown(content);
     curr_pu.bindPopup(popupString(title, content, 1));
+}
+
+function show_history(){
+    hist_c+=1;
+    if(hist_c % 2 == 1){
+        let sel=document.getElementById("dd_ver");
+        for(let i=0;i<curr_pu.noteVersions.length;i++){
+            let opt=document.createElement("option");
+            opt.value=i;
+            opt.innerHTML=curr_pu.noteVersions[i].creation_date;
+
+            sel.appendChild(opt);
+            }
+        document.getElementById("dd_ver").style.visibility="visible";
+    } else {
+        document.getElementById("dd_ver").style.visibility="hidden";
+    }
+}
+
+function change_version(){
+    title=curr_pu.noteVersions[document.getElementById("dd_ver").value].title;
+    content=curr_pu.noteVersions[document.getElementById("dd_ver").value].text;
+    curr_pu.bindPopup(popupString(title, content, 2));
 }
 
 // ADDING MARKER FUNCTION
