@@ -203,19 +203,19 @@ function pu_submit(){
 
         // push the created note to the database.
         fetch("/api/add_note", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        cache: "no-cache",
-        // The backend only accepts this very request structure. Ping Kerstin for more fields etc.
-        body: JSON.stringify( {
-            versions: [ {
-            title: title,
-            text: content
-            } ],
-            lat: latlng.lat,
-            lon: latlng.lng,
-            kind: ""
-        } )
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            cache: "no-cache",
+            // The backend only accepts this very request structure. Ping Kerstin for more fields etc.
+            body: JSON.stringify( {
+                versions: [ {
+                title: title,
+                text: content
+                } ],
+                lat: latlng.lat,
+                lon: latlng.lng,
+                kind: ""
+            } )
         })
         .then(response => response.json())
         .then(json => console.log(json))
