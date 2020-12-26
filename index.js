@@ -107,6 +107,7 @@ function edit(){
     let title =  curr_pu.title;
     let content =  curr_pu.content;
     curr_pu.bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").checked));
+    isOverflown(document.getElementById("pu_title_ld"));
 }
 
 
@@ -186,6 +187,7 @@ fetch("/api/get_notes", {
     marker.title=title;
     marker.content=content;
     marker.bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").checked));
+    isOverflown(document.getElementById("pu_title_ld"));
     marker.noteVersions = note.versions;
     arr_marker.push(marker);
 }))
@@ -204,6 +206,7 @@ function pu_submit(){
         arr_marker[arr_marker.length-1].title=title;
         arr_marker[arr_marker.length-1].content=content;
         arr_marker[arr_marker.length-1].bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").checked));
+        isOverflown(document.getElementById("pu_title_ld"));
 
         // push the created note to the database.
         fetch("/api/add_note", {
@@ -242,7 +245,7 @@ function popupString(title, content, n, edit){ // n1: edit layout; n2: final lay
             "<span class='tooltiptext'>Heading 1: # <br>Heading 2: ## <br>Italics: *Text* <br>Bold: **Text** <br>Blockquote: < Text <br>Horizontal Line: --- <br>Links: [Text](URL) <br>Paragraph: Empty Line</span></div><br><br>" +
             "<button type='button' style='width:80px; height: 20px;' onclick='pu_submit()'><clr-icon shape='check' style='color: #000'></clr-icon> Submit</button>"
         case 2:
-            return "<h1 id='pu_title_ld' class='title'>" + title + "</h1><br><div id='pu_content_ld' class='content'>" + content +"</div><br>" +
+            return "<h1 id='pu_title_ld' class='title' style='font-size: 30'>" + title + "</h1><br><div id='pu_content_ld' class='content'>" + content +"</div><br>" +
             "<button type='button' id='btn_edit' style='width:40px; height: 20px; display:" + disp + ";' onClick='invoke_pu_edit()' ><clr-icon shape='pencil' style='color: #000'></clr-icon></button>" +
             "<button type='button' id='btn_history' style='width:40px; height: 20px;' onClick='show_history()' ><clr-icon shape='history' style='color: #000'></clr-icon></button>" +
             "<select id='dd_ver' style='width:180px;height:20px;visibility:hidden;' onChange='change_version()'></select>";
@@ -283,6 +286,7 @@ function change_version(){
     title=curr_pu.noteVersions[document.getElementById("dd_ver").value].title;
     content=curr_pu.noteVersions[document.getElementById("dd_ver").value].text;
     curr_pu.bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").checked));
+    isOverflown(document.getElementById("pu_title_ld"));
 }
 
 // ADDING MARKER FUNCTION
@@ -373,4 +377,14 @@ function setAnchor(){
     for(let i=0;i<arr_marker.length;i++){
         arr_marker[i].setIcon(greenIcon);
     }
+}
+
+
+function isOverflown(element) {
+    let f=0;
+    do {
+        f=Number(element.style.fontSize.replace("px",""));
+        f-=1;
+        element.style.fontSize=String(f);
+    } while (element.scrollWidth > element.clientWidth)
 }
