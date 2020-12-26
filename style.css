@@ -6,6 +6,7 @@ h1{
     color: #00a104 !important;
     font-family: georgia;
     text-shadow: 0 0 4px rgba(0,0,0,0.5);
+    font-size: 2.5vh;
     text-align: center;
     margin: 5px !important;
 }
@@ -97,13 +98,20 @@ p{
     height: 256.5px !important;
 }
 
+.leaflet-control-attribution{
+    font-size: 1.5vh !important;
+}
 
+.leaflet-control-mouseposition{
+    font-size: 1.5vh !important;
+}
 
 
 /* CONTROLS */
 /* Table */
 table { 
     margin: 10px;
+    font-size: 1.5vh;
     border-collapse: collapse; 
     text-align: center; 
     vertical-align: center; 
@@ -136,16 +144,21 @@ button:hover {
 /* Slider */
 #ctrl_rotate {
     border-radius: 8px;
-    height: 6px;
+    height: 0.5vh;
+    min-height: 6px;
+    width: 6vw;
+    min-width: 50px;
     -webkit-appearance: none;
     cursor: pointer;
 }
 
 #ctrl_rotate::-webkit-slider-thumb{
     -webkit-appearance: none;
-    width: 16px;
-    height: 16px;
-    border-radius: 8px;
+    width: 1.5vh;
+    height: 1.5vh;
+    min-width: 16px;
+    min-height: 16px;
+    border-radius: 50%;
     cursor: ew-resize;
     background: #fff;
     border: 1px solid;
@@ -172,10 +185,12 @@ button:hover {
 .ctrl_edit {
     position: absolute;
     cursor: pointer;
-    top: 7;
-    left: 8;
-    height: 20px;
-    width: 40px;
+    top: 12.5%;
+    left: 12.5%;
+    height: 2vh;
+    min-height: 20px;
+    width: 2vw;
+    min-width: 40px;
     border-radius: 34px;
     background-color: #ccc;
     -webkit-transition: .4s;
@@ -185,10 +200,12 @@ button:hover {
 .ctrl_edit:before {
     position: absolute;
     content: "";
-    height: 16px;
-    width: 16px;
-    left: 2px;
-    bottom: 2px;
+    height: 1.5vh;
+    min-height: 16px;
+    width: 1.5vh;
+    min-width: 16px;
+    left: 12.5%;
+    bottom: 12.5%;
     border-radius: 50%;
     background-color: white;
     -webkit-transition: .4s;
@@ -204,9 +221,9 @@ input:focus + .ctrl_edit {
 }
   
 input:checked + .ctrl_edit:before {
-    -webkit-transform: translateX(20px);
-    -ms-transform: translateX(20px);
-    transform: translateX(20px);
+    -webkit-transform: translateX(100%);
+    -ms-transform: translateX(100%);
+    transform: translateX(100%);
 }
 
 

@@ -9,7 +9,7 @@ map.setView([43.18, -91.15], 12); // map center
 
 // custom tiles
 L.tileLayer('/Tiles/{z}/{x}/{y}.png', {
-    'attribution':  'Map Data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>', // panel bottomright
+    'attribution':  "Map Data &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>", // panel bottomright
     'useCache': true
 }).addTo(map);
 
@@ -21,12 +21,12 @@ L.control.custom({
     position: "topleft",
     content: "<table><tr>" +
                 "<td>Zoom</td><td>Rotation</td><td>Edit Mode</td><td>Overview</td></tr>" +
-                "<tr><td><button type='button' id='ctrl_zm' class='ctrl_zoom' style='width: 30px; height: 20px;' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' style='color: #000'></clr-icon></button>"+
-                "<button type='button' id='ctrl_zp' class='ctrl_zoom' style='width: 30px; height: 20px;' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' style='color: #000'></clr-icon></button></td>"+
-                "<td><input type='range' min='0' max='360' value='0' step='30' name='rotation' id='ctrl_rotate' class='ctrl_rotate'/></td>" +
-                "<td><label class='switch'><input type='checkbox' id='ctrl_edit' onclick='edit()'><span class='ctrl_edit'></span></label></td>" +
-                "<td><label class='switch'><input type='checkbox' id='ctrl_ov' onclick='overview();'><span class='ctrl_edit'></span></label></td>" +
-                "</tr></table>",
+                "<tr><td style='width:3vw;'><button type='button' id='ctrl_zm' class='ctrl_zoom' style='width: 50%; min-width: 30px; height: 2vh; min-height: 20px;' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' style='color: #000'></clr-icon></button>"+
+                "<button type='button' id='ctrl_zp' class='ctrl_zoom' style='width: 50%; min-width: 30px; height: 2vh; min-height: 20px;' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' style='color: #000'></clr-icon></button></td>"+
+                "<td style='width:6vw;'><input type='range' min='0' max='360' value='0' step='30' name='rotation' id='ctrl_rotate' class='ctrl_rotate'/></td>" +
+                "<td style='width:3vw;'><label class='switch'><input type='checkbox' id='ctrl_edit' onclick='edit()'><span class='ctrl_edit'></span></label></td>" +
+                "<td style='width:3vw;'><label class='switch'><input type='checkbox' id='ctrl_ov' onclick='overview();'><span class='ctrl_edit'></span></label></td>" +
+                "</tr></table><br><div style='background: white; width: 25vw; height: 75vh;'></div>",
     style:
     {
         margin: "0",
@@ -137,6 +137,7 @@ map.on('popupopen', function(e) {
     curr_pu = e.popup._source;
     pu_flag=true;
     hist_c=0;
+    isOverflown(document.getElementById("pu_title_ld"));
 });
 
 // POPUP CLOSE
@@ -379,7 +380,7 @@ function setAnchor(){
     }
 }
 
-
+// adjust fontSize to fit container
 function isOverflown(element) {
     let f=0;
     do {
