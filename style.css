@@ -1,12 +1,20 @@
+@font-face {
+    font-family: 'mySlab';
+    src: url('GE703XBC.TTF') format('truetype');
+}
+html{
+    font-family: 'Titillium Web', sans-serif !important;
+}
+
 a{
     color: #00a104 !important;
 }
 
 h1{
     color: #00a104 !important;
-    font-family: georgia;
+    font-family: mySlab;
     text-shadow: 0 0 4px rgba(0,0,0,0.5);
-    font-size: 2.5vh;
+    font-size: max(3.5vh,20px);
     text-align: center;
     margin: 5px !important;
 }
@@ -27,7 +35,18 @@ p{
     height: 84%; 
     width: 100%;
     background: #000;
+    overflow: hidden;
+    font-size: max(1.25vh,12px);
+    padding-right: 20px;
+
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;         /* Opera/IE 8+ */
+}
+
+.content:hover{
     overflow: auto;
+    padding-right: 10px;
 }
 
 .content_ta{
@@ -35,6 +54,7 @@ p{
     width: 100%;
     background: #000;
     overflow: auto;
+    font-family: 'Titillium Web', sans-serif !important;
 }
 
 .title{
@@ -48,6 +68,7 @@ p{
     width: 100%;
     background: #000;
     padding-top: 1.25%;
+    font-family: 'Titillium Web', sans-serif !important;
 }
 
 /* leaflet popup */
@@ -85,11 +106,31 @@ p{
     box-shadow: none;
     }
 
+/* SCROLLBAR */
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #fff;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #00a104;
+  }    
+
 /* attribution style */
 .leaflet-control-attribution{
     background-color: rgba(0, 0, 0, 0.5) !important;
     color: #ffffff;
-    font-size: 14px !important;
 }
 
 /* fix seams between tiles */
@@ -99,19 +140,22 @@ p{
 }
 
 .leaflet-control-attribution{
-    font-size: 1.5vh !important;
+    font-size: max(1.5vh,12px) !important;
 }
 
 .leaflet-control-mouseposition{
-    font-size: 1.5vh !important;
+    font-size: max(1.5vh,12px) !important;
 }
 
+.leaflet-container {
+    font-family: 'Titillium Web', sans-serif !important;
+}
 
 /* CONTROLS */
 /* Table */
 table { 
     margin: 10px;
-    font-size: 1.5vh;
+    font-size: max(1.5vh,12px);
     border-collapse: collapse; 
     text-align: center; 
     vertical-align: center; 

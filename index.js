@@ -20,13 +20,14 @@ L.tileLayer('/Tiles/{z}/{x}/{y}.png', {
 L.control.custom({
     position: "topleft",
     content: "<table><tr>" +
-                "<td>Zoom</td><td>Rotation</td><td>Edit Mode</td><td>Overview</td></tr>" +
-                "<tr><td style='width:3vw;'><button type='button' id='ctrl_zm' class='ctrl_zoom' style='width: 50%; min-width: 30px; height: 2vh; min-height: 20px;' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' style='color: #000'></clr-icon></button>"+
+                "<td>Zoom</td><td>Rotation</td><td>Edit Mode</td><td>Overview</td><td>Stories</td></tr>" +
+                "<tr><td style='width:3vw; min-width: 60px;'><button type='button' id='ctrl_zm' class='ctrl_zoom' style='width: 50%; min-width: 30px; height: 2vh; min-height: 20px;' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' style='color: #000'></clr-icon></button>"+
                 "<button type='button' id='ctrl_zp' class='ctrl_zoom' style='width: 50%; min-width: 30px; height: 2vh; min-height: 20px;' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' style='color: #000'></clr-icon></button></td>"+
                 "<td style='width:6vw;'><input type='range' min='0' max='360' value='0' step='30' name='rotation' id='ctrl_rotate' class='ctrl_rotate'/></td>" +
                 "<td style='width:3vw;'><label class='switch'><input type='checkbox' id='ctrl_edit' onclick='edit()'><span class='ctrl_edit'></span></label></td>" +
                 "<td style='width:3vw;'><label class='switch'><input type='checkbox' id='ctrl_ov' onclick='overview();'><span class='ctrl_edit'></span></label></td>" +
-                "</tr></table><br><div style='background: white; width: 25vw; height: 75vh;'></div>",
+                "<td style='width:3vw;'><label class='switch'><input type='checkbox' id='ctrl_ov' onclick='overview();'><span class='ctrl_edit'></span></label></td>" +
+                "</tr></table><br><div style='background: white; width: 25vw; height: 75vh; display: none;'></div>",
     style:
     {
         margin: "0",
