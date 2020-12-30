@@ -170,7 +170,13 @@ td {
     border-left: solid 1px #fff;
 }
 
-
+.stories-panel {
+    background: white; 
+    width: 35vw; 
+    height: 75vh;
+    display: none;
+    border: 1px solid #000;
+}
 
 /* Buttons */
 button {

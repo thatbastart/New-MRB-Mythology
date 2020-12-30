@@ -24,10 +24,10 @@ L.control.custom({
                 "<tr><td style='width:3vw; min-width: 60px;'><button type='button' id='ctrl_zm' class='ctrl_zoom' style='width: 50%; min-width: 30px; height: 2vh; min-height: 20px;' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' style='color: #000'></clr-icon></button>"+
                 "<button type='button' id='ctrl_zp' class='ctrl_zoom' style='width: 50%; min-width: 30px; height: 2vh; min-height: 20px;' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' style='color: #000'></clr-icon></button></td>"+
                 "<td style='width:6vw;'><input type='range' min='0' max='360' value='0' step='30' name='rotation' id='ctrl_rotate' class='ctrl_rotate'/></td>" +
-                "<td style='width:3vw;'><label class='switch'><input type='checkbox' id='ctrl_edit' onclick='edit()'><span class='ctrl_edit'></span></label></td>" +
-                "<td style='width:3vw;'><label class='switch'><input type='checkbox' id='ctrl_ov' onclick='overview();'><span class='ctrl_edit'></span></label></td>" +
-                "<td style='width:3vw;'><label class='switch'><input type='checkbox' id='ctrl_ov' onclick='overview();'><span class='ctrl_edit'></span></label></td>" +
-                "</tr></table><br><div style='background: white; width: 25vw; height: 75vh; display: none;'></div>",
+                "<td style='width:4vw;'><label class='switch'><input type='checkbox' id='ctrl_edit' onclick='edit()'><span class='ctrl_edit'></span></label></td>" +
+                "<td style='width:4vw;'><label class='switch'><input type='checkbox' id='ctrl_ov' onclick='overview();'><span class='ctrl_edit'></span></label></td>" +
+                "<td style='width:4vw;'><label class='switch'><input type='checkbox' id='ctrl_st' onclick='stories();'><span class='ctrl_edit'></span></label></td>" +
+                "</tr></table><br><div id='stories-panel' class='stories-panel'></div>",
     style:
     {
         margin: "0",
@@ -111,7 +111,14 @@ function edit(){
     isOverflown(document.getElementById("pu_title_ld"));
 }
 
-
+// stories
+function stories(){
+    if(document.getElementById("ctrl_st").checked==true){
+        document.getElementById("stories-panel").style.display="block";
+    } else {
+        document.getElementById("stories-panel").style.display="none";
+    }
+}
 
 // MARKER -----------------------------
 
