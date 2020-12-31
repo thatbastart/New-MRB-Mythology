@@ -14,7 +14,6 @@ L.tileLayer('/Tiles/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 
-
 // OVERLAYS -----------------------------
 // panel topleft: zoom, rotation, edit mode, overview
 L.control.custom({
@@ -27,13 +26,30 @@ L.control.custom({
                 "<td style='width:4vw;'><label class='switch'><input type='checkbox' id='ctrl_edit' onclick='edit()'><span class='ctrl_edit'></span></label></td>" +
                 "<td style='width:4vw;'><label class='switch'><input type='checkbox' id='ctrl_ov' onclick='overview();'><span class='ctrl_edit'></span></label></td>" +
                 "<td style='width:4vw;'><label class='switch'><input type='checkbox' id='ctrl_st' onclick='stories();'><span class='ctrl_edit'></span></label></td>" +
-                "</tr></table><br><div id='stories-panel' class='stories-panel'></div>",
+                "</tr></table><br><div id='stories-panel' class='stories-panel scroll'></div>",
     style:
     {
         margin: "0",
         padding: "0px 0 0 0",
     },
 }).addTo(map);
+
+class Story {
+    constructor(title, author, text, img, thumb, date){
+        this.title=title;
+        this.author=author;
+        this.text=text;
+        this.img=img;
+        this.thumb=thumb;
+        this.date=date;
+    }
+}
+
+arr_stories=[];
+arr_stories[0]=new Story("Hello World", "Chuck Norris", "hi there", "/stories/img/story_01.jpg", "/stories/thumb/story_01.jpg", "31.12.2020");
+tile="<div class='stories-panel_tiles'><div style='height: 60%; overflow: hidden;'><img src='" + arr_stories[0].thumb + "' style='width: 100%; height:auto;'></img></div><div class='stories-panel_tiles_title'>"+arr_stories[0].title+"</div></div>";
+document.getElementById("stories-panel").innerHTML="<center>"+tile+tile+tile+tile+tile+tile+"</center>";
+
 
 // panel topright: title
 L.control.custom({
@@ -196,7 +212,6 @@ fetch("/api/get_notes", {
     marker.title=title;
     marker.content=content;
     marker.bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").checked));
-    isOverflown(document.getElementById("pu_title_ld"));
     marker.noteVersions = note.versions;
     arr_marker.push(marker);
 }))

@@ -16,7 +16,7 @@
     "mysql": "^2.18.1"
   },
   "scripts": {
-    "start": "echo \"running on http://localhost:1000\" && http-server -a localhost -p 2000 -c-1",
+    "start": "echo \"running on http://localhost:4000\" && http-server -a localhost -p 4000 -c-1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
