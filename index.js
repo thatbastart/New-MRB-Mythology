@@ -47,14 +47,24 @@ class Story {
 
 arr_stories=[];
 arr_stories[0]=new Story("Hello World", "Chuck Norris", "hi there", "/stories/img/story_01.jpg", "/stories/thumb/story_01.jpg", "31.12.2020");
-tile="<div class='stories-panel_tiles'><div style='height: 60%; overflow: hidden;'><img src='" + arr_stories[0].thumb + "' style='width: 100%; height:auto;'></img></div><div class='stories-panel_tiles_title'>"+arr_stories[0].title+"</div></div>";
-document.getElementById("stories-panel").innerHTML="<center>"+tile+tile+tile+tile+tile+tile+"</center>";
+arr_stories[1]=new Story("My Old Friend", "Chuck Norris", "hi there", "/stories/img/story_01.jpg", "/stories/thumb/story_01.jpg", "31.12.2020");
+arr_stories[2]=new Story("Mississippi Isabell", "Chuck Norris", "hi there", "/stories/img/story_01.jpg", "/stories/thumb/story_01.jpg", "31.12.2020");
 
+let tiles="";
+for (let i=0;i<arr_stories.length;i++){
+    tiles=tiles+"<div class='stories-panel_tiles' onClick='createStory("+i+")'><div style='height: 60%; overflow: hidden;'><img src='" + arr_stories[i].thumb + "' style='width: 100%; height:auto;'></img></div><div class='stories-panel_tiles_title'>"+arr_stories[i].title+"</div></div>";
+}
+document.getElementById("stories-panel").innerHTML="<center>"+tiles+"</center>";
+
+function createStory(id){
+    id+=1;
+    console.log(id);
+}
 
 // panel topright: title
 L.control.custom({
     position: "topright",
-    content: "<h1>The New Mississippi River Basin Mythology</h1>",
+    content: "<h1 style='font-size: max(4.5vh,30px);'>The New Mississippi River Basin Mythology</h1>",
 }).addTo(map);        
         
 // panel bottomleft: Lat and Lng at cursor
@@ -264,14 +274,14 @@ function popupString(title, content, n, edit){ // n1: edit layout; n2: final lay
     switch(n){
         case 1:
             return "<textarea id='pu_title' rows='1' style='text-align: center' maxlength='40' class='title_ta'>" + title + "</textarea><br><br>" +
-            "<textarea id='pu_content' rows='30' class='content_ta'>" + content + "</textarea><br><br>" +
+            "<textarea id='pu_content' rows='30' class='content_ta scroll'>" + content + "</textarea><br><br>" +
             "<div class='tooltip'>You can use Markdown to format the text." + 
             "<span class='tooltiptext'>Heading 1: # <br>Heading 2: ## <br>Italics: *Text* <br>Bold: **Text** <br>Blockquote: < Text <br>Horizontal Line: --- <br>Links: [Text](URL) <br>Paragraph: Empty Line</span></div><br><br>" +
-            "<button type='button' style='width:80px; height: 20px;' onclick='pu_submit()'><clr-icon shape='check' style='color: #000'></clr-icon> Submit</button>"
+            "<button type='button' style='width:6vw; min-width:100px; height: 20px;' onclick='pu_submit()'><clr-icon shape='check' style='color: #000'></clr-icon> Submit</button>"
         case 2:
-            return "<h1 id='pu_title_ld' class='title' style='font-size: 30'>" + title + "</h1><br><div id='pu_content_ld' class='content'>" + content +"</div><br>" +
-            "<button type='button' id='btn_edit' style='width:40px; height: 20px; display:" + disp + ";' onClick='invoke_pu_edit()' ><clr-icon shape='pencil' style='color: #000'></clr-icon></button>" +
-            "<button type='button' id='btn_history' style='width:40px; height: 20px;' onClick='show_history()' ><clr-icon shape='history' style='color: #000'></clr-icon></button>" +
+            return "<h1 id='pu_title_ld' class='title' style='font-size: 30'>" + title + "</h1><br><div id='pu_content_ld' class='content scroll'>" + content +"</div><br>" +
+            "<button type='button' id='btn_edit' style='width:3vw; min-width: 40px; height: 20px; display:" + disp + ";' onClick='invoke_pu_edit()' ><clr-icon shape='pencil' style='color: #000'></clr-icon></button>" +
+            "<button type='button' id='btn_history' style='width:3vw; min-width: 40px; height: 20px;' onClick='show_history()' ><clr-icon shape='history' style='color: #000'></clr-icon></button>" +
             "<select id='dd_ver' style='width:180px;height:20px;visibility:hidden;' onChange='change_version()'></select>";
     }
   

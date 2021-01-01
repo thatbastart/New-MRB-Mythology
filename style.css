@@ -36,7 +36,7 @@ p{
     width: 100%;
     background: #000;
     overflow: hidden;
-    font-size: max(1.25vh,12px);
+    font-size: max(1.75vh,12px);
     padding-right: 20px;
 
     -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
@@ -55,6 +55,7 @@ p{
     background: #000;
     overflow: auto;
     font-family: 'Titillium Web', sans-serif !important;
+    font-size: max(1.75vh,12px);
 }
 
 .title{
@@ -69,6 +70,7 @@ p{
     background: #000;
     padding-top: 1.25%;
     font-family: 'Titillium Web', sans-serif !important;
+    overflow: hidden;
 }
 
 /* leaflet popup */
