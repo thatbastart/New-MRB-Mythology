@@ -26,7 +26,7 @@ L.control.custom({
                 "<td style='width:4vw;'><label class='switch'><input type='checkbox' id='ctrl_edit' onclick='edit()'><span class='ctrl_edit'></span></label></td>" +
                 "<td style='width:4vw;'><label class='switch'><input type='checkbox' id='ctrl_ov' onclick='overview();'><span class='ctrl_edit'></span></label></td>" +
                 "<td style='width:4vw;'><label class='switch'><input type='checkbox' id='ctrl_st' onclick='stories();'><span class='ctrl_edit'></span></label></td>" +
-                "</tr></table><br><div id='stories-panel' class='stories-panel scroll'></div><div id='story' class='story scroll'></div>",
+                "</tr></table><br><div id='stories-panel' class='stories-panel scroll'></div><div id='story' class='story scroll' onScroll='scrollMarker()'></div>",
     style:
     {
         margin: "0",
@@ -35,7 +35,7 @@ L.control.custom({
 }).addTo(map);
 
 class Story {
-    constructor(title, author, text, img, img_sub, thumb, date){
+    constructor(title, author, text, img, img_sub, thumb, date, arr_marker){
         this.title=title;
         this.author=author;
         this.text=text;
@@ -43,25 +43,45 @@ class Story {
         this.img_sub=img_sub
         this.thumb=thumb;
         this.date=date;
+        this.marker=arr_marker;
     }
 }
 
 arr_stories=[];
-arr_stories[0]=new Story("Hello World", "Chuck Norris", "hi there", "/stories/img/story_01.jpg", "much picture", "/stories/thumb/story_01.jpg", "31.12.2020");
-arr_stories[1]=new Story("My Old Friend", "Chuck Norris", "hi there", "/stories/img/story_01.jpg", "much wow", "/stories/thumb/story_01.jpg", "31.12.2020");
-arr_stories[2]=new Story("Mississippi Isabell", "Chuck Norris", "hi there", "/stories/img/story_01.jpg", "cat", "/stories/thumb/story_01.jpg", "31.12.2020");
+arr_stories[0]=new Story("Hello World", "Chuck Norris", "stories/text/story_01.txt", "/stories/img/story_01.jpg", "much picture", "/stories/thumb/story_01.jpg", "31.12.2020", [[43.16,-91.15,13]]);
+arr_stories[1]=new Story("My Old Friend", "Chuck Norris", "hi there", "/stories/img/story_01.jpg", "much wow", "/stories/thumb/story_01.jpg", "31.12.2020", [[43.16,-91.15,10]]);
+arr_stories[2]=new Story("Mississippi Isabell", "Chuck Norris", "hi there", "/stories/img/story_01.jpg", "cat", "/stories/thumb/story_01.jpg", "31.12.2020", [[43.16,-91.15,10]]);
 
 let tiles="";
 for (let i=0;i<arr_stories.length;i++){
     tiles=tiles+"<div class='stories-panel_tiles' onClick='createStory("+i+")'><div style='height: 60%; overflow: hidden;'><img src='" + arr_stories[i].thumb + "' style='width: 100%; height:auto;'></img></div><div class='stories-panel_tiles_title'>"+arr_stories[i].title+"</div></div>";
 }
 document.getElementById("stories-panel").innerHTML="<center>"+tiles+"</center>";
-
+  
+let curr_st=undefined;
 function createStory(id){
+    curr_st=id;
     document.getElementById("stories-panel").style.display="none";
     document.getElementById("story").style.display="block";
-    document.getElementById("story").innerHTML="<clr-icon shape='arrow' dir='left' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; top: 10px; left:10px;' onClick='story_back()'></clr-icon><center><span class='stories-panel_tiles_title'>" + arr_stories[id].title + "</span></center>" + arr_stories[id].author + ", " + arr_stories[id].date + "<br><br><img src='" + arr_stories[id].img + "' style='width: 100%; height:auto;'></img>" + arr_stories[id].img_sub + "<br><br>" + arr_stories[id].text;
+
+    fetch(arr_stories[id].text)
+        .then(response => response.text())
+        .then(text => {document.getElementById("story").innerHTML="<clr-icon shape='arrow' dir='left' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; top: 10px; left:10px;' onClick='story_back()'></clr-icon><center><span class='stories-panel_tiles_title'>" + arr_stories[id].title + "</span></center>" + arr_stories[id].author + ", " + arr_stories[id].date + "<br><br><img src='" + arr_stories[id].img + "' style='width: 100%; height:auto;'></img>" + arr_stories[id].img_sub + "<br><br>" + text;})
+    
 }
+
+function scrollMarker(){
+    let c=0;
+    let m="story_marker_" + c;
+    let spanY=document.getElementById(m).getBoundingClientRect().y - document.getElementById("story").getBoundingClientRect().y;
+    let thld=document.getElementById("story").getBoundingClientRect().height / 2;
+
+    if(spanY<thld && spanY>0){
+        map.setView([arr_stories[curr_st].marker[c][0], arr_stories[curr_st].marker[c][1]], arr_stories[curr_st].marker[c][2]);
+    }
+    
+}
+
 
 function story_back(){
     document.getElementById("story").style.display="none";
