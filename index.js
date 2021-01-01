@@ -26,7 +26,7 @@ L.control.custom({
                 "<td style='width:4vw;'><label class='switch'><input type='checkbox' id='ctrl_edit' onclick='edit()'><span class='ctrl_edit'></span></label></td>" +
                 "<td style='width:4vw;'><label class='switch'><input type='checkbox' id='ctrl_ov' onclick='overview();'><span class='ctrl_edit'></span></label></td>" +
                 "<td style='width:4vw;'><label class='switch'><input type='checkbox' id='ctrl_st' onclick='stories();'><span class='ctrl_edit'></span></label></td>" +
-                "</tr></table><br><div id='stories-panel' class='stories-panel scroll'></div>",
+                "</tr></table><br><div id='stories-panel' class='stories-panel scroll'></div><div id='story' class='story scroll'></div>",
     style:
     {
         margin: "0",
@@ -35,20 +35,21 @@ L.control.custom({
 }).addTo(map);
 
 class Story {
-    constructor(title, author, text, img, thumb, date){
+    constructor(title, author, text, img, img_sub, thumb, date){
         this.title=title;
         this.author=author;
         this.text=text;
         this.img=img;
+        this.img_sub=img_sub
         this.thumb=thumb;
         this.date=date;
     }
 }
 
 arr_stories=[];
-arr_stories[0]=new Story("Hello World", "Chuck Norris", "hi there", "/stories/img/story_01.jpg", "/stories/thumb/story_01.jpg", "31.12.2020");
-arr_stories[1]=new Story("My Old Friend", "Chuck Norris", "hi there", "/stories/img/story_01.jpg", "/stories/thumb/story_01.jpg", "31.12.2020");
-arr_stories[2]=new Story("Mississippi Isabell", "Chuck Norris", "hi there", "/stories/img/story_01.jpg", "/stories/thumb/story_01.jpg", "31.12.2020");
+arr_stories[0]=new Story("Hello World", "Chuck Norris", "hi there", "/stories/img/story_01.jpg", "much picture", "/stories/thumb/story_01.jpg", "31.12.2020");
+arr_stories[1]=new Story("My Old Friend", "Chuck Norris", "hi there", "/stories/img/story_01.jpg", "much wow", "/stories/thumb/story_01.jpg", "31.12.2020");
+arr_stories[2]=new Story("Mississippi Isabell", "Chuck Norris", "hi there", "/stories/img/story_01.jpg", "cat", "/stories/thumb/story_01.jpg", "31.12.2020");
 
 let tiles="";
 for (let i=0;i<arr_stories.length;i++){
@@ -57,9 +58,16 @@ for (let i=0;i<arr_stories.length;i++){
 document.getElementById("stories-panel").innerHTML="<center>"+tiles+"</center>";
 
 function createStory(id){
-    id+=1;
-    console.log(id);
+    document.getElementById("stories-panel").style.display="none";
+    document.getElementById("story").style.display="block";
+    document.getElementById("story").innerHTML="<clr-icon shape='arrow' dir='left' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; top: 10px; left:10px;' onClick='story_back()'></clr-icon><center><span class='stories-panel_tiles_title'>" + arr_stories[id].title + "</span></center>" + arr_stories[id].author + ", " + arr_stories[id].date + "<br><br><img src='" + arr_stories[id].img + "' style='width: 100%; height:auto;'></img>" + arr_stories[id].img_sub + "<br><br>" + arr_stories[id].text;
 }
+
+function story_back(){
+    document.getElementById("story").style.display="none";
+    document.getElementById("stories-panel").style.display="block";
+}
+
 
 // panel topright: title
 L.control.custom({
@@ -143,6 +151,7 @@ function stories(){
         document.getElementById("stories-panel").style.display="block";
     } else {
         document.getElementById("stories-panel").style.display="none";
+        document.getElementById("story").style.display="none";
     }
 }
 

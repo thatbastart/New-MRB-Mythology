@@ -215,6 +215,25 @@ td {
     padding-top: max(1vh,10px);
 }
 
+.story {
+    position: relative;
+    background:rgba(255,255,255,0.75); 
+    width: 35vw; 
+    min-width: 250px;
+    height: 75vh;
+    display: none;
+    border: 1px solid #000;
+    margin: 10px;
+    padding: 20px;
+    overflow-y: hidden;
+    color: #000;
+    font-size: max(2vh,12px);
+    text-align:left;
+}
+
+.story:hover {
+    overflow: auto;
+}
 
 /* Buttons */
 button {
