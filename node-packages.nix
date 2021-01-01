@@ -148,13 +148,13 @@ let
         sha512 = "1yD6RmLI1XBfxugvORwlck6f75tYL+iR0jqwsOrOxMZyGYqUuDhJ0l4AXdO1iX/FTs9cBAMEk1gWSEx1kSbylg==";
       };
     };
-    "fraction.js-4.0.12" = {
+    "fraction.js-4.0.13" = {
       name = "fraction.js";
       packageName = "fraction.js";
-      version = "4.0.12";
+      version = "4.0.13";
       src = fetchurl {
-        url = "https://registry.npmjs.org/fraction.js/-/fraction.js-4.0.12.tgz";
-        sha512 = "8Z1K0VTG4hzYY7kA/1sj4/r1/RWLBD3xwReT/RCrUCbzPszjNQCCsy3ktkU/eaEqX3MYa4pY37a52eiBlPMlhA==";
+        url = "https://registry.npmjs.org/fraction.js/-/fraction.js-4.0.13.tgz";
+        sha512 = "E1fz2Xs9ltlUp+qbiyx9wmt2n9dRzPsS11Jtdb8D2o+cC7wr9xkkKsVKJuBX0ST+LVS+LhLO+SbLJNtfWcJvXA==";
       };
     };
     "get-caller-file-2.0.5" = {
@@ -202,13 +202,13 @@ let
         sha512 = "7AO748wWnIhNqAuaty2ZWHkQHRSNfPVIsPIfwEOWO22AmaoVrWavlOcMR5nzTLNYvp36X220/maaRsrec1G65A==";
       };
     };
-    "mathjs-8.1.0" = {
+    "mathjs-8.1.1" = {
       name = "mathjs";
       packageName = "mathjs";
-      version = "8.1.0";
+      version = "8.1.1";
       src = fetchurl {
-        url = "https://registry.npmjs.org/mathjs/-/mathjs-8.1.0.tgz";
-        sha512 = "Nf41Ms01FX+gP1xnJ5lWcGwMY/snFdqbYPe0LU16rXtLwk+UPfllKC6rStOuOqiPKwj5imJtkHO1vI8X4Y2aSw==";
+        url = "https://registry.npmjs.org/mathjs/-/mathjs-8.1.1.tgz";
+        sha512 = "b3TX3EgiZObujjwb8lZnTDLUuivC2jar4ZBjmGJ4stFYCDXx/DNwx5yry5t/z65p9mvejyZel1qoeR05KtChcQ==";
       };
     };
     "p-limit-2.3.0" = {
@@ -405,13 +405,13 @@ let
       sources."emoji-regex-7.0.3"
       sources."escape-latex-1.2.0"
       sources."find-up-3.0.0"
-      sources."fraction.js-4.0.12"
+      sources."fraction.js-4.0.13"
       sources."get-caller-file-2.0.5"
       sources."is-fullwidth-code-point-2.0.0"
       sources."javascript-natural-sort-0.7.1"
       sources."leaflet-rotate-map-0.2.2"
       sources."locate-path-3.0.0"
-      sources."mathjs-8.1.0"
+      sources."mathjs-8.1.1"
       sources."p-limit-2.3.0"
       sources."p-locate-3.0.0"
       sources."p-try-2.2.0"
