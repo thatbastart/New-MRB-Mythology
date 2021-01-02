@@ -69,6 +69,8 @@ function createStory(id){
         marker = new L.marker(pos, {icon: blueIcon}).addTo(map);
     }
 
+    let polyline = L.polyline(arr_stories[id].marker, {color: '#355AD9'}).addTo(map);
+
     fetch(arr_stories[id].text)
         .then(response => response.text())
         .then(text => {document.getElementById("story").innerHTML="<clr-icon shape='arrow' dir='left' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; top: 10px; left:10px;' onClick='story_back()'></clr-icon><center><span class='stories-panel_tiles_title'>" + arr_stories[id].title + "</span></center>" + arr_stories[id].author + ", " + arr_stories[id].date + "<span id='story_marker_0'></span><br><br><img src='" + arr_stories[id].img + "' style='width: 100%; height:auto;'></img>" + arr_stories[id].img_sub + "<br><br>" + text + "<br><br><clr-icon shape='arrow' dir='up' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; right:10px;' onClick='story_up()'></clr-icon><br>";})
