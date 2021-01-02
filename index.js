@@ -48,7 +48,7 @@ class Story {
 }
 
 arr_stories=[];
-arr_stories[0]=new Story("Hello World", "Chuck Norris", "stories/text/story_01.txt", "/stories/img/story_01.jpg", "much picture", "/stories/thumb/story_01.jpg", "31.12.2020", [[43.16,-91.15,13]]);
+arr_stories[0]=new Story("Hello World", "Chuck Norris", "stories/text/story_01.txt", "/stories/img/story_01.jpg", "much picture", "/stories/thumb/story_01.jpg", "31.12.2020", [[43.16,-91.15,13],[42.75,-91.08,11],[41.9,-90.16,11]]);
 arr_stories[1]=new Story("My Old Friend", "Chuck Norris", "hi there", "/stories/img/story_01.jpg", "much wow", "/stories/thumb/story_01.jpg", "31.12.2020", [[43.16,-91.15,10]]);
 arr_stories[2]=new Story("Mississippi Isabell", "Chuck Norris", "hi there", "/stories/img/story_01.jpg", "cat", "/stories/thumb/story_01.jpg", "31.12.2020", [[43.16,-91.15,10]]);
 
@@ -63,23 +63,30 @@ function createStory(id){
     curr_st=id;
     document.getElementById("stories-panel").style.display="none";
     document.getElementById("story").style.display="block";
+    
+    for(let i=0;i<arr_stories[id].marker.length;i++){
+        let pos = L.latLng(arr_stories[id].marker[i][0],arr_stories[id].marker[i][1])
+        marker = new L.marker(pos, {icon: blueIcon}).addTo(map);
+    }
 
     fetch(arr_stories[id].text)
         .then(response => response.text())
-        .then(text => {document.getElementById("story").innerHTML="<clr-icon shape='arrow' dir='left' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; top: 10px; left:10px;' onClick='story_back()'></clr-icon><center><span class='stories-panel_tiles_title'>" + arr_stories[id].title + "</span></center>" + arr_stories[id].author + ", " + arr_stories[id].date + "<br><br><img src='" + arr_stories[id].img + "' style='width: 100%; height:auto;'></img>" + arr_stories[id].img_sub + "<br><br>" + text;})
-    
+        .then(text => {document.getElementById("story").innerHTML="<clr-icon shape='arrow' dir='left' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; top: 10px; left:10px;' onClick='story_back()'></clr-icon><center><span class='stories-panel_tiles_title'>" + arr_stories[id].title + "</span></center>" + arr_stories[id].author + ", " + arr_stories[id].date + "<span id='story_marker_0'></span><br><br><img src='" + arr_stories[id].img + "' style='width: 100%; height:auto;'></img>" + arr_stories[id].img_sub + "<br><br>" + text + "<br><br><clr-icon shape='arrow' dir='up' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; right:10px;' onClick='story_up()'></clr-icon><br>";})
+    story_up();
 }
 
+let curr_st_m=-1;
 function scrollMarker(){
-    let c=0;
-    let m="story_marker_" + c;
-    let spanY=document.getElementById(m).getBoundingClientRect().y - document.getElementById("story").getBoundingClientRect().y;
-    let thld=document.getElementById("story").getBoundingClientRect().height / 2;
+    for(let i=0;i<arr_stories[curr_st].marker.length;i++){
+        let m="story_marker_" + i;
+        let spanY=document.getElementById(m).getBoundingClientRect().y - document.getElementById("story").getBoundingClientRect().y;
+        let thld=document.getElementById("story").getBoundingClientRect().height / 3;
 
-    if(spanY<thld && spanY>0){
-        map.setView([arr_stories[curr_st].marker[c][0], arr_stories[curr_st].marker[c][1]], arr_stories[curr_st].marker[c][2]);
+        if(spanY<thld && spanY>0 && i!=curr_st_m){
+            map.setView([arr_stories[curr_st].marker[i][0], arr_stories[curr_st].marker[i][1]], arr_stories[curr_st].marker[i][2]);
+            curr_st_m=i;
+        }
     }
-    
 }
 
 
@@ -88,6 +95,10 @@ function story_back(){
     document.getElementById("stories-panel").style.display="block";
 }
 
+function story_up(){
+    document.getElementById("story").scrollTop=0;
+    scrollMarker();
+}
 
 // panel topright: title
 L.control.custom({
@@ -180,6 +191,13 @@ function stories(){
 // intialize marker icons; green=community; blue=editorial; red=position
 let greenIcon = L.icon({
     iconUrl: 'marker_green.png',
+    iconSize:     [30, 30], 
+    iconAnchor:   [15, 15], 
+    popupAnchor:  [-500, 15] 
+});
+
+let blueIcon = L.icon({
+    iconUrl: 'marker_blue.png',
     iconSize:     [30, 30], 
     iconAnchor:   [15, 15], 
     popupAnchor:  [-500, 15] 

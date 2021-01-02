@@ -2,8 +2,17 @@
     font-family: 'mySlab';
     src: url('GE703XBC.TTF') format('truetype');
 }
+
 html{
     font-family: 'Titillium Web', sans-serif !important;
+}
+::selection{
+    color:#fff;
+    background:#00a104;
+}
+::-moz-selection{
+    color:#fff;
+    background:#00a104;
 }
 
 a{
