@@ -59,6 +59,8 @@ for (let i=0;i<arr_stories.length;i++){
 document.getElementById("stories-panel").innerHTML="<center>"+tiles+"</center>";
   
 let curr_st=undefined;
+let st_marker=[];
+let st_line;
 function createStory(id){
     curr_st=id;
     document.getElementById("stories-panel").style.display="none";
@@ -66,10 +68,11 @@ function createStory(id){
     
     for(let i=0;i<arr_stories[id].marker.length;i++){
         let pos = L.latLng(arr_stories[id].marker[i][0],arr_stories[id].marker[i][1])
-        marker = new L.marker(pos, {icon: blueIcon}).addTo(map);
+        let m = new L.marker(pos, {icon: blueIcon}).addTo(map);
+        st_marker.push(m);
     }
 
-    let polyline = L.polyline(arr_stories[id].marker, {color: '#355AD9'}).addTo(map);
+    st_line = L.polyline(arr_stories[id].marker, {color: '#355AD9'}).addTo(map);
 
     fetch(arr_stories[id].text)
         .then(response => response.text())
@@ -91,10 +94,18 @@ function scrollMarker(){
     }
 }
 
+function rmStoryMarkers(){
+    for (let i=0;i<st_marker.length;i++){
+        map.removeLayer(st_marker[i]);
+    }
+    map.removeLayer(st_line);
+    st_marker=[];
+}
 
 function story_back(){
     document.getElementById("story").style.display="none";
     document.getElementById("stories-panel").style.display="block";
+    rmStoryMarkers();
 }
 
 function story_up(){
@@ -138,7 +149,6 @@ let curr_pos=undefined;
 let curr_edit=false;
 
 function overview(){
-    
     if(document.getElementById("ctrl_ov").checked==true){
         curr_edit=document.getElementById("ctrl_edit").checked;
         document.getElementById("ctrl_edit").checked=false;
@@ -148,6 +158,7 @@ function overview(){
         curr_pos=L.marker([curr_view[0], curr_view[1]], {icon: redIcon}).addTo(map);
         
         setIcon(greenIcon,12);
+        setIcon(blueIcon,12);
         map.options.minZoom=6;
         map.options.maxZoom=6;
         map.setView([curr_view[0], curr_view[1]], 6);
@@ -157,6 +168,7 @@ function overview(){
         map.removeLayer(curr_pos);
 
         setIcon(greenIcon,30);
+        setIcon(blueIcon,30);
         map.options.minZoom=10;
         map.options.maxZoom=14;
         map.setView([curr_view[0], curr_view[1]], curr_view[2]);
@@ -185,6 +197,7 @@ function stories(){
     } else {
         document.getElementById("stories-panel").style.display="none";
         document.getElementById("story").style.display="none";
+        rmStoryMarkers();
     }
 }
 
@@ -329,9 +342,9 @@ function popupString(title, content, n, edit){ // n1: edit layout; n2: final lay
             "<button type='button' style='width:6vw; min-width:100px; height: 20px;' onclick='pu_submit()'><clr-icon shape='check' style='color: #000'></clr-icon> Submit</button>"
         case 2:
             return "<h1 id='pu_title_ld' class='title' style='font-size: 30'>" + title + "</h1><br><div id='pu_content_ld' class='content scroll'>" + content +"</div><br>" +
-            "<button type='button' id='btn_edit' style='width:3vw; min-width: 40px; height: 20px; display:" + disp + ";' onClick='invoke_pu_edit()' ><clr-icon shape='pencil' style='color: #000'></clr-icon></button>" +
-            "<button type='button' id='btn_history' style='width:3vw; min-width: 40px; height: 20px;' onClick='show_history()' ><clr-icon shape='history' style='color: #000'></clr-icon></button>" +
-            "<select id='dd_ver' style='width:180px;height:20px;visibility:hidden;' onChange='change_version()'></select>";
+            "<button type='button' id='btn_edit' style='display:" + disp + ";' onClick='invoke_pu_edit()' ><clr-icon shape='pencil' style='color: #000'></clr-icon></button>" +
+            "<button type='button' id='btn_history' onClick='show_history()'><clr-icon shape='history' style='color: #000'></clr-icon></button>" +
+            "<select id='dd_ver' style='visibility: hidden;' onChange='change_version()'></select>";
     }
   
     
