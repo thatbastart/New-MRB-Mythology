@@ -20,7 +20,7 @@ L.control.custom({
     position: "topleft",
     content: "<table><tr>" +
                 "<td>Zoom</td><td>Rotation</td><td>Edit Mode</td><td>Overview</td><td>Stories</td></tr>" +
-                "<tr><td style='width:3vw; min-width: 60px;'><button type='button' id='ctrl_zm' class='ctrl_zoom' style='width: 50%; min-width: 30px; height: 2vh; min-height: 20px;' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' style='color: #000'></clr-icon></button>"+
+                "<tr><td style='width:4vw; min-width: 60px;'><button type='button' id='ctrl_zm' class='ctrl_zoom' style='width: 50%; min-width: 30px; height: 2vh; min-height: 20px;' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' style='color: #000'></clr-icon></button>"+
                 "<button type='button' id='ctrl_zp' class='ctrl_zoom' style='width: 50%; min-width: 30px; height: 2vh; min-height: 20px;' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' style='color: #000'></clr-icon></button></td>"+
                 "<td style='width:6vw;'><input type='range' min='0' max='360' value='0' step='30' name='rotation' id='ctrl_rotate' class='ctrl_rotate'/></td>" +
                 "<td style='width:4vw;'><label class='switch'><input type='checkbox' id='ctrl_edit' onclick='edit()'><span class='ctrl_edit'></span></label></td>" +
@@ -52,12 +52,15 @@ arr_stories[0]=new Story("Hello World", "Chuck Norris", "stories/text/story_01.t
 arr_stories[1]=new Story("My Old Friend", "Chuck Norris", "hi there", "/stories/img/story_01.jpg", "much wow", "/stories/thumb/story_01.jpg", "31.12.2020", [[43.16,-91.15,10]]);
 arr_stories[2]=new Story("Mississippi Isabell", "Chuck Norris", "hi there", "/stories/img/story_01.jpg", "cat", "/stories/thumb/story_01.jpg", "31.12.2020", [[43.16,-91.15,10]]);
 
+// load story tiles
 let tiles="";
 for (let i=0;i<arr_stories.length;i++){
     tiles=tiles+"<div class='stories-panel_tiles' onClick='createStory("+i+")'><div style='height: 60%; overflow: hidden;'><img src='" + arr_stories[i].thumb + "' style='width: 100%; height:auto;'></img></div><div class='stories-panel_tiles_title'>"+arr_stories[i].title+"</div></div>";
 }
 document.getElementById("stories-panel").innerHTML="<center>"+tiles+"</center>";
-  
+
+
+// construct the story
 let curr_st=undefined;
 let st_marker=[];
 let st_line;
@@ -80,6 +83,8 @@ function createStory(id){
     story_up();
 }
 
+
+// jump to markers while scrolling
 let curr_st_m=-1;
 function scrollMarker(){
     for(let i=0;i<arr_stories[curr_st].marker.length;i++){
@@ -94,6 +99,7 @@ function scrollMarker(){
     }
 }
 
+// remove Story Markers and Line
 function rmStoryMarkers(){
     for (let i=0;i<st_marker.length;i++){
         map.removeLayer(st_marker[i]);
@@ -102,23 +108,37 @@ function rmStoryMarkers(){
     st_marker=[];
 }
 
+// back to story overview panel
 function story_back(){
     document.getElementById("story").style.display="none";
     document.getElementById("stories-panel").style.display="block";
     rmStoryMarkers();
 }
 
+// in story back to top
 function story_up(){
     document.getElementById("story").scrollTop=0;
     scrollMarker();
 }
 
+
+
+
 // panel topright: title
 L.control.custom({
     position: "topright",
-    content: "<h1 style='font-size: max(4.5vh,30px);'>The New Mississippi River Basin Mythology</h1>",
+    content: "<h1 title='About the Project' style='font-size: max(4.5vh,30px); cursor: help;' onClick='showAbout()'>The New Mississippi River Basin Mythology</h1>" +
+            "<br><br><div id='about' class='about-panel scroll' style='display:none;'><center><span class='stories-panel_tiles_title'>About</span></center><br>Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas Böses getan hätte, wurde er eines Morgens verhaftet. »Wie ein Hund!« sagte er, es war, als sollte die Scham ihn überleben. Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand er sich in seinem Bett zu einem ungeheueren Ungeziefer verwandelt. Und es war ihnen wie eine Bestätigung ihrer neuen Träume und guten Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob und ihren jungen Körper dehnte. »Es ist ein eigentümlicher Apparat«, sagte der Offizier zu dem Forschungsreisenden und überblickte mit einem gewissermaßen bewundernden Blick den ihm doch wohlbekannten Apparat. Sie hätten noch ins Boot springen können, aber der Reisende hob ein schweres, geknotetes Tau vom Boden, drohte ihnen damit und hielt sie dadurch von dem Sprunge ab. In den letzten Jahrzehnten ist das Interesse an Hungerkünstlern sehr zurückgegangen. Aber sie überwanden sich, umdrängten den Käfig und wollten sich gar nicht fortrühren.Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas Böses getan hätte, wurde er eines Morgens verhaftet. »Wie ein Hund!« sagte er, es war, als sollte die Scham ihn überleben. Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand er sich</div>",
 }).addTo(map);        
-        
+     
+function showAbout(){
+    if(document.getElementById("about").style.display=="none"){
+        document.getElementById("about").style.display="block";
+    } else {
+        document.getElementById("about").style.display="none";
+    }
+}
+
 // panel bottomleft: Lat and Lng at cursor
 L.control.mousePosition({prefix: "Lat ", separator: "\nLng ", numDigits: 2}).addTo(map);
 

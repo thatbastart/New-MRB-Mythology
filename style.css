@@ -238,6 +238,22 @@ td {
     text-align:left;
 }
 
+/* About Panel */
+.about-panel {
+    position: absolute;
+    right: 0px;
+    text-align: left;
+    font-size: max(1.5vh,12px);
+    color: #000;
+    padding: 20px;
+    background:rgba(255,255,255,0.75); 
+    width: 32vw; 
+    min-width: 500px;
+    height: 50vh;
+    border: 1px solid #000;
+    margin: 10px;
+    overflow-y: scroll;
+}
 
 /* Buttons */
 button {
