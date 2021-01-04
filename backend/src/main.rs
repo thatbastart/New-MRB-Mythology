@@ -72,7 +72,7 @@ fn add_note(db: State<'_, DbConnection>, msg: Json<Note>) -> ApiResult {
     let db_conn = db.lock().expect("db connection lock");
     let insert_op = db_conn.execute(
         "INSERT INTO notes (creation_date, title, content, lat, lon, kind)
-            VALUES (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'), $1, $2, $3, $4, $5)",
+            VALUES (STRFTIME('%Y-%m-%d %H:%M', 'NOW'), $1, $2, $3, $4, $5)",
         params![title, text, lat, lon, kind],
     );
 
