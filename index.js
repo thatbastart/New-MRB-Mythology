@@ -384,13 +384,13 @@ function show_history(){
     hist_c+=1;
     if(hist_c % 2 == 1){
         let sel=document.getElementById("dd_ver");
-        for(let i=0;i<curr_pu.noteVersions.length;i++){
+        noteVersions.reverse().map(version => {
             let opt=document.createElement("option");
             opt.value=i;
-            opt.innerHTML=curr_pu.noteVersions[i].creation_date;
+            opt.innerHTML=version.creation_date;
 
             sel.appendChild(opt);
-            }
+        });
         document.getElementById("dd_ver").style.visibility="visible";
     } else {
         document.getElementById("dd_ver").style.visibility="hidden";
