@@ -384,7 +384,7 @@ function show_history(){
     hist_c+=1;
     if(hist_c % 2 == 1){
         let sel=document.getElementById("dd_ver");
-        for(let i=0;i<curr_pu.noteVersions.length;i++){
+        for(let i=curr_pu.noteVersions.length-1;i>=0;i--){
             let opt=document.createElement("option");
             opt.value=i;
             opt.innerHTML=curr_pu.noteVersions[i].creation_date;
