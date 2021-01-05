@@ -13,3 +13,6 @@ serde = { version = "*", features = [ "derive" ] }
 docopt = "*"
 kdtree = { git = "https://github.com/mrhooray/kdtree-rs", branch = "master" }
 log = "*"
+data-url = "*"
+image = "*"
+sha2 = "*"

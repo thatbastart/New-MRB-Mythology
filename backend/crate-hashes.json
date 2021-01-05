@@ -3,9 +3,9 @@
   "devise 0.3.0 (git+https://github.com/SergioBenitez/Devise.git?rev=3648468#3648468a9ede9ca896cd35bc1eb818c7a9fb3047)": "17vdx9y7k9qqp287pgdc04m7m8cdxb58jz3psqxd7081x0kd2ymi",
   "devise_codegen 0.3.0 (git+https://github.com/SergioBenitez/Devise.git?rev=3648468#3648468a9ede9ca896cd35bc1eb818c7a9fb3047)": "17vdx9y7k9qqp287pgdc04m7m8cdxb58jz3psqxd7081x0kd2ymi",
   "devise_core 0.3.0 (git+https://github.com/SergioBenitez/Devise.git?rev=3648468#3648468a9ede9ca896cd35bc1eb818c7a9fb3047)": "17vdx9y7k9qqp287pgdc04m7m8cdxb58jz3psqxd7081x0kd2ymi",
-  "kdtree 0.6.1-alpha.0 (git+https://github.com/mrhooray/kdtree-rs?branch=master#26596430d0d02aa2ab941737d8c919996b37e23f)": "0n0qlxqlrs6rwfkd7g6ihqn5v5r5rrn8ldw49hmqn45iqdys5kzh",
-  "rocket 0.5.0-dev (git+https://github.com/SergioBenitez/Rocket?branch=master#9671115796e42865eaebd020ac27542802027b02)": "1f71b0l74si787zf2wmkls00jdvdk27j6vsvvjpvii9g4qrp6bax",
-  "rocket_codegen 0.5.0-dev (git+https://github.com/SergioBenitez/Rocket?branch=master#9671115796e42865eaebd020ac27542802027b02)": "1f71b0l74si787zf2wmkls00jdvdk27j6vsvvjpvii9g4qrp6bax",
-  "rocket_contrib 0.5.0-dev (git+https://github.com/SergioBenitez/Rocket?branch=master#9671115796e42865eaebd020ac27542802027b02)": "1f71b0l74si787zf2wmkls00jdvdk27j6vsvvjpvii9g4qrp6bax",
-  "rocket_http 0.5.0-dev (git+https://github.com/SergioBenitez/Rocket?branch=master#9671115796e42865eaebd020ac27542802027b02)": "1f71b0l74si787zf2wmkls00jdvdk27j6vsvvjpvii9g4qrp6bax"
+  "kdtree 0.6.1-alpha.0 (git+https://github.com/mrhooray/kdtree-rs#26596430d0d02aa2ab941737d8c919996b37e23f)": "0n0qlxqlrs6rwfkd7g6ihqn5v5r5rrn8ldw49hmqn45iqdys5kzh",
+  "rocket 0.5.0-dev (git+https://github.com/SergioBenitez/Rocket#9671115796e42865eaebd020ac27542802027b02)": "1f71b0l74si787zf2wmkls00jdvdk27j6vsvvjpvii9g4qrp6bax",
+  "rocket_codegen 0.5.0-dev (git+https://github.com/SergioBenitez/Rocket#9671115796e42865eaebd020ac27542802027b02)": "1f71b0l74si787zf2wmkls00jdvdk27j6vsvvjpvii9g4qrp6bax",
+  "rocket_contrib 0.5.0-dev (git+https://github.com/SergioBenitez/Rocket#9671115796e42865eaebd020ac27542802027b02)": "1f71b0l74si787zf2wmkls00jdvdk27j6vsvvjpvii9g4qrp6bax",
+  "rocket_http 0.5.0-dev (git+https://github.com/SergioBenitez/Rocket#9671115796e42865eaebd020ac27542802027b02)": "1f71b0l74si787zf2wmkls00jdvdk27j6vsvvjpvii9g4qrp6bax"
 }

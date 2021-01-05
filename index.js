@@ -383,6 +383,23 @@ fetch("/api/get_notes", {
 
 // ADD NOTES - popup submit function
 function pu_submit(){
+
+    let image_file = document.getElementById("upload_image").files[0];
+    let reader = new FileReader();
+    reader.readAsDataURL(image_file);
+    reader.onload = function() {
+        console.log(reader.result);
+        fetch("/api/upload_image", {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=UTF-8" },
+            cache: "no-cache",
+            body: reader.result
+        })
+        .then(response => response.json())
+        .then(json => console.log(json))
+        .catch(err => console.log(err));
+    };
+
     let title = L.DomUtil.get("pu_title").value;
     let text = L.DomUtil.get("pu_content").value;
     if (title=="" || text==""){
@@ -431,7 +448,8 @@ function popupString(title, content, n, edit){ // n1: edit layout; n2: final lay
             "<textarea id='pu_content' rows='30' class='content_ta scroll'>" + content + "</textarea><br><br>" +
             "<div class='tooltip'>You can use Markdown to format the text." + 
             "<span class='tooltiptext'>Heading 1: # <br>Heading 2: ## <br>Italics: *Text* <br>Bold: **Text** <br>Blockquote: < Text <br>Horizontal Line: --- <br>Links: [Text](URL) <br>Paragraph: Empty Line</span></div><br><br>" +
-            "<button id='pu_btn' type='button' onclick='pu_submit()'><clr-icon shape='check' size='20'></clr-icon></button>"
+            "<button id='pu_btn' type='button' onclick='pu_submit()'><clr-icon shape='check' size='20'></clr-icon></button>" +
+            "<input id='upload_image' type='file' accept='image/jpeg,image/png' />"
         case 2:
             return "<h1 id='pu_title_ld' class='title' style='font-size: 30'>" + title + "</h1><br><div id='pu_content_ld' class='content scroll'>" + content +"</div><br>" +
             "<button id='pu_btn' type='button' id='btn_edit' style='border-radius: 5px 0 0 5px; border-right: 1px solid #005201; display:" + disp + ";' onClick='invoke_pu_edit()' ><clr-icon shape='pencil' size='20'></clr-icon></button>" +

@@ -187,6 +187,55 @@ fn get_notes(db: State<'_, DbConnection>) -> Json<Vec<Note>> {
     Json(notes)
 }
 
+/// Upload an image file.
+#[post("/", data = "<url_str>")]
+fn upload_image(_state: State<'_, DbConnection>, url_str: String) -> ApiResult {
+    use data_url::DataUrl;
+    use image::io::Reader;
+    use image::ImageFormat;
+    use std::io::Cursor;
+
+    let data_url = DataUrl::process(&url_str).unwrap();
+    let (data_body, _) = data_url.decode_to_vec().unwrap();
+    let mime_type = format!("{}", data_url.mime_type());
+
+    println!("Image mime type: {}", mime_type);
+
+    let image_reader = Reader::new(Cursor::new(&data_body))
+        .with_guessed_format()
+        .expect("This doesn't fail");
+
+    match (image_reader.format(), mime_type.as_str()) {
+        (None, _) => ApiResult::Err(json!("Couldn't determine image format from raw data.")),
+        (Some(ImageFormat::Jpeg), "image/jpeg") => write_image(data_body, "jpeg"),
+        (Some(ImageFormat::Png), "image/png") => write_image(data_body, "png"),
+        _ => ApiResult::Err(json!(format!(
+            "Image format and MIME type {} does not match.",
+            mime_type
+        ))),
+    }
+}
+
+fn write_image(data: Vec<u8>, file_extension: &str) -> ApiResult {
+    use sha2::{Digest, Sha256};
+    use std::fs;
+
+    let hash_str = {
+        let mut hasher = Sha256::new();
+        hasher.update(&data);
+        let hash = hasher.finalize();
+        format!("{:x}", hash)
+    };
+
+    let path = format!("images/{}.{}", hash_str, file_extension);
+
+    if let Ok(()) = fs::write(&path, &data) {
+        ApiResult::Ok(json!({ "file_path": path }))
+    } else {
+        ApiResult::Err(json!("Failed to create file."))
+    }
+}
+
 #[launch]
 fn rocket() -> Rocket {
     let args: CliArgs = Docopt::new(USAGE)
@@ -213,4 +262,5 @@ fn rocket() -> Rocket {
         .manage(Mutex::new(db))
         .mount("/api/add_note", routes![add_note])
         .mount("/api/get_notes", routes![get_notes])
+        .mount("/api/upload_image", routes![upload_image])
 }
