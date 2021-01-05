@@ -1,6 +1,14 @@
 @font-face {
     font-family: 'mySlab';
-    src: url('GE703XBC.TTF') format('truetype');
+    src: url('/fonts/GE703XBC.TTF') format('truetype');
+}
+
+@font-face {
+  font-family: 'Titillium Web';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url(/fonts/google-fonts/truetype/TitilliumWeb-Regular.ttf) format('truetype');
 }
 
 html{

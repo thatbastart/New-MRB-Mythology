@@ -48,6 +48,9 @@
                   (type != "symlink")
                 )
                 ./.;
+              postInstall = ''
+                ln -s ${pkgs.google-fonts}/share/fonts fonts/google-fonts
+              '';
             };
           backend =
             let
