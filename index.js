@@ -17,16 +17,25 @@ L.tileLayer('/Tiles/{z}/{x}/{y}.png', {
 // OVERLAYS -----------------------------
 // panel topleft: zoom, rotation, edit mode, overview
 L.control.custom({
-    position: "topleft",
+    position: "topright",
     content: "<table><tr>" +
-                "<td>Zoom</td><td>Rotation</td><td>Edit Mode</td><td>Overview</td><td>Stories</td></tr>" +
-                "<tr><td style='width:4vw; min-width: 60px;'><button type='button' id='ctrl_zm' class='ctrl_zoom' style='width: 50%; min-width: 30px; height: 2vh; min-height: 20px;' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' style='color: #000'></clr-icon></button>"+
-                "<button type='button' id='ctrl_zp' class='ctrl_zoom' style='width: 50%; min-width: 30px; height: 2vh; min-height: 20px;' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' style='color: #000'></clr-icon></button></td>"+
-                "<td style='width:6vw;'><input type='range' min='0' max='360' value='0' step='30' name='rotation' id='ctrl_rotate' class='ctrl_rotate'/></td>" +
-                "<td style='width:4vw;'><label class='switch'><input type='checkbox' id='ctrl_edit' onclick='edit()'><span class='ctrl_edit'></span></label></td>" +
-                "<td style='width:4vw;'><label class='switch'><input type='checkbox' id='ctrl_ov' onclick='overview();'><span class='ctrl_edit'></span></label></td>" +
-                "<td style='width:4vw;'><label class='switch'><input type='checkbox' id='ctrl_st' onclick='stories();'><span class='ctrl_edit'></span></label></td>" +
-                "</tr></table><br><div id='stories-panel' class='stories-panel scroll'></div><div id='story' class='story scroll' onScroll='scrollMarker()'></div>",
+                "<td>Stories</td><td>Edit Mode</td><td>Overview</td></tr>" +
+                "<td style='width:4vw;'><label class='switch'><div id='ctrl_st' class='btn_toggle' onclick='stories();' data-checked='false'>Stories</div></td>" +
+                "<td style='width:4vw;'><label class='switch'><div id='ctrl_edit' class='btn_toggle' onclick='edit();' data-checked='false'>Edit</div></td>" +
+                "<td style='width:4vw;'><label class='switch'><div id='ctrl_ov' class='btn_toggle' onclick='overview();' data-checked='false'></div></td>" +
+                "</tr></table><br><div id='stories-panel' class='stories-panel scroll'></div><div id='story' class='story scroll' onScroll='scrollMarker()''></div>",
+    style:
+    {
+        margin: "0",
+        padding: "0px 0 0 0",
+    },
+}).addTo(map);
+
+L.control.custom({
+    position: "bottomright",
+    content:    "<div><button type='button' id='ctrl_zp' class='ctrl_zoom' style='border-radius: 5px 5px 0 0;' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' style='color: #000'></clr-icon></button><br>"+
+                "<button type='button' id='ctrl_zm' class='ctrl_zoom' style='border-radius: 0 0 5px 5px;' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' style='color: #000'></clr-icon></button><br><br>"+
+                "<input type='range' min='0' max='360' value='0' step='30' name='rotation' id='ctrl_rotate' class='ctrl_rotate'></div>",
     style:
     {
         margin: "0",
@@ -126,7 +135,7 @@ function story_up(){
 
 // panel topright: title
 L.control.custom({
-    position: "topright",
+    position: "topleft",
     content: "<h1 title='About the Project' style='font-size: max(4.5vh,30px); cursor: help;' onClick='showAbout()'>The New Mississippi River Basin Mythology</h1>" +
             "<br><br><div id='about' class='about-panel scroll' style='display:none;'><center><span class='stories-panel_tiles_title'>About</span></center><br>Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas Böses getan hätte, wurde er eines Morgens verhaftet. »Wie ein Hund!« sagte er, es war, als sollte die Scham ihn überleben. Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand er sich in seinem Bett zu einem ungeheueren Ungeziefer verwandelt. Und es war ihnen wie eine Bestätigung ihrer neuen Träume und guten Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob und ihren jungen Körper dehnte. »Es ist ein eigentümlicher Apparat«, sagte der Offizier zu dem Forschungsreisenden und überblickte mit einem gewissermaßen bewundernden Blick den ihm doch wohlbekannten Apparat. Sie hätten noch ins Boot springen können, aber der Reisende hob ein schweres, geknotetes Tau vom Boden, drohte ihnen damit und hielt sie dadurch von dem Sprunge ab. In den letzten Jahrzehnten ist das Interesse an Hungerkünstlern sehr zurückgegangen. Aber sie überwanden sich, umdrängten den Käfig und wollten sich gar nicht fortrühren.Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas Böses getan hätte, wurde er eines Morgens verhaftet. »Wie ein Hund!« sagte er, es war, als sollte die Scham ihn überleben. Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand er sich</div>",
 }).addTo(map);        
@@ -169,7 +178,7 @@ let curr_pos=undefined;
 let curr_edit=false;
 
 function overview(){
-    if(document.getElementById("ctrl_ov").checked==true){
+    if(document.getElementById("ctrl_ov").getAttribute("data-checked")=="false"){
         curr_edit=document.getElementById("ctrl_edit").checked;
         document.getElementById("ctrl_edit").checked=false;
         curr_view[0]=map.getCenter().lat;
@@ -183,6 +192,7 @@ function overview(){
         map.options.maxZoom=6;
         map.setView([curr_view[0], curr_view[1]], 6);
         map.closePopup();
+        document.getElementById("ctrl_ov").setAttribute("data-checked", "true");
     } else {
         document.getElementById("ctrl_edit").checked=curr_edit;
         map.removeLayer(curr_pos);
@@ -192,6 +202,7 @@ function overview(){
         map.options.minZoom=10;
         map.options.maxZoom=14;
         map.setView([curr_view[0], curr_view[1]], curr_view[2]);
+        document.getElementById("ctrl_ov").setAttribute("data-checked", "false");
     }
 }
 
