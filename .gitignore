@@ -2,3 +2,5 @@ node_modules*
 result*
 Tiles*
 .vscode*
+out-links/
+notes*

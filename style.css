@@ -1,6 +1,14 @@
 @font-face {
     font-family: 'mySlab';
-    src: url('GE703XBC.TTF') format('truetype');
+    src: url('/fonts/GE703XBC.TTF') format('truetype');
+}
+
+@font-face {
+  font-family: 'Titillium Web';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(/fonts/google-fonts/truetype/TitilliumWeb-Regular.ttf) format('truetype');
 }
 
 html{
@@ -27,6 +35,10 @@ h1{
     font-weight: normal;
     text-align: center;
     margin: 5px !important;
+}
+
+h1#title {
+    letter-spacing: 0.12vw;
 }
 
 textarea{
@@ -171,23 +183,6 @@ background: transparent;
 }
 
 /* CONTROLS */
-/* Table */
-table { 
-    margin: 10px;
-    font-size: max(1.5vh,12px);
-    border-collapse: collapse; 
-    text-align: center; 
-    vertical-align: center; 
-    background-color:rgba(0, 0, 0, 0.5); 
-}
-tr { 
-    border: none; 
-}
-td {
-    padding: 5px;
-    border-right: solid 1px #fff; 
-    border-left: solid 1px #fff;
-}
 
 .stories-panel {
     background:rgba(255,255,255,0.75); 
@@ -197,10 +192,7 @@ td {
     display: none;
     border: 1px solid #000;
     margin: 10px;
-    margin-right: 100px;
     overflow-y: scroll;
-    position: absolute;
-    right: 1vw;
 }
 
 
@@ -262,17 +254,25 @@ td {
 button {
     -webkit-appearance: none;
     -moz-appearance: none;
-    background: #fff;
+    background: #333;
+    color: #fff;
     border: none;
-    width:1.5vw; 
+    width:35%; 
     min-width: 30px; 
-    height: 2vh;
+    height: 10%;
     min-height: 20px; 
     font-weight: bold;
 }
 
+button#pu_btn {
+    height: 25px;
+    color: #fff;
+    width: 3vw;
+    border-radius: 5px;
+}
+
 button:hover {
-    background: #00a104;
+    background: #005201;
     cursor: pointer;
 }
 
@@ -305,31 +305,50 @@ select:hover {
       linear-gradient(#00a104 42%, #00a104 42%);
 }
 
+.panel_right {
+    text-align: center;
+    width: 10vw;
+    min-width: 100px;
+    height: 40vh;
+    margin: 0 0 3vh 27px !important;
+    padding-right: 5vh;
+    transition: width 0.5s, height 0.5s;
+}
+.panel_right:hover{
+    width: 15vw;
+    height: 40vh;
+    transition: width 0.5s, height 0.5s;
+}
+
+.ctrl_ov {
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    margin-bottom: 20vh;
+    overflow: hidden;
+}
+
+.ctrl_ov:hover {
+    border: 2px solid #00a104;
+}
 
 /* Slider */
 #ctrl_rotate {
     border-radius: 8px;
-    height: 0.25vw;
+    height: 0.15vw;
     min-height: 2px;
     max-height: 5px;
-    width: 16vh;
-    min-width: 100px;
+    width: 100%;
+    transform: translate(-3px);
     -webkit-appearance: none;
     cursor: pointer;
-    transform: rotate(90deg);
-    -moz-transform: rotate(90deg);
-    margin-top:8vh;
-    margin-bottom:30vh;
 }
 
 #ctrl_rotate::-webkit-slider-thumb{
     -webkit-appearance: none;
     width: 1.5vh;
     height: 1.5vh;
-    min-width: 16px;
-    min-height: 16px;
     border-radius: 50%;
-    cursor: ns-resize;
+    cursor: ew-resize;
     background: #fff;
     border: 1px solid;
     border-color: #ccc;
@@ -338,84 +357,43 @@ select:hover {
 /* Button Toggle */
 
 .btn_toggle {
-    height: 3vh;
+    height: 4vh;
     min-height: 20px;
-    width: 100%;
-    background: #fff;
-    color: #000;
-    line-height: 3vh;
+    width: 7vw;
+    min-width:50px;
+    line-height: 4vh;
     border-radius: 5px;
     cursor: pointer;
+    text-align: center; 
+    padding: 5px;
+    margin: 5px 5px 5px 5px;
+    font-size: max(2vh,14px);
 }
 
-.btn_toggle:hover{
-    background: #00a104;
+.btn_toggle#ctrl_edit{
+    background-color: #333;
+    border: 4px solid transparent;
 }
 
-.btn_toggle[data-checked="true"] {
-    background: #00a104;
+.btn_toggle#ctrl_edit:hover{
+    border: 4px solid #ccc;
 }
 
-/* The switch - the box around the slider */
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
-}
-  
-/* Hide default HTML checkbox */
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-  
-/* slider style */
-.ctrl_edit {
-    position: absolute;
-    cursor: pointer;
-    top: 12.5%;
-    left: 12.5%;
-    height: 2vh;
-    min-height: 20px;
-    width: 2vw;
-    min-width: 40px;
-    border-radius: 34px;
-    background-color: #ccc;
-    -webkit-transition: .4s;
-    transition: .4s;
-}
-  
-.ctrl_edit:before {
-    position: absolute;
-    content: "";
-    height: 1.5vh;
-    min-height: 16px;
-    width: 1.5vh;
-    min-width: 16px;
-    left: 12.5%;
-    bottom: 12.5%;
-    border-radius: 50%;
-    background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
-}
-  
-input:checked + .ctrl_edit {
-    background-color: #00a104;
-}
-  
-input:focus + .ctrl_edit {
-    box-shadow: 0 0 1px #00a104;
-}
-  
-input:checked + .ctrl_edit:before {
-    -webkit-transform: translateX(100%);
-    -ms-transform: translateX(100%);
-    transform: translateX(100%);
+.btn_toggle#ctrl_edit[data-checked="true"] {
+    border: 4px solid #ccc; 
 }
 
+.btn_toggle#ctrl_st{
+    background-color: #005201;
+    border: 4px solid transparent;
+}
+.btn_toggle#ctrl_st:hover{
+    border: 4px solid #ccc;
+}
+
+.btn_toggle#ctrl_st[data-checked="true"] {
+    border: 4px solid #ccc;
+}
 
 /* Markdown Info Tooltip */
 .tooltip {

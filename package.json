@@ -5,15 +5,16 @@
   "main": "index.html",
   "dependencies": {
     "@clr/icons": "^4.0.7",
+    "@webcomponents/custom-elements": "1.4.3",
+    "leaflet-easyprint": "^2.1.9",
     "leaflet-rotate-map": "^0.2.2",
-    "showdown-htmlescape": "^0.1.9",
     "mathjs": "^8.1.0",
-    "@webcomponents/custom-elements": "1.4.3"
+    "showdown-htmlescape": "^0.1.9"
   },
   "devDependencies": {
-    "http-server": "^0.11.1",
-    "reload": "^3.0.1",
-    "mysql": "^2.18.1"
+    "http-server": "^0.12.3",
+    "mysql": "^2.18.1",
+    "reload": "^3.0.1"
   },
   "scripts": {
     "start": "echo \"running on http://localhost:4000\" && http-server -a localhost -p 4000 -c-1",

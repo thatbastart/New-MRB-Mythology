@@ -9,7 +9,7 @@ map.setView([43.18, -91.15], 12); // map center
 
 // custom tiles
 L.tileLayer('/Tiles/{z}/{x}/{y}.png', {
-    'attribution':  "Map Data &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>", // panel bottomright
+    'attribution':  "Map Data &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> | <a href='https://github.com/The-bastART/New-MRB-Mythology'>GitHub</a>", // panel bottomright
     'useCache': true
 }).addTo(map);
 
@@ -18,12 +18,10 @@ L.tileLayer('/Tiles/{z}/{x}/{y}.png', {
 // panel topleft: zoom, rotation, edit mode, overview
 L.control.custom({
     position: "topright",
-    content: "<table><tr>" +
-                "<td>Stories</td><td>Edit Mode</td><td>Overview</td></tr>" +
-                "<td style='width:4vw;'><label class='switch'><div id='ctrl_st' class='btn_toggle' onclick='stories();' data-checked='false'>Stories</div></td>" +
-                "<td style='width:4vw;'><label class='switch'><div id='ctrl_edit' class='btn_toggle' onclick='edit();' data-checked='false'>Edit</div></td>" +
-                "<td style='width:4vw;'><label class='switch'><div id='ctrl_ov' class='btn_toggle' onclick='overview();' data-checked='false'></div></td>" +
-                "</tr></table><br><div id='stories-panel' class='stories-panel scroll'></div><div id='story' class='story scroll' onScroll='scrollMarker()''></div>",
+    content: "<div style='margin: 20px 20px 0 0;'><table style='margin-right: 0px; margin-left: auto;'><tr><td><div id='ctrl_st' class='btn_toggle' onclick='stories();' data-checked='false'>Stories&nbsp<clr-icon id='st_angle' shape='angle' dir='down' size='20'></clr-icon></div></td>" +
+                "<td><div id='ctrl_edit' class='btn_toggle' onclick='edit();' data-checked='false'>Edit</div></td>" +
+                "</tr></table>" +
+                "<br><div id='stories-panel' class='stories-panel scroll'></div><div id='story' class='story scroll' onScroll='scrollMarker()''></div></div>",
     style:
     {
         margin: "0",
@@ -31,17 +29,23 @@ L.control.custom({
     },
 }).addTo(map);
 
+// panel bottomleft: Lat and Lng at cursor
+L.control.mousePosition({prefix: "Lat ", separator: "\nLng ", numDigits: 2}).addTo(map);
+
 L.control.custom({
-    position: "bottomright",
-    content:    "<div><button type='button' id='ctrl_zp' class='ctrl_zoom' style='border-radius: 5px 5px 0 0;' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' style='color: #000'></clr-icon></button><br>"+
-                "<button type='button' id='ctrl_zm' class='ctrl_zoom' style='border-radius: 0 0 5px 5px;' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' style='color: #000'></clr-icon></button><br><br>"+
-                "<input type='range' min='0' max='360' value='0' step='30' name='rotation' id='ctrl_rotate' class='ctrl_rotate'></div>",
+    position: "bottomleft",
+    content:    "<div class='panel_right'><br><br><button type='button' id='ctrl_zp' class='ctrl_zoom' style='border-radius: 5px 0 0 5px; border-right:1px solid #005201' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' size='24' class='white is-solid'></clr-icon></button>" +
+                "<button type='button' id='ctrl_zm' class='ctrl_zoom' style='border-radius: 0 5px 5px 0;' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' size='24'></clr-icon></button><br><br>" +
+                "<input type='range' min='0' max='360' value='0' step='1' name='rotation' id='ctrl_rotate' class='ctrl_rotate'>"+
+                "<table style='margin-top: 5px; margin-bottom: 5px; table-layout: fixed; width: 100%; font-size: max(1.2vh,10px);'><colgroup><col style='width: 50%'><col style='width: 50%'></colgroup><tr><td style='text-align: left;'>0°</td><td style='text-align: right;'>360°</td></tr></table>" +
+                "<div id='ctrl_ov' class='ctrl_ov' onclick='overview();' data-checked='false'><img id='img_ov' src='overview.jpg' style='width: 100%; height:auto;'></img></div></div>",
     style:
     {
         margin: "0",
         padding: "0px 0 0 0",
     },
 }).addTo(map);
+
 
 class Story {
     constructor(title, author, text, img, img_sub, thumb, date, arr_marker){
@@ -131,13 +135,11 @@ function story_up(){
 }
 
 
-
-
-// panel topright: title
+// panel topleft: title
 L.control.custom({
     position: "topleft",
-    content: "<h1 title='About the Project' style='font-size: max(4.5vh,30px); cursor: help;' onClick='showAbout()'>The New Mississippi River Basin Mythology</h1>" +
-            "<br><br><div id='about' class='about-panel scroll' style='display:none;'><center><span class='stories-panel_tiles_title'>About</span></center><br>Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas Böses getan hätte, wurde er eines Morgens verhaftet. »Wie ein Hund!« sagte er, es war, als sollte die Scham ihn überleben. Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand er sich in seinem Bett zu einem ungeheueren Ungeziefer verwandelt. Und es war ihnen wie eine Bestätigung ihrer neuen Träume und guten Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob und ihren jungen Körper dehnte. »Es ist ein eigentümlicher Apparat«, sagte der Offizier zu dem Forschungsreisenden und überblickte mit einem gewissermaßen bewundernden Blick den ihm doch wohlbekannten Apparat. Sie hätten noch ins Boot springen können, aber der Reisende hob ein schweres, geknotetes Tau vom Boden, drohte ihnen damit und hielt sie dadurch von dem Sprunge ab. In den letzten Jahrzehnten ist das Interesse an Hungerkünstlern sehr zurückgegangen. Aber sie überwanden sich, umdrängten den Käfig und wollten sich gar nicht fortrühren.Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas Böses getan hätte, wurde er eines Morgens verhaftet. »Wie ein Hund!« sagte er, es war, als sollte die Scham ihn überleben. Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand er sich</div>",
+    content: "<h1 id='title' title='About the Project' style='font-size: max(4.5vh,30px); cursor: help;' onClick='showAbout()'>The New Mississippi River Basin Mythology</h1>" +
+            "<br><br><div id='about' class='about-panel scroll' style='display:none;'><center><span class='stories-panel_tiles_title'>About</span></center><br>Did you ever see what happens after locks and dams disrupt the river flow? How the landscape turns into pictures, into stories that want to get told? The Mississippi isn’t just a River, it’s all about the stories, group events, myths and legends that grow up around the current. Are you familiar with the Mississippi River Child or the invasion of the carps? Take your time, discover the hidden parts and above all participate and tell your own story, myth and relationship towards the river. Just click the Edit Box and go for it. Even the smallest note helps to understand the dimension of the Mississippi River Basin. From Minnesota to New Orleans, the Story of the Mississippi fluently curated. If you want to understand the Mississippi you need coherent connection lines between different stories. Because a wide variety of forces and diverse narratives are at work here which unite 40 percent of the U.S. surface area in the Mississippi River Basin. And this is where the story mode comes in. Just scroll through the tales and follow the lines.</div>",
 }).addTo(map);        
      
 function showAbout(){
@@ -147,9 +149,6 @@ function showAbout(){
         document.getElementById("about").style.display="none";
     }
 }
-
-// panel bottomleft: Lat and Lng at cursor
-L.control.mousePosition({prefix: "Lat ", separator: "\nLng ", numDigits: 2}).addTo(map);
 
 
 
@@ -185,7 +184,19 @@ function overview(){
         curr_view[1]=map.getCenter().lng;
         curr_view[2]=map.getZoom();
         curr_pos=L.marker([curr_view[0], curr_view[1]], {icon: redIcon}).addTo(map);
-        
+
+        for (let i=curr_view[2]; i>=5; i--){
+            let tilefile=getTileURL(curr_view[0], curr_view[1], i);
+            let img=new Image();
+            img.src="/Tiles/" + tilefile + ".png";
+            console.log(img.src);
+            if (img.height!=0){
+                console.log("hello");
+                document.getElementById("img_ov").src=img.src;
+                break;
+            }
+        }
+
         setIcon(greenIcon,12);
         setIcon(blueIcon,12);
         map.options.minZoom=6;
@@ -197,6 +208,7 @@ function overview(){
         document.getElementById("ctrl_edit").checked=curr_edit;
         map.removeLayer(curr_pos);
 
+        document.getElementById("img_ov").src="overview.jpg";
         setIcon(greenIcon,30);
         setIcon(blueIcon,30);
         map.options.minZoom=10;
@@ -208,27 +220,40 @@ function overview(){
 
 // set edit depending on overview
 function edit(){
-    if(document.getElementById("ctrl_ov").checked==true){
-        document.getElementById("ctrl_edit").checked=false;
+    if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="true"){
+        document.getElementById("ctrl_edit").setAttribute("data-checked","false");
+    } else {
+        document.getElementById("ctrl_edit").setAttribute("data-checked","true");
     }
-    if(document.getElementById("ctrl_edit").checked==false){
+
+    if(document.getElementById("ctrl_ov").getAttribute("data-checked")=="true"){
+        document.getElementById("ctrl_edit").setAttribute("data-checked","false");
+    }
+    if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="false"){
         popup_close_check();
     }
     // redraw popup to show/hide edit button
-    let title =  curr_pu.title;
-    let content =  curr_pu.content;
-    curr_pu.bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").checked));
-    isOverflown(document.getElementById("pu_title_ld"));
+    if(curr_pu!=undefined){
+        let title =  curr_pu.title;
+        let content =  curr_pu.content;
+        curr_pu.bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").getAttribute("data-checked")));
+        isOverflown(document.getElementById("pu_title_ld"));
+    }
 }
 
 // stories
 function stories(){
-    if(document.getElementById("ctrl_st").checked==true){
-        document.getElementById("stories-panel").style.display="block";
-    } else {
+    if(document.getElementById("ctrl_st").getAttribute("data-checked")=="true"){
+        document.getElementById("st_angle").dir="down";
+        document.getElementById("ctrl_st").setAttribute("data-checked","false");
         document.getElementById("stories-panel").style.display="none";
         document.getElementById("story").style.display="none";
         rmStoryMarkers();
+    } else {
+        document.getElementById("st_angle").dir="up";
+        document.getElementById("ctrl_st").setAttribute("data-checked","true");
+        document.getElementById("stories-panel").style.display="block";
+        
     }
 }
 
@@ -314,7 +339,7 @@ fetch("/api/get_notes", {
     let content =  note.versions[note.versions.length-1].text;
     marker.title=title;
     marker.content=content;
-    marker.bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").checked));
+    marker.bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").getAttribute("data-checked")));
     marker.noteVersions = note.versions;
     arr_marker.push(marker);
 }))
@@ -332,7 +357,7 @@ function pu_submit(){
         let content= converter.makeHtml(text);
         arr_marker[arr_marker.length-1].title=title;
         arr_marker[arr_marker.length-1].content=content;
-        arr_marker[arr_marker.length-1].bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").checked));
+        arr_marker[arr_marker.length-1].bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").getAttribute("data-checked")));
         isOverflown(document.getElementById("pu_title_ld"));
 
         // push the created note to the database.
@@ -359,7 +384,7 @@ function pu_submit(){
 
 function popupString(title, content, n, edit){ // n1: edit layout; n2: final layout
     let disp="";
-    if(edit==true){
+    if(edit=="true"){
         disp="inline";
     } else {
         disp="none";
@@ -370,11 +395,11 @@ function popupString(title, content, n, edit){ // n1: edit layout; n2: final lay
             "<textarea id='pu_content' rows='30' class='content_ta scroll'>" + content + "</textarea><br><br>" +
             "<div class='tooltip'>You can use Markdown to format the text." + 
             "<span class='tooltiptext'>Heading 1: # <br>Heading 2: ## <br>Italics: *Text* <br>Bold: **Text** <br>Blockquote: < Text <br>Horizontal Line: --- <br>Links: [Text](URL) <br>Paragraph: Empty Line</span></div><br><br>" +
-            "<button type='button' style='width:6vw; min-width:100px; height: 20px;' onclick='pu_submit()'><clr-icon shape='check' style='color: #000'></clr-icon> Submit</button>"
+            "<button id='pu_btn' type='button' onclick='pu_submit()'><clr-icon shape='check' size='20'></clr-icon></button>"
         case 2:
             return "<h1 id='pu_title_ld' class='title' style='font-size: 30'>" + title + "</h1><br><div id='pu_content_ld' class='content scroll'>" + content +"</div><br>" +
-            "<button type='button' id='btn_edit' style='display:" + disp + ";' onClick='invoke_pu_edit()' ><clr-icon shape='pencil' style='color: #000'></clr-icon></button>" +
-            "<button type='button' id='btn_history' onClick='show_history()'><clr-icon shape='history' style='color: #000'></clr-icon></button>" +
+            "<button id='pu_btn' type='button' id='btn_edit' style='border-radius: 5px 0 0 5px; border-right: 1px solid #005201; display:" + disp + ";' onClick='invoke_pu_edit()' ><clr-icon shape='pencil' size='20'></clr-icon></button>" +
+            "<button id='pu_btn' type='button' id='btn_history' onClick='show_history()' style='border-radius: 0 5px 5px 0;'><clr-icon shape='history' size='20'></clr-icon></button>" +
             "<select id='dd_ver' style='visibility: hidden;' onChange='change_version()'></select>";
     }
   
@@ -387,7 +412,7 @@ function invoke_pu_edit(){
     let content =  curr_pu.content;
     let converter = new showdown.Converter();
     content = converter.makeMarkdown(content);
-    curr_pu.bindPopup(popupString(title, content, 1,document.getElementById("ctrl_edit").checked));
+    curr_pu.bindPopup(popupString(title, content, 1,document.getElementById("ctrl_edit").getAttribute("data-checked")));
 }
 
 // shows the versions dropdown
@@ -412,7 +437,7 @@ function show_history(){
 function change_version(){
     title=curr_pu.noteVersions[document.getElementById("dd_ver").value].title;
     content=curr_pu.noteVersions[document.getElementById("dd_ver").value].text;
-    curr_pu.bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").checked));
+    curr_pu.bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").getAttribute("data-checked")));
     isOverflown(document.getElementById("pu_title_ld"));
 }
 
@@ -423,7 +448,7 @@ function add_marker(pos,title,content){
     
     title = (typeof title !== 'undefined') ?  title : "";
     content = (typeof content !== 'undefined') ?  content : "";
-    marker.bindPopup(popupString(title, content, 1,document.getElementById("ctrl_edit").checked));
+    marker.bindPopup(popupString(title, content, 1,document.getElementById("ctrl_edit").getAttribute("data-checked")));
     
     arr_marker.push(marker);
     view_reset(pos.lat,pos.lng);
@@ -434,7 +459,7 @@ function add_marker(pos,title,content){
 
 // onClick Event -> adding marker
 map.on('click', function(e){
-    if(document.getElementById("ctrl_edit").checked==true && document.getElementById("ctrl_ov").checked==false){
+    if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="true" && document.getElementById("ctrl_ov").getAttribute("data-checked")=="false"){
         add_marker(e.latlng);
     }
 });
@@ -514,4 +539,12 @@ function isOverflown(element) {
         f-=1;
         element.style.fontSize=String(f);
     } while (element.scrollWidth > element.clientWidth)
+}
+
+
+
+function getTileURL(lat, lon, zoom) {
+    let xtile = parseInt(Math.floor( (lon + 180) / 360 * (1<<zoom) ));
+    let ytile = parseInt(Math.floor( (1 - Math.log(Math.tan((lat*Math.PI)/180) + 1 / Math.cos((lat*Math.PI)/180)) / Math.PI) / 2 * (1<<zoom) ));
+    return "" + zoom + "/" + xtile + "/" + ytile;
 }
