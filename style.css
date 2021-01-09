@@ -139,12 +139,12 @@ p{
 
 /* Track */
 ::-webkit-scrollbar-track {
-background: transparent;
+    background: transparent;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-        background: #fff;
+    background: #fff;
 }
 
 /* Handle on hover */
@@ -183,18 +183,31 @@ background: transparent;
 }
 
 /* CONTROLS */
-
-.stories-panel {
-    background:rgba(255,255,255,0.75); 
+.stories-outer{
     width: 19.7vw; 
     min-width: 250px;
     height: 75vh;
-    display: none;
+    overflow: hidden;
     border: 1px solid #000;
+    border-radius: 10px;
     margin: 10px;
-    overflow-y: scroll;
+    display: none;
 }
 
+.stories-panel {
+    background:rgba(255,255,255,0.9); 
+    height: 75vh;
+    overflow-y: scroll;
+}
+@supports ((-webkit-backdrop-filter: blur(15px)) or (backdrop-filter: blur(15px))){
+    .stories-panel {
+        background:rgba(255,255,255,0.7); 
+        height: 75vh;
+        overflow-y: scroll;
+        -webkit-backdrop-filter: blur(15px);
+        backdrop-filter: blur(15px);
+    }
+}
 
 .stories-panel_tiles{
     width: 17.73vw;
@@ -217,37 +230,79 @@ background: transparent;
     padding-top: max(1vh,10px);
 }
 
-.story {
-    position: relative;
-    background:rgba(255,255,255,0.75); 
-    width: 35vw; 
+.story-outer{
+    width: 35vw;  
     min-width: 400px;
     height: 75vh;
-    display: none;
+    overflow: hidden;
     border: 1px solid #000;
+    border-radius: 10px;
     margin: 10px;
-    padding: 20px;
+    display: none;
+}
+.story {
+    position: relative;
+    background:rgba(255,255,255,0.9); 
+    height: 71vh;
+    padding: 2vh;
     overflow-y: scroll;
     color: #000;
     font-size: max(2vh,12px);
     text-align:left;
 }
+@supports ((-webkit-backdrop-filter: blur(15px)) or (backdrop-filter: blur(15px))){
+    .story {
+        position: relative;
+        background:rgba(255,255,255,0.7); 
+        height: 71vh;
+        padding: 2vh;
+        overflow-y: scroll;
+        color: #000;
+        font-size: max(2vh,12px);
+        text-align:left;
+        -webkit-backdrop-filter: blur(15px);
+        backdrop-filter: blur(15px);
+    }
+}
 
 /* About Panel */
+.about-outer{
+    position: absolute;
+    left: 0px;
+    width: 30vw; 
+    min-width: 500px;
+    height: 45vh;
+    overflow: hidden;
+    border: 1px solid #000;
+    border-radius: 10px;
+    margin-left: 18px;
+    margin-top: 5px;
+}
 .about-panel {
     position: absolute;
     left: 0px;
     text-align: left;
     font-size: max(1.75vh,12px);
     color: #000;
-    padding: 20px;
-    background:rgba(255,255,255,0.75); 
-    width: 30vw; 
-    min-width: 500px;
-    height: 45vh;
-    border: 1px solid #000;
-    margin: 5px;
+    padding: 2vh;
+    background:rgba(255,255,255,0.9); 
+    height: 41vh;
     overflow-y: scroll;
+}
+@supports ((-webkit-backdrop-filter: blur(15px)) or (backdrop-filter: blur(15px))){
+    .about-panel {
+        position: absolute;
+        left: 0px;
+        text-align: left;
+        font-size: max(1.75vh,12px);
+        color: #000;
+        padding: 2vh;
+        background:rgba(255,255,255,0.7); 
+        height: 41vh;
+        overflow-y: scroll;
+        -webkit-backdrop-filter: blur(15px);
+        backdrop-filter: blur(15px);
+    }
 }
 
 /* Buttons */

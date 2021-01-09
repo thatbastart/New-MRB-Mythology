@@ -10,15 +10,18 @@ L.tileLayer('/Tiles/{z}/{x}/{y}.png', {
     'useCache': true
 }).addTo(map);
 
+let label = new L.marker([43.26, -91.26], { opacity: 0 }); //opacity may be set to zero
+label.bindTooltip("My Label", {permanent: true, className: "my-label", offset: [0, 0] });
+label.addTo(map);
 
 // OVERLAYS -----------------------------
 // panel topleft: zoom, rotation, edit mode, overview
 L.control.custom({
     position: "topright",
     content: "<div style='margin: 20px 20px 0 0;'><table style='margin-right: 0px; margin-left: auto;'><tr><td><div id='ctrl_st' class='btn_toggle' onclick='stories();' data-checked='false'>Stories&nbsp<clr-icon id='st_angle' shape='angle' dir='down' size='20'></clr-icon></div></td>" +
-                "<td><div id='ctrl_edit' class='btn_toggle' onclick='edit();' data-checked='false'>Edit</div></td>" +
+                "<td><div id='ctrl_edit' class='btn_toggle' onclick='edit();' data-checked='false'>New</div></td>" +
                 "</tr></table>" +
-                "<br><div id='stories-panel' class='stories-panel scroll'></div><div id='story' class='story scroll' onScroll='scrollMarker()''></div></div>",
+                "<br><div id='stories-panel-outer' class='stories-outer'><div id='stories-panel' class='stories-panel scroll'></div></div><div id='story-outer' class='story-outer'><div id='story' class='story scroll' onScroll='scrollMarker()''></div></div></div>",
     style:
     {
         margin: "0",
@@ -78,18 +81,18 @@ let st_line;
 function createStory(id){
     st_marker=[];
     curr_st=id;
-    document.getElementById("stories-panel").style.display="none";
-    document.getElementById("story").style.display="block";
+    document.getElementById("stories-panel-outer").style.display="none";
+    document.getElementById("story-outer").style.display="block";
     
     for(let i=0;i<arr_stories[id].marker.length;i++){
-        let pos = L.latLng(arr_stories[id].marker[i][0],arr_stories[id].marker[i][1])
+        let pos = [arr_stories[id].marker[i][0],arr_stories[id].marker[i][1]];
         let m = new L.marker(pos, {icon: blueIconL}).addTo(map);
         st_marker.push(m);
     }
     curr_st_m=0;
     st_line = L.polyline(arr_stories[id].marker, {color: '#355AD9'}).addTo(map);
     
-    map.flyTo(L.latLng(arr_stories[curr_st].marker[0][0],arr_stories[curr_st].marker[0][1]), arr_stories[curr_st].marker[0][2], {
+    map.flyTo([arr_stories[curr_st].marker[0][0],arr_stories[curr_st].marker[0][1]], arr_stories[curr_st].marker[0][2], {
         animate: true,
         duration: 0.5
     });
@@ -109,7 +112,7 @@ function scrollMarker(){
         let thld=document.getElementById("story").getBoundingClientRect().height / 3;
 
         if(spanY<thld && spanY>0 && i!=curr_st_m){
-            map.flyTo(L.latLng(arr_stories[curr_st].marker[i][0],arr_stories[curr_st].marker[i][1]), arr_stories[curr_st].marker[i][2], {
+            map.flyTo([arr_stories[curr_st].marker[i][0],arr_stories[curr_st].marker[i][1]], arr_stories[curr_st].marker[i][2], {
                 animate: true,
                 duration: 1.0
             });
@@ -129,8 +132,8 @@ function rmStoryMarkers(){
 
 // back to story overview panel
 function story_back(){
-    document.getElementById("story").style.display="none";
-    document.getElementById("stories-panel").style.display="block";
+    document.getElementById("story-outer").style.display="none";
+    document.getElementById("stories-panel-outer").style.display="block";
     rmStoryMarkers();
 }
 
@@ -145,7 +148,8 @@ function story_up(){
 L.control.custom({
     position: "topleft",
     content: "<h1 id='title' title='About the Project' style='font-size: max(4.5vh,30px); cursor: help;' onClick='showAbout()'>The New Mississippi River Basin Mythology</h1>" +
-            "<br><br><div id='about' class='about-panel scroll' style='display:inline;'><span class='stories-panel_tiles_title'>About</span><br><br><br><span class='stories-panel_tiles_title'>Edit</span><br><br>Did you ever see what happens after locks and dams disrupt the river flow?<br> How the landscape turns into pictures, into stories that want to get told?<br> The Mississippi isn’t just a River, it’s all about the stories, group events, myths and legends that grow up around the current.<br> Are you familiar with the Mississippi River Child or the invasion of the carps?<br> Take your time, discover the hidden parts and above all participate and tell your own story, myth and relationship towards the river. Just click the Edit Box and go for it. Even the smallest note helps to understand the dimension of the Mississippi River Basin. <br><br><span class='stories-panel_tiles_title'>Stories</span><br><br>From Minnesota to New Orleans, the Story of the Mississippi fluently curated. <br>If you want to understand the Mississippi you need coherent connection lines between different stories. Because a wide variety of forces and diverse narratives are at work here which unite 40 percent of the U.S. surface area in the Mississippi River Basin. And this is where the story mode comes in. Just scroll through the tales and follow the lines.</div>",
+            "<br><br><div id='about' class='about-outer'><div id='about' class='about-panel scroll' style='display:inline;'><span class='stories-panel_tiles_title'><center>About</center></span><br><br><span class='stories-panel_tiles_title'><center>Contribute Notes</center></span><br>Did you ever see what happens after locks and dams disrupt the river flow?<br> How the landscape turns into pictures, into stories that want to get told?<br> The Mississippi isn’t just a River, it’s all about the stories, group events, myths and legends that grow up around the current.<br> Are you familiar with the Mississippi River Child or the invasion of the carps?<br> Take your time, discover the hidden parts and above all participate and tell your own story, myth and relationship towards the river. Just click the Edit Box and go for it. Even the smallest note helps to understand the dimension of the Mississippi River Basin. <br><br><span class='stories-panel_tiles_title'><center>Stories</center></span><br>From Minnesota to New Orleans, the Story of the Mississippi fluently curated. <br>If you want to understand the Mississippi you need coherent connection lines between different stories. Because a wide variety of forces and diverse narratives are at work here which unite 40 percent of the U.S. surface area in the Mississippi River Basin. And this is where the story mode comes in. Just scroll through the tales and follow the lines." +
+            "</div></div>",
 }).addTo(map);        
      
 function showAbout(){
@@ -258,13 +262,13 @@ function stories(){
     if(document.getElementById("ctrl_st").getAttribute("data-checked")=="true"){
         document.getElementById("st_angle").dir="down";
         document.getElementById("ctrl_st").setAttribute("data-checked","false");
-        document.getElementById("stories-panel").style.display="none";
-        document.getElementById("story").style.display="none";
+        document.getElementById("stories-panel-outer").style.display="none";
+        document.getElementById("story-outer").style.display="none";
         rmStoryMarkers();
     } else {
         document.getElementById("st_angle").dir="up";
         document.getElementById("ctrl_st").setAttribute("data-checked","true");
-        document.getElementById("stories-panel").style.display="block";
+        document.getElementById("stories-panel-outer").style.display="block";
         
     }
 }
