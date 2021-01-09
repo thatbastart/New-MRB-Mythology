@@ -30,7 +30,7 @@ L.control.custom({
 }).addTo(map);
 
 // panel bottomleft: Lat and Lng at cursor
-L.control.mousePosition({prefix: "Lat ", separator: "\nLng ", numDigits: 2}).addTo(map);
+L.control.mousePosition({prefix: "Lat ", separator: " | Lng ", numDigits: 2}).addTo(map);
 
 L.control.custom({
     position: "bottomleft",
@@ -38,7 +38,7 @@ L.control.custom({
                 "<button type='button' id='ctrl_zm' class='ctrl_zoom' style='border-radius: 0 5px 5px 0;' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' size='24'></clr-icon></button><br><br>" +
                 "<input type='range' min='0' max='360' value='0' step='1' name='rotation' id='ctrl_rotate' class='ctrl_rotate'>"+
                 "<table style='margin-top: 5px; margin-bottom: 5px; table-layout: fixed; width: 100%; font-size: max(1.2vh,10px);'><colgroup><col style='width: 50%'><col style='width: 50%'></colgroup><tr><td style='text-align: left;'>0°</td><td style='text-align: right;'>360°</td></tr></table>" +
-                "<div id='ctrl_ov' class='ctrl_ov' onclick='overview();' data-checked='false'><img id='img_ov' src='overview.jpg' style='width: 100%; height:auto;'></img></div></div>",
+                "<div id='ctrl_ov' class='ctrl_ov' onclick='overview();' data-checked='false'><div style='position: absolute; top: 0; left: 0; bottom: 0; right: 0; width: 100%;'><img id='img_ov' src='overview.jpg' style='width: 100%; height:auto;'></img></div></div></div>",
     style:
     {
         margin: "0",
@@ -139,7 +139,7 @@ function story_up(){
 L.control.custom({
     position: "topleft",
     content: "<h1 id='title' title='About the Project' style='font-size: max(4.5vh,30px); cursor: help;' onClick='showAbout()'>The New Mississippi River Basin Mythology</h1>" +
-            "<br><br><div id='about' class='about-panel scroll' style='display:none;'><center><span class='stories-panel_tiles_title'>About</span></center><br>Did you ever see what happens after locks and dams disrupt the river flow? How the landscape turns into pictures, into stories that want to get told? The Mississippi isn’t just a River, it’s all about the stories, group events, myths and legends that grow up around the current. Are you familiar with the Mississippi River Child or the invasion of the carps? Take your time, discover the hidden parts and above all participate and tell your own story, myth and relationship towards the river. Just click the Edit Box and go for it. Even the smallest note helps to understand the dimension of the Mississippi River Basin. From Minnesota to New Orleans, the Story of the Mississippi fluently curated. If you want to understand the Mississippi you need coherent connection lines between different stories. Because a wide variety of forces and diverse narratives are at work here which unite 40 percent of the U.S. surface area in the Mississippi River Basin. And this is where the story mode comes in. Just scroll through the tales and follow the lines.</div>",
+            "<br><br><div id='about' class='about-panel scroll' style='display:inline;'><center><span class='stories-panel_tiles_title'>About</span></center><br>Edit<br>Did you ever see what happens after locks and dams disrupt the river flow?<br> How the landscape turns into pictures, into stories that want to get told?<br> The Mississippi isn’t just a River, it’s all about the stories, group events, myths and legends that grow up around the current.<br> Are you familiar with the Mississippi River Child or the invasion of the carps?<br> Take your time, discover the hidden parts and above all participate and tell your own story, myth and relationship towards the river. Just click the Edit Box and go for it. Even the smallest note helps to understand the dimension of the Mississippi River Basin. <br><br>Stories<br>From Minnesota to New Orleans, the Story of the Mississippi fluently curated. <br>If you want to understand the Mississippi you need coherent connection lines between different stories. Because a wide variety of forces and diverse narratives are at work here which unite 40 percent of the U.S. surface area in the Mississippi River Basin. And this is where the story mode comes in. Just scroll through the tales and follow the lines.</div>",
 }).addTo(map);        
      
 function showAbout(){
@@ -196,7 +196,7 @@ function overview(){
                 break;
             }
         }
-
+        document.getElementById("img_ov").style.transform="translateY(-12.5%)";
         setIcon(greenIcon,12);
         setIcon(blueIcon,12);
         map.options.minZoom=6;
@@ -209,6 +209,7 @@ function overview(){
         map.removeLayer(curr_pos);
 
         document.getElementById("img_ov").src="overview.jpg";
+        document.getElementById("img_ov").style.transform="translateY(0)";
         setIcon(greenIcon,30);
         setIcon(blueIcon,30);
         map.options.minZoom=10;
@@ -402,8 +403,6 @@ function popupString(title, content, n, edit){ // n1: edit layout; n2: final lay
             "<button id='pu_btn' type='button' id='btn_history' onClick='show_history()' style='border-radius: 0 5px 5px 0;'><clr-icon shape='history' size='20'></clr-icon></button>" +
             "<select id='dd_ver' style='visibility: hidden;' onChange='change_version()'></select>";
     }
-  
-    
 }
 
 // edit button for popup

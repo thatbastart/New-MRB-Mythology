@@ -236,17 +236,17 @@ background: transparent;
 /* About Panel */
 .about-panel {
     position: absolute;
-    right: 0px;
+    left: 0px;
     text-align: left;
-    font-size: max(1.5vh,12px);
+    font-size: max(1.75vh,12px);
     color: #000;
     padding: 20px;
     background:rgba(255,255,255,0.75); 
-    width: 32vw; 
+    width: 30vw; 
     min-width: 500px;
-    height: 50vh;
+    height: 45vh;
     border: 1px solid #000;
-    margin: 10px;
+    margin: 5px;
     overflow-y: scroll;
 }
 
@@ -310,8 +310,8 @@ select:hover {
     width: 10vw;
     min-width: 100px;
     height: 40vh;
-    margin: 0 0 3vh 27px !important;
-    padding-right: 5vh;
+    margin: 0 0 -1.5vw 27px !important;
+    padding-right: 3vw;
     transition: width 0.5s, height 0.5s;
 }
 .panel_right:hover{
@@ -322,9 +322,13 @@ select:hover {
 
 .ctrl_ov {
     border: 2px solid #ccc;
+    width: 100%;
+    padding-top: 75.75%;
     border-radius: 10px;
     margin-bottom: 20vh;
     overflow: hidden;
+    cursor: pointer;
+    position: relative;
 }
 
 .ctrl_ov:hover {
