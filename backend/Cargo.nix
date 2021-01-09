@@ -7,7 +7,11 @@
 , pkgs ? import nixpkgs { config = {}; }
 , lib ? pkgs.lib
 , stdenv ? pkgs.stdenv
-, buildRustCrate ? pkgs.buildRustCrate
+, buildRustCrateForPkgs ? if buildRustCrate != null
+    then lib.warn "`buildRustCrate` is deprecated, use `buildRustCrateForPkgs` instead" (_: buildRustCrate)
+    else pkgs: pkgs.buildRustCrate
+  # Deprecated
+, buildRustCrate ? null
   # This is used as the `crateOverrides` argument for `buildRustCrate`.
 , defaultCrateOverrides ? pkgs.defaultCrateOverrides
   # The features to enable for the root_crate or the workspace_members.
@@ -181,12 +185,12 @@ rec {
             name = "libc";
             packageId = "libc";
             usesDefaultFeatures = false;
-            target = { target, features }: target."unix";
+            target = { target, features }: (target."unix" or false);
           }
           {
             name = "winapi";
             packageId = "winapi 0.3.9";
-            target = { target, features }: target."windows";
+            target = { target, features }: (target."windows" or false);
             features = [ "consoleapi" "processenv" "minwinbase" "minwindef" "winbase" ];
           }
         ];
@@ -252,11 +256,25 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" ];
       };
-      "bytes" = rec {
+      "bytes 0.5.6" = rec {
         crateName = "bytes";
         version = "0.5.6";
         edition = "2018";
         sha256 = "0f5s7xq6qzmdh22ygsy8v0sp02m51y0radvq4i4y8cizy1lfqk0f";
+        authors = [
+          "Carl Lerche <me@carllerche.com>"
+          "Sean McArthur <sean@seanmonstar.com>"
+        ];
+        features = {
+          "default" = [ "std" ];
+        };
+        resolvedDefaultFeatures = [ "default" "std" ];
+      };
+      "bytes 1.0.0" = rec {
+        crateName = "bytes";
+        version = "1.0.0";
+        edition = "2018";
+        sha256 = "0wpsy2jwmbrsn7x6vcd00hw9vvz071lv8nrb25wrspvmkna8w7xd";
         authors = [
           "Carl Lerche <me@carllerche.com>"
           "Sean McArthur <sean@seanmonstar.com>"
@@ -324,7 +342,7 @@ rec {
             name = "winapi";
             packageId = "winapi 0.3.9";
             optional = true;
-            target = { target, features }: target."windows";
+            target = { target, features }: (target."windows" or false);
             features = [ "std" "minwinbase" "minwindef" "timezoneapi" ];
           }
         ];
@@ -339,9 +357,9 @@ rec {
       };
       "const_fn" = rec {
         crateName = "const_fn";
-        version = "0.4.4";
+        version = "0.4.5";
         edition = "2018";
-        sha256 = "09i8lsi55rhrx4jh69h4mmhklvhaijax1ql9z0xnmzdl3arfllfd";
+        sha256 = "19plqg6q4i2a1grphpzl68030sffdq1w8zyigbwjrqj9gzgddf98";
         procMacro = true;
         authors = [
           "Taiki Endo <te316e89@gmail.com>"
@@ -370,7 +388,7 @@ rec {
           }
           {
             name = "time";
-            packageId = "time 0.2.23";
+            packageId = "time 0.2.24";
             usesDefaultFeatures = false;
             features = [ "std" ];
           }
@@ -652,9 +670,9 @@ rec {
       };
       "futures" = rec {
         crateName = "futures";
-        version = "0.3.8";
+        version = "0.3.9";
         edition = "2018";
-        sha256 = "1l434mh7p5na5c3c7lih575hszqc515r9idk62fm5rhz1820qfwv";
+        sha256 = "171wvi5h88vhbfs93dsb9f51aqrv2qcbkk5b763f7bh5qlsf82y7";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -717,9 +735,9 @@ rec {
       };
       "futures-channel" = rec {
         crateName = "futures-channel";
-        version = "0.3.8";
+        version = "0.3.9";
         edition = "2018";
-        sha256 = "0r7y228kkhwx9jj3ny5ppmw2gvw0capm6ig8dzppgqd4g9l0jwab";
+        sha256 = "1ad0921sziz3apky4hsffhyklfkk90i70icjrjb5zs8l6f26277h";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -748,9 +766,9 @@ rec {
       };
       "futures-core" = rec {
         crateName = "futures-core";
-        version = "0.3.8";
+        version = "0.3.9";
         edition = "2018";
-        sha256 = "0j0pixxv8dmqas1h5cgy92z4r9lpmnlis8ls22v17yrgnwqy2z44";
+        sha256 = "022yjh7fradc7ffmcmqadds4mb4gh413q4vkc6ls4qzz2w4kp3fv";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -762,9 +780,9 @@ rec {
       };
       "futures-executor" = rec {
         crateName = "futures-executor";
-        version = "0.3.8";
+        version = "0.3.9";
         edition = "2018";
-        sha256 = "0r8ayj6g08d1i0hj2v6g5zr3hzlkxpqlkpf1awq0105qd0mjpajc";
+        sha256 = "0s3h29gy3cv2faf4v3yk19ky5p08cb81rp9rrxr5fixlgqpwmscy";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -794,9 +812,9 @@ rec {
       };
       "futures-io" = rec {
         crateName = "futures-io";
-        version = "0.3.8";
+        version = "0.3.9";
         edition = "2018";
-        sha256 = "1frh7d0n96lczy22al3bkgwpq0p1agbgax5kqh9vv8da33738631";
+        sha256 = "0fr5yd3slv0lfydy8767sjmxhp1cd68fv3jbhqi0kf1pn18ilz73";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -807,9 +825,9 @@ rec {
       };
       "futures-macro" = rec {
         crateName = "futures-macro";
-        version = "0.3.8";
+        version = "0.3.9";
         edition = "2018";
-        sha256 = "0mjmb46zapb59iilsbljpj7l0hq6w19df0f03p3br5qz5xlqlh3p";
+        sha256 = "0r1nl7xwpsbjsj87kbl5vak0qqf0y875gr7gycs5wg0z1v51k1qg";
         procMacro = true;
         authors = [
           "Taylor Cramer <cramertj@google.com>"
@@ -838,9 +856,9 @@ rec {
       };
       "futures-sink" = rec {
         crateName = "futures-sink";
-        version = "0.3.8";
+        version = "0.3.9";
         edition = "2018";
-        sha256 = "0gfb1z97q861ki6lqsvpgfn3hnm9w3vkrf82dc00xrff95d1jy7q";
+        sha256 = "1sqzny97b66xw7rq28ncy71x4ji4nqpijycz13x9q44h2anapbgn";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -852,9 +870,9 @@ rec {
       };
       "futures-task" = rec {
         crateName = "futures-task";
-        version = "0.3.8";
+        version = "0.3.9";
         edition = "2018";
-        sha256 = "03ad39v8scy353src2f9dkkvcs24n736iavi8xn45cj8pyslwmbw";
+        sha256 = "0f00xi1mc1v35m0jqmikwmj2pgh9kbzbyxvwiwx84rpzl91hham9";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -875,9 +893,9 @@ rec {
       };
       "futures-util" = rec {
         crateName = "futures-util";
-        version = "0.3.8";
+        version = "0.3.9";
         edition = "2018";
-        sha256 = "1lnbhpyrypn9giw6122af0pffxfijfz3zm7phrwzp75rlzscy16k";
+        sha256 = "1afdjrfvsxfzbf91nz9vr9iwsrxd7lv6q6rg6bbzcmzbrl3j2sh3";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -924,8 +942,8 @@ rec {
             optional = true;
           }
           {
-            name = "pin-project";
-            packageId = "pin-project 1.0.2";
+            name = "pin-project-lite";
+            packageId = "pin-project-lite 0.2.2";
           }
           {
             name = "pin-utils";
@@ -981,7 +999,7 @@ rec {
             name = "libc";
             packageId = "libc";
             usesDefaultFeatures = false;
-            target = { target, features }: target."unix";
+            target = { target, features }: (target."unix" or false);
           }
           {
             name = "wasi";
@@ -1018,7 +1036,7 @@ rec {
         dependencies = [
           {
             name = "bytes";
-            packageId = "bytes";
+            packageId = "bytes 0.5.6";
           }
           {
             name = "fnv";
@@ -1147,9 +1165,9 @@ rec {
       };
       "http" = rec {
         crateName = "http";
-        version = "0.2.2";
+        version = "0.2.3";
         edition = "2018";
-        sha256 = "09lfcl4589xfin22hblysab3zbx43j1ypy0gjr3d4mvdi8lrs4l4";
+        sha256 = "0iq75yw9i73kzm43fw82z2mvpsnlkgvfmaf8qc42cyfc95scsibj";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
           "Carl Lerche <me@carllerche.com>"
@@ -1158,7 +1176,7 @@ rec {
         dependencies = [
           {
             name = "bytes";
-            packageId = "bytes";
+            packageId = "bytes 1.0.0";
           }
           {
             name = "fnv";
@@ -1184,7 +1202,7 @@ rec {
         dependencies = [
           {
             name = "bytes";
-            packageId = "bytes";
+            packageId = "bytes 0.5.6";
           }
           {
             name = "http";
@@ -1228,7 +1246,7 @@ rec {
         dependencies = [
           {
             name = "bytes";
-            packageId = "bytes";
+            packageId = "bytes 0.5.6";
           }
           {
             name = "futures-channel";
@@ -1270,7 +1288,7 @@ rec {
           }
           {
             name = "pin-project";
-            packageId = "pin-project 1.0.2";
+            packageId = "pin-project 1.0.3";
           }
           {
             name = "socket2";
@@ -1387,7 +1405,7 @@ rec {
           {
             name = "libc";
             packageId = "libc";
-            target = { target, features }: target."unix";
+            target = { target, features }: (target."unix" or false);
           }
         ];
         
@@ -1465,9 +1483,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.81";
+        version = "0.2.82";
         edition = "2015";
-        sha256 = "1jsk82v5snd286ba92lir5snrxl18qm3kjkagz8c97hn0q9q50hl";
+        sha256 = "0a8r4wiyn7hbg8fmlkcr7zwhl368wfy8xbfad989adqap8zky849";
         authors = [
           "The Rust Project Developers"
         ];
@@ -1606,12 +1624,12 @@ rec {
           {
             name = "kernel32-sys";
             packageId = "kernel32-sys";
-            target = { target, features }: target."windows";
+            target = { target, features }: (target."windows" or false);
           }
           {
             name = "libc";
             packageId = "libc";
-            target = { target, features }: target."unix";
+            target = { target, features }: (target."unix" or false);
           }
           {
             name = "log";
@@ -1620,7 +1638,7 @@ rec {
           {
             name = "miow";
             packageId = "miow";
-            target = { target, features }: target."windows";
+            target = { target, features }: (target."windows" or false);
           }
           {
             name = "net2";
@@ -1633,7 +1651,7 @@ rec {
           {
             name = "winapi";
             packageId = "winapi 0.2.8";
-            target = { target, features }: target."windows";
+            target = { target, features }: (target."windows" or false);
           }
         ];
         features = {
@@ -1653,17 +1671,17 @@ rec {
           {
             name = "iovec";
             packageId = "iovec";
-            target = { target, features }: target."unix";
+            target = { target, features }: (target."unix" or false);
           }
           {
             name = "libc";
             packageId = "libc";
-            target = { target, features }: target."unix";
+            target = { target, features }: (target."unix" or false);
           }
           {
             name = "mio";
             packageId = "mio";
-            target = { target, features }: target."unix";
+            target = { target, features }: (target."unix" or false);
           }
         ];
         
@@ -1762,12 +1780,12 @@ rec {
           {
             name = "libc";
             packageId = "libc";
-            target = { target, features }: ((target."os" == "redox") || target."unix" || (target."os" == "wasi"));
+            target = { target, features }: ((target."os" == "redox") || (target."unix" or false) || (target."os" == "wasi"));
           }
           {
             name = "winapi";
             packageId = "winapi 0.3.9";
-            target = { target, features }: target."windows";
+            target = { target, features }: (target."windows" or false);
             features = [ "handleapi" "winsock2" "ws2def" "ws2ipdef" "ws2tcpip" ];
           }
         ];
@@ -1909,7 +1927,7 @@ rec {
           {
             name = "libc";
             packageId = "libc";
-            target = { target, features }: target."unix";
+            target = { target, features }: (target."unix" or false);
           }
           {
             name = "redox_syscall";
@@ -1923,7 +1941,7 @@ rec {
           {
             name = "winapi";
             packageId = "winapi 0.3.9";
-            target = { target, features }: target."windows";
+            target = { target, features }: (target."windows" or false);
             features = [ "winnt" "ntstatus" "minwindef" "winerror" "winbase" "errhandlingapi" "handleapi" ];
           }
         ];
@@ -2018,18 +2036,18 @@ rec {
         ];
         
       };
-      "pin-project 1.0.2" = rec {
+      "pin-project 1.0.3" = rec {
         crateName = "pin-project";
-        version = "1.0.2";
+        version = "1.0.3";
         edition = "2018";
-        sha256 = "19qw2nm2kk38v9j16nsm8j3fkh0g8pjq0k4cplx7i2f4q8vj5k4w";
+        sha256 = "1rvmv48ynnnh526ylxhinyy9ypw5113p8qan6ijvmmma753810ss";
         authors = [
           "Taiki Endo <te316e89@gmail.com>"
         ];
         dependencies = [
           {
             name = "pin-project-internal";
-            packageId = "pin-project-internal 1.0.2";
+            packageId = "pin-project-internal 1.0.3";
             usesDefaultFeatures = false;
           }
         ];
@@ -2061,11 +2079,11 @@ rec {
         ];
         
       };
-      "pin-project-internal 1.0.2" = rec {
+      "pin-project-internal 1.0.3" = rec {
         crateName = "pin-project-internal";
-        version = "1.0.2";
+        version = "1.0.3";
         edition = "2018";
-        sha256 = "0pwy3m32scf3ypjb9ai151lmaa27vyj06lc64i28l0r31fzx5s7q";
+        sha256 = "0flbvqy34ng3y21s8zqqm4glj62p66xyqpqwphaksi3kixmw9g5p";
         procMacro = true;
         authors = [
           "Taiki Endo <te316e89@gmail.com>"
@@ -2097,11 +2115,11 @@ rec {
         ];
         
       };
-      "pin-project-lite 0.2.0" = rec {
+      "pin-project-lite 0.2.2" = rec {
         crateName = "pin-project-lite";
-        version = "0.2.0";
+        version = "0.2.2";
         edition = "2018";
-        sha256 = "070klqy200alrhxb79fxarrrrn0vbwg95dmqw9062vhqxibky1kb";
+        sha256 = "0g6ain5m0lnhz53h9brwj9ybw42lsl2hv9dp832bxkm40jvxx5k1";
         authors = [
           "Taiki Endo <te316e89@gmail.com>"
         ];
@@ -2262,7 +2280,7 @@ rec {
             packageId = "libc";
             optional = true;
             usesDefaultFeatures = false;
-            target = { target, features }: target."unix";
+            target = { target, features }: (target."unix" or false);
           }
           {
             name = "rand_chacha";
@@ -2419,9 +2437,9 @@ rec {
       };
       "regex" = rec {
         crateName = "regex";
-        version = "1.4.2";
+        version = "1.4.3";
         edition = "2015";
-        sha256 = "172bw2yryv65whn3n5vkww4kgk0bq08lx0zbln8xwia7xl9jrkrq";
+        sha256 = "12llbg82js69mdl50lav4yn1iqlx71ckb18dww467q99w4wi49fr";
         authors = [
           "The Rust Project Developers"
         ];
@@ -2467,9 +2485,9 @@ rec {
       };
       "regex-syntax" = rec {
         crateName = "regex-syntax";
-        version = "0.6.21";
+        version = "0.6.22";
         edition = "2015";
-        sha256 = "12d176jkgw9749g07zjxz0n78nyvb2nqx3j4sp5aqyphvji1n61v";
+        sha256 = "10b56ylil35jkb4nwqxm8hbyx3zq7fws0wpydjln165s8xql3sxm";
         authors = [
           "The Rust Project Developers"
         ];
@@ -2566,7 +2584,7 @@ rec {
           }
           {
             name = "time";
-            packageId = "time 0.2.23";
+            packageId = "time 0.2.24";
           }
           {
             name = "tokio";
@@ -2776,7 +2794,7 @@ rec {
           }
           {
             name = "time";
-            packageId = "time 0.2.23";
+            packageId = "time 0.2.24";
           }
           {
             name = "tokio";
@@ -3072,9 +3090,9 @@ rec {
       };
       "smallvec" = rec {
         crateName = "smallvec";
-        version = "1.6.0";
+        version = "1.6.1";
         edition = "2018";
-        sha256 = "1h0s7dbhf96k1g726h7rp16wm4m83mpnmi7qkfbirr387dgwlm8s";
+        sha256 = "0kk08axr0ybfbjzk65a41k84mb6sfhyajmfndaka9igkx34kf3zy";
         authors = [
           "The Servo Project Developers"
         ];
@@ -3093,18 +3111,18 @@ rec {
           {
             name = "cfg-if";
             packageId = "cfg-if 1.0.0";
-            target = { target, features }: target."unix";
+            target = { target, features }: (target."unix" or false);
           }
           {
             name = "libc";
             packageId = "libc";
-            target = { target, features }: target."unix";
+            target = { target, features }: (target."unix" or false);
             features = [ "align" ];
           }
           {
             name = "winapi";
             packageId = "winapi 0.3.9";
-            target = { target, features }: target."windows";
+            target = { target, features }: (target."windows" or false);
             features = [ "handleapi" "ws2def" "ws2ipdef" "ws2tcpip" "minwindef" ];
           }
         ];
@@ -3171,7 +3189,7 @@ rec {
           {
             name = "wasm-bindgen";
             packageId = "wasm-bindgen";
-            target = { target, features }: ((target."arch" == "wasm32") && (target."vendor" == "unknown") && (target."os" == "unknown") && (!target."cargo_web"));
+            target = { target, features }: ((target."arch" == "wasm32") && (target."vendor" == "unknown") && (target."os" == "unknown") && (!(target."cargo_web" or false)));
           }
         ];
         buildDependencies = [
@@ -3292,9 +3310,9 @@ rec {
       };
       "syn" = rec {
         crateName = "syn";
-        version = "1.0.56";
+        version = "1.0.58";
         edition = "2018";
-        sha256 = "0wlvjgxhqvcp36zg20q4jzx5khfrk2vhal7fxs3d2w21x7fjv059";
+        sha256 = "1m85bvywsm6cf17d534c5ma73zch0cgwqc6q2bblqnd67vbs6q6c";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -3325,9 +3343,9 @@ rec {
       };
       "thread_local" = rec {
         crateName = "thread_local";
-        version = "1.0.1";
+        version = "1.1.0";
         edition = "2015";
-        sha256 = "054vlrr1vsdy1h4b7n99mr24pnj8928ig9qwzg36wnkld4dns36l";
+        sha256 = "0iyl5jby55q6mv6j69csjpdw57pw9x9qb7cxn6r7c7nms29c16xv";
         authors = [
           "Amanieu d'Antras <amanieu@gmail.com>"
         ];
@@ -3360,7 +3378,7 @@ rec {
           {
             name = "winapi";
             packageId = "winapi 0.3.9";
-            target = { target, features }: target."windows";
+            target = { target, features }: (target."windows" or false);
             features = [ "std" "minwinbase" "minwindef" "ntdef" "profileapi" "sysinfoapi" "timezoneapi" ];
           }
         ];
@@ -3373,11 +3391,11 @@ rec {
         ];
         
       };
-      "time 0.2.23" = rec {
+      "time 0.2.24" = rec {
         crateName = "time";
-        version = "0.2.23";
+        version = "0.2.24";
         edition = "2018";
-        sha256 = "12z95k0005rmyn9pf9v4hq80khsns7y5wfydnjr5jpci2yiyxnmw";
+        sha256 = "1xsq83n90nx4sa9ssvs688nh85dmizafhr9ndc6ln9na9pa3wg97";
         authors = [
           "Jacob Pratt <the.z.cuber@gmail.com>"
         ];
@@ -3390,7 +3408,7 @@ rec {
             name = "libc";
             packageId = "libc";
             optional = true;
-            target = { target, features }: target."unix";
+            target = { target, features }: (target."unix" or false);
           }
           {
             name = "standback";
@@ -3412,7 +3430,7 @@ rec {
             name = "winapi";
             packageId = "winapi 0.3.9";
             optional = true;
-            target = { target, features }: target."windows";
+            target = { target, features }: (target."windows" or false);
             features = [ "minwinbase" "minwindef" "timezoneapi" ];
           }
         ];
@@ -3501,7 +3519,7 @@ rec {
         dependencies = [
           {
             name = "bytes";
-            packageId = "bytes";
+            packageId = "bytes 0.5.6";
           }
           {
             name = "fnv";
@@ -3527,7 +3545,7 @@ rec {
             name = "libc";
             packageId = "libc";
             optional = true;
-            target = { target, features }: target."unix";
+            target = { target, features }: (target."unix" or false);
           }
           {
             name = "memchr";
@@ -3543,7 +3561,7 @@ rec {
             name = "mio-uds";
             packageId = "mio-uds";
             optional = true;
-            target = { target, features }: target."unix";
+            target = { target, features }: (target."unix" or false);
           }
           {
             name = "num_cpus";
@@ -3558,7 +3576,7 @@ rec {
             name = "signal-hook-registry";
             packageId = "signal-hook-registry";
             optional = true;
-            target = { target, features }: target."unix";
+            target = { target, features }: (target."unix" or false);
           }
           {
             name = "slab";
@@ -3575,7 +3593,7 @@ rec {
             packageId = "winapi 0.3.9";
             optional = true;
             usesDefaultFeatures = false;
-            target = { target, features }: target."windows";
+            target = { target, features }: (target."windows" or false);
           }
         ];
         features = {
@@ -3638,7 +3656,7 @@ rec {
         dependencies = [
           {
             name = "bytes";
-            packageId = "bytes";
+            packageId = "bytes 0.5.6";
           }
           {
             name = "futures-core";
@@ -3726,7 +3744,7 @@ rec {
           }
           {
             name = "pin-project-lite";
-            packageId = "pin-project-lite 0.2.0";
+            packageId = "pin-project-lite 0.2.2";
           }
           {
             name = "tracing-core";
@@ -4325,7 +4343,7 @@ rec {
     { packageId
     , features ? rootFeatures
     , crateOverrides ? defaultCrateOverrides
-    , buildRustCrateFunc ? null
+    , buildRustCrateForPkgsFunc ? null
     , runTests ? false
     , testCrateFlags ? [ ]
     , testInputs ? [ ]
@@ -4339,30 +4357,30 @@ rec {
         , testInputs
         }:
         let
-          buildRustCrateFuncOverriden =
-            if buildRustCrateFunc != null
-            then buildRustCrateFunc
+          buildRustCrateForPkgsFuncOverriden =
+            if buildRustCrateForPkgsFunc != null
+            then buildRustCrateForPkgsFunc
             else
               (
                 if crateOverrides == pkgs.defaultCrateOverrides
-                then buildRustCrate
+                then buildRustCrateForPkgs
                 else
-                  buildRustCrate.override {
+                  pkgs: (buildRustCrateForPkgs pkgs).override {
                     defaultCrateOverrides = crateOverrides;
                   }
               );
           builtRustCrates = builtRustCratesWithFeatures {
             inherit packageId features;
-            buildRustCrateFunc = buildRustCrateFuncOverriden;
+            buildRustCrateForPkgsFunc = buildRustCrateForPkgsFuncOverriden;
             runTests = false;
           };
           builtTestRustCrates = builtRustCratesWithFeatures {
             inherit packageId features;
-            buildRustCrateFunc = buildRustCrateFuncOverriden;
+            buildRustCrateForPkgsFunc = buildRustCrateForPkgsFuncOverriden;
             runTests = true;
           };
-          drv = builtRustCrates.${packageId};
-          testDrv = builtTestRustCrates.${packageId};
+          drv = builtRustCrates.crates.${packageId};
+          testDrv = builtTestRustCrates.crates.${packageId};
           derivation =
             if runTests then
               crateWithTest
@@ -4377,14 +4395,14 @@ rec {
       )
       { inherit features crateOverrides runTests testCrateFlags testInputs; };
 
-  /* Returns an attr set with packageId mapped to the result of buildRustCrateFunc
+  /* Returns an attr set with packageId mapped to the result of buildRustCrateForPkgsFunc
      for the corresponding crate.
   */
   builtRustCratesWithFeatures =
     { packageId
     , features
     , crateConfigs ? crates
-    , buildRustCrateFunc
+    , buildRustCrateForPkgsFunc
     , runTests
     , target ? defaultTarget
     } @ args:
@@ -4402,12 +4420,17 @@ rec {
               target = target // { test = runTests; };
             }
           );
-        buildByPackageId = packageId: buildByPackageIdImpl packageId;
-
         # Memoize built packages so that reappearing packages are only built once.
-        builtByPackageId =
-          lib.mapAttrs (packageId: value: buildByPackageId packageId) crateConfigs;
-        buildByPackageIdImpl = packageId:
+        builtByPackageIdByPkgs = mkBuiltByPackageIdByPkgs pkgs;
+        mkBuiltByPackageIdByPkgs = pkgs:
+          let
+            self = {
+              crates = lib.mapAttrs (packageId: value: buildByPackageIdForPkgsImpl self pkgs packageId) crateConfigs;
+              build = mkBuiltByPackageIdByPkgs pkgs.buildPackages;
+            };
+          in
+          self;
+        buildByPackageIdForPkgsImpl = self: pkgs: packageId:
           let
             features = mergedFeatures."${packageId}" or [ ];
             crateConfig' = crateConfigs."${packageId}";
@@ -4419,14 +4442,21 @@ rec {
                 (crateConfig'.devDependencies or [ ]);
             dependencies =
               dependencyDerivations {
-                inherit builtByPackageId features target;
+                inherit features target;
+                buildByPackageId = depPackageId:
+                  # proc_macro crates must be compiled for the build architecture
+                  if crateConfigs.${depPackageId}.procMacro or false
+                  then self.build.crates.${depPackageId}
+                  else self.crates.${depPackageId};
                 dependencies =
                   (crateConfig.dependencies or [ ])
                   ++ devDependencies;
               };
             buildDependencies =
               dependencyDerivations {
-                inherit builtByPackageId features target;
+                inherit features target;
+                buildByPackageId = depPackageId:
+                  self.build.crates.${depPackageId};
                 dependencies = crateConfig.buildDependencies or [ ];
               };
             filterEnabledDependenciesForThis = dependencies: filterEnabledDependencies {
@@ -4458,13 +4488,13 @@ rec {
                     dependenciesWithRenames;
                 versionAndRename = dep:
                   let
-                    package = builtByPackageId."${dep.packageId}";
+                    package = crateConfigs."${dep.packageId}";
                   in
                   { inherit (dep) rename; version = package.version; };
               in
               lib.mapAttrs (name: choices: builtins.map versionAndRename choices) grouped;
           in
-          buildRustCrateFunc
+          buildRustCrateForPkgsFunc pkgs
             (
               crateConfig // {
                 src = crateConfig.src or (
@@ -4483,16 +4513,15 @@ rec {
               }
             );
       in
-      builtByPackageId;
+      builtByPackageIdByPkgs;
 
   /* Returns the actual derivations for the given dependencies. */
   dependencyDerivations =
-    { builtByPackageId
+    { buildByPackageId
     , features
     , dependencies
     , target
     }:
-      assert (builtins.isAttrs builtByPackageId);
       assert (builtins.isList features);
       assert (builtins.isList dependencies);
       assert (builtins.isAttrs target);
@@ -4500,7 +4529,7 @@ rec {
         enabledDependencies = filterEnabledDependencies {
           inherit dependencies features target;
         };
-        depDerivation = dependency: builtByPackageId.${dependency.packageId};
+        depDerivation = dependency: buildByPackageId dependency.packageId;
       in
       map depDerivation enabledDependencies;
 
@@ -4523,14 +4552,14 @@ rec {
       debug = rec {
         # The built tree as passed to buildRustCrate.
         buildTree = buildRustCrateWithFeatures {
-          buildRustCrateFunc = lib.id;
+          buildRustCrateForPkgsFunc = _: lib.id;
           inherit packageId;
         };
         sanitizedBuildTree = sanitizeForJson buildTree;
         dependencyTree = sanitizeForJson
           (
             buildRustCrateWithFeatures {
-              buildRustCrateFunc = crate: {
+              buildRustCrateForPkgsFunc = _: crate: {
                 "01_crateName" = crate.crateName or false;
                 "02_features" = crate.features or [ ];
                 "03_dependencies" = crate.dependencies or [ ];
