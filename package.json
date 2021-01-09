@@ -6,7 +6,6 @@
   "dependencies": {
     "@clr/icons": "^4.0.7",
     "@webcomponents/custom-elements": "1.4.3",
-    "leaflet-easyprint": "^2.1.9",
     "leaflet-rotate-map": "^0.2.2",
     "mathjs": "^8.1.0",
     "showdown-htmlescape": "^0.1.9"

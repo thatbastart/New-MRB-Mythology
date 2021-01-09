@@ -305,7 +305,7 @@ select:hover {
       linear-gradient(#00a104 42%, #00a104 42%);
 }
 
-.panel_right {
+.nav_panel {
     text-align: center;
     width: 10vw;
     min-width: 100px;
@@ -314,7 +314,7 @@ select:hover {
     padding-right: 3vw;
     transition: width 0.5s, height 0.5s;
 }
-.panel_right:hover{
+.nav_panel:hover{
     width: 15vw;
     height: 40vh;
     transition: width 0.5s, height 0.5s;

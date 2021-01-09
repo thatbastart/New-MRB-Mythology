@@ -1,10 +1,7 @@
 // LEAFLET MAP BASICS -----------------------------
 // maxBounds
-let southWest = L.latLng(25, -118),
-    northEast = L.latLng(54, -74),
-    mybounds = L.latLngBounds(southWest, northEast);
 // initialize map
-let map = L.map('map', {maxBounds: mybounds, minZoom: 10, maxZoom: 14, rotate: true, zoomControl: false});
+let map = L.map('map', {minZoom: 10, maxZoom: 14, rotate: true, zoomControl: false});
 map.setView([43.18, -91.15], 12); // map center
 
 // custom tiles
@@ -34,7 +31,7 @@ L.control.mousePosition({prefix: "Lat ", separator: " | Lng ", numDigits: 2}).ad
 
 L.control.custom({
     position: "bottomleft",
-    content:    "<div class='panel_right'><br><br><button type='button' id='ctrl_zp' class='ctrl_zoom' style='border-radius: 5px 0 0 5px; border-right:1px solid #005201' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' size='24' class='white is-solid'></clr-icon></button>" +
+    content:    "<div class='nav_panel'><br><br><button type='button' id='ctrl_zp' class='ctrl_zoom' style='border-radius: 5px 0 0 5px; border-right:1px solid #005201' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' size='24' class='white is-solid'></clr-icon></button>" +
                 "<button type='button' id='ctrl_zm' class='ctrl_zoom' style='border-radius: 0 5px 5px 0;' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' size='24'></clr-icon></button><br><br>" +
                 "<input type='range' min='0' max='360' value='0' step='1' name='rotation' id='ctrl_rotate' class='ctrl_rotate'>"+
                 "<table style='margin-top: 5px; margin-bottom: 5px; table-layout: fixed; width: 100%; font-size: max(1.2vh,10px);'><colgroup><col style='width: 50%'><col style='width: 50%'></colgroup><tr><td style='text-align: left;'>0°</td><td style='text-align: right;'>360°</td></tr></table>" +
@@ -75,16 +72,17 @@ document.getElementById("stories-panel").innerHTML="<center>"+tiles+"</center>";
 
 // construct the story
 let curr_st=undefined;
-let st_marker=[];
+let st_marker;
 let st_line;
 function createStory(id){
+    st_marker=[];
     curr_st=id;
     document.getElementById("stories-panel").style.display="none";
     document.getElementById("story").style.display="block";
     
     for(let i=0;i<arr_stories[id].marker.length;i++){
         let pos = L.latLng(arr_stories[id].marker[i][0],arr_stories[id].marker[i][1])
-        let m = new L.marker(pos, {icon: blueIcon}).addTo(map);
+        let m = new L.marker(pos, {icon: blueIconL}).addTo(map);
         st_marker.push(m);
     }
 
@@ -139,7 +137,7 @@ function story_up(){
 L.control.custom({
     position: "topleft",
     content: "<h1 id='title' title='About the Project' style='font-size: max(4.5vh,30px); cursor: help;' onClick='showAbout()'>The New Mississippi River Basin Mythology</h1>" +
-            "<br><br><div id='about' class='about-panel scroll' style='display:inline;'><center><span class='stories-panel_tiles_title'>About</span></center><br>Edit<br>Did you ever see what happens after locks and dams disrupt the river flow?<br> How the landscape turns into pictures, into stories that want to get told?<br> The Mississippi isn’t just a River, it’s all about the stories, group events, myths and legends that grow up around the current.<br> Are you familiar with the Mississippi River Child or the invasion of the carps?<br> Take your time, discover the hidden parts and above all participate and tell your own story, myth and relationship towards the river. Just click the Edit Box and go for it. Even the smallest note helps to understand the dimension of the Mississippi River Basin. <br><br>Stories<br>From Minnesota to New Orleans, the Story of the Mississippi fluently curated. <br>If you want to understand the Mississippi you need coherent connection lines between different stories. Because a wide variety of forces and diverse narratives are at work here which unite 40 percent of the U.S. surface area in the Mississippi River Basin. And this is where the story mode comes in. Just scroll through the tales and follow the lines.</div>",
+            "<br><br><div id='about' class='about-panel scroll' style='display:inline;'><span class='stories-panel_tiles_title'>About</span><br><br><br><span class='stories-panel_tiles_title'>Edit</span><br><br>Did you ever see what happens after locks and dams disrupt the river flow?<br> How the landscape turns into pictures, into stories that want to get told?<br> The Mississippi isn’t just a River, it’s all about the stories, group events, myths and legends that grow up around the current.<br> Are you familiar with the Mississippi River Child or the invasion of the carps?<br> Take your time, discover the hidden parts and above all participate and tell your own story, myth and relationship towards the river. Just click the Edit Box and go for it. Even the smallest note helps to understand the dimension of the Mississippi River Basin. <br><br><span class='stories-panel_tiles_title'>Stories</span><br><br>From Minnesota to New Orleans, the Story of the Mississippi fluently curated. <br>If you want to understand the Mississippi you need coherent connection lines between different stories. Because a wide variety of forces and diverse narratives are at work here which unite 40 percent of the U.S. surface area in the Mississippi River Basin. And this is where the story mode comes in. Just scroll through the tales and follow the lines.</div>",
 }).addTo(map);        
      
 function showAbout(){
@@ -184,21 +182,21 @@ function overview(){
         curr_view[1]=map.getCenter().lng;
         curr_view[2]=map.getZoom();
         curr_pos=L.marker([curr_view[0], curr_view[1]], {icon: redIcon}).addTo(map);
-
         for (let i=curr_view[2]; i>=5; i--){
             let tilefile=getTileURL(curr_view[0], curr_view[1], i);
             let img=new Image();
             img.src="/Tiles/" + tilefile + ".png";
             console.log(img.src);
             if (img.height!=0){
-                console.log("hello");
                 document.getElementById("img_ov").src=img.src;
                 break;
             }
         }
         document.getElementById("img_ov").style.transform="translateY(-12.5%)";
-        setIcon(greenIcon,12);
-        setIcon(blueIcon,12);
+        
+        chngIcon(arr_marker, greenIconS);
+        chngIcon(st_marker, blueIconS);
+
         map.options.minZoom=6;
         map.options.maxZoom=6;
         map.setView([curr_view[0], curr_view[1]], 6);
@@ -210,8 +208,10 @@ function overview(){
 
         document.getElementById("img_ov").src="overview.jpg";
         document.getElementById("img_ov").style.transform="translateY(0)";
-        setIcon(greenIcon,30);
-        setIcon(blueIcon,30);
+
+        chngIcon(arr_marker, greenIconL);
+        chngIcon(st_marker, blueIconL);
+
         map.options.minZoom=10;
         map.options.maxZoom=14;
         map.setView([curr_view[0], curr_view[1]], curr_view[2]);
@@ -261,18 +261,32 @@ function stories(){
 // MARKER -----------------------------
 
 // intialize marker icons; green=community; blue=editorial; red=position
-let greenIcon = L.icon({
+let greenIconL = L.icon({
     iconUrl: 'marker_green.png',
     iconSize:     [30, 30], 
     iconAnchor:   [15, 15], 
     popupAnchor:  [-500, 15] 
 });
 
-let blueIcon = L.icon({
+let blueIconL = L.icon({
     iconUrl: 'marker_blue.png',
     iconSize:     [30, 30], 
     iconAnchor:   [15, 15], 
     popupAnchor:  [-500, 15] 
+});
+
+let greenIconS = L.icon({
+    iconUrl: 'marker_green.png',
+    iconSize:     [12, 12], 
+    iconAnchor:   [6, 6], 
+    popupAnchor:  [-500, 6] 
+});
+
+let blueIconS = L.icon({
+    iconUrl: 'marker_blue.png',
+    iconSize:     [12, 12], 
+    iconAnchor:   [6, 6], 
+    popupAnchor:  [-500, 6] 
 });
 
 let redIcon = L.icon({
@@ -335,7 +349,7 @@ fetch("/api/get_notes", {
 })
 .then(response => response.json())
 .then(json => json.map(note => {
-    let marker = new L.marker({ lat: note.lat, lng: note.lon }, {icon: greenIcon}).addTo(map);
+    let marker = new L.marker({ lat: note.lat, lng: note.lon }, {icon: greenIconL}).addTo(map);
     let title = note.versions[note.versions.length-1].title;
     let content =  note.versions[note.versions.length-1].text;
     marker.title=title;
@@ -443,7 +457,7 @@ function change_version(){
 // ADDING MARKER FUNCTION
 let marker=undefined;
 function add_marker(pos,title,content){
-    marker = new L.marker(pos, {icon: greenIcon}).addTo(map);
+    marker = new L.marker(pos, {icon: greenIconL}).addTo(map);
     
     title = (typeof title !== 'undefined') ?  title : "";
     content = (typeof content !== 'undefined') ?  content : "";
@@ -524,9 +538,9 @@ let rot_matrix={0: [-500,15],
 function setAnchor(){
     let rot=document.getElementById("ctrl_rotate").value;
     console.log(rot);
-    greenIcon.options.popupAnchor=rot_matrix[rot];
+    greenIconL.options.popupAnchor=rot_matrix[rot];
     for(let i=0;i<arr_marker.length;i++){
-        arr_marker[i].setIcon(greenIcon);
+        arr_marker[i].setIcon(greenIconL);
     }
 }
 
@@ -540,6 +554,11 @@ function isOverflown(element) {
     } while (element.scrollWidth > element.clientWidth)
 }
 
+function chngIcon(arr, ico){
+    for (m in arr){
+        arr[m].setIcon(ico);
+    }
+}
 
 
 function getTileURL(lat, lon, zoom) {
