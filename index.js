@@ -72,6 +72,7 @@ document.getElementById("stories-panel").innerHTML="<center>"+tiles+"</center>";
 
 // construct the story
 let curr_st=undefined;
+let curr_st_m=-1;
 let st_marker;
 let st_line;
 function createStory(id){
@@ -85,9 +86,14 @@ function createStory(id){
         let m = new L.marker(pos, {icon: blueIconL}).addTo(map);
         st_marker.push(m);
     }
-
+    curr_st_m=0;
     st_line = L.polyline(arr_stories[id].marker, {color: '#355AD9'}).addTo(map);
-
+    
+    map.flyTo(L.latLng(arr_stories[curr_st].marker[0][0],arr_stories[curr_st].marker[0][1]), arr_stories[curr_st].marker[0][2], {
+        animate: true,
+        duration: 0.5
+    });
+    
     fetch(arr_stories[id].text)
         .then(response => response.text())
         .then(text => {document.getElementById("story").innerHTML="<clr-icon shape='arrow' dir='left' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; top: 10px; left:10px;' onClick='story_back()'></clr-icon><center><span class='stories-panel_tiles_title'>" + arr_stories[id].title + "</span></center>" + arr_stories[id].author + ", " + arr_stories[id].date + "<span id='story_marker_0'></span><br><br><img src='" + arr_stories[id].img + "' style='width: 100%; height:auto;'></img>" + arr_stories[id].img_sub + "<br><br>" + text + "<br><br><clr-icon shape='arrow' dir='up' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; right:10px;' onClick='story_up()'></clr-icon><br>";})
@@ -96,7 +102,6 @@ function createStory(id){
 
 
 // jump to markers while scrolling
-let curr_st_m=-1;
 function scrollMarker(){
     for(let i=0;i<arr_stories[curr_st].marker.length;i++){
         let m="story_marker_" + i;
@@ -104,7 +109,10 @@ function scrollMarker(){
         let thld=document.getElementById("story").getBoundingClientRect().height / 3;
 
         if(spanY<thld && spanY>0 && i!=curr_st_m){
-            map.setView([arr_stories[curr_st].marker[i][0], arr_stories[curr_st].marker[i][1]], arr_stories[curr_st].marker[i][2]);
+            map.flyTo(L.latLng(arr_stories[curr_st].marker[i][0],arr_stories[curr_st].marker[i][1]), arr_stories[curr_st].marker[i][2], {
+                animate: true,
+                duration: 1.0
+            });
             curr_st_m=i;
         }
     }
@@ -175,6 +183,7 @@ let curr_pos=undefined;
 let curr_edit=false;
 
 function overview(){
+    document.getElementById("about").style.display="none";
     if(document.getElementById("ctrl_ov").getAttribute("data-checked")=="false"){
         curr_edit=document.getElementById("ctrl_edit").checked;
         document.getElementById("ctrl_edit").checked=false;
@@ -221,6 +230,7 @@ function overview(){
 
 // set edit depending on overview
 function edit(){
+    document.getElementById("about").style.display="none";
     if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="true"){
         document.getElementById("ctrl_edit").setAttribute("data-checked","false");
     } else {
@@ -244,6 +254,7 @@ function edit(){
 
 // stories
 function stories(){
+    document.getElementById("about").style.display="none";
     if(document.getElementById("ctrl_st").getAttribute("data-checked")=="true"){
         document.getElementById("st_angle").dir="down";
         document.getElementById("ctrl_st").setAttribute("data-checked","false");
@@ -300,6 +311,7 @@ let curr_pu=undefined;
 let pu_flag=false;
 let hist_c=undefined;
 map.on('popupopen', function(e) {
+    document.getElementById("about").style.display="none";
     setAnchor();
     curr_pu = e.popup._source;
     pu_flag=true;
