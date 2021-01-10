@@ -10,10 +10,6 @@ L.tileLayer('/Tiles/{z}/{x}/{y}.png', {
     'useCache': true
 }).addTo(map);
 
-let label = new L.marker([43.26, -91.06], { opacity: 0 }); //opacity may be set to zero
-label.bindTooltip("My Label", {permanent: true, className: "my-label", direction: "center"});
-label.addTo(map);
-
 // OVERLAYS -----------------------------
 // panel topright: title
 L.control.custom({
@@ -38,8 +34,8 @@ L.control.custom({
     position: "topright",
     content: "<div style='margin: 20px 20px 0 0;'><table style='margin-right: 0px; margin-left: auto;'><tr><td><div id='ctrl_st' class='btn_toggle' onclick='stories();' data-checked='false'>Stories&nbsp<clr-icon id='st_angle' shape='angle' dir='down' size='20'></clr-icon></div></td>" +
                 "<td><div id='ctrl_edit' class='btn_toggle' onclick='edit();' data-checked='false'>New</div></td>" +
-                "</tr><tr id='new_type' style='display: none;'><td></td><td><div id='kind_sel' class='btn_toggle' data-checked='false' style='float: right; margin-right: 5px; border-radius: 0 5px 5px 0;'><clr-icon shape='chat-bubble' size='22' style='#fff'></clr-icon></div>"+
-                "<div id='kind_sel' class='btn_toggle' data-checked='false' style='float: right; margin-left: 5px; border-radius: 5px 0 0 5px; border-right: 1px solid #005201;'><clr-icon shape='note' size='22' style='#fff'></clr-icon></div></td></tr></table>" +
+                "</tr><tr><td></td><td><div id='new_type' style='display: none;'><div id='kind_label' class='btn_toggle' data-checked='false' style='float: right; margin-right: 5px; border-radius: 0 5px 5px 0;' onClick='kind_label()'><clr-icon shape='chat-bubble' size='22' style='#fff'></clr-icon></div>"+
+                "<div id='kind_note' class='btn_toggle' data-checked='true' style='float: right; margin-left: 5px; border-radius: 5px 0 0 5px; border-right: 1px solid #005201;' onClick='kind_note()'><clr-icon shape='note' size='22' style='#fff'></clr-icon></div></div></td></tr></table>" +
                 "<br><div id='stories-panel-outer' class='stories-outer'><div id='stories-panel' class='stories-panel scroll'></div></div><div id='story-outer' class='story-outer'><div id='story' class='story scroll' onScroll='scrollMarker()''></div></div></div>",
     style:
     {
@@ -235,19 +231,35 @@ function overview(){
     }
 }
 
+function kind_note(){
+    btn_tgl("kind_note","kind_label");
+}
+
+function kind_label(){
+    btn_tgl("kind_label","kind_note");
+}
+
 // set edit depending on overview
 function edit(){
     document.getElementById("about").style.display="none";
     document.getElementById("about-arrow").style.display="none";
-    if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="true"){
-        document.getElementById("ctrl_edit").setAttribute("data-checked","false");
-    } else {
-        document.getElementById("ctrl_edit").setAttribute("data-checked","true");
-    }
 
     if(document.getElementById("ctrl_ov").getAttribute("data-checked")=="true"){
         document.getElementById("ctrl_edit").setAttribute("data-checked","false");
+    } else {
+        btn_tgl("ctrl_edit");
+        if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="true"){
+            document.getElementById("map").style.cursor="pointer";
+        } else {
+            document.getElementById("map").style.cursor="grab";
+        }
+        if(document.getElementById("new_type").style.display=="inline"){
+            document.getElementById("new_type").style.display="none";
+        } else {
+            document.getElementById("new_type").style.display="inline";
+        }
     }
+
     if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="false"){
         popup_close_check();
     }
@@ -490,13 +502,24 @@ function add_marker(pos,title,content){
     set_edit_btn();
 }
 
-// onClick Event -> adding marker
+let label=undefined;
+function add_label(pos){
+    label = new L.marker(pos, { opacity: 0 });
+    label.bindTooltip("My Label", {permanent: true, className: "my-label", direction: "center"});
+    label.addTo(map);
+    
+}
+
+// onClick Event -> adding marker or label
 map.on('click', function(e){
     if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="true" && document.getElementById("ctrl_ov").getAttribute("data-checked")=="false"){
-        add_marker(e.latlng);
+        if(document.getElementById("kind_note").getAttribute("data-checked")=="true"){
+            add_marker(e.latlng);
+        } else {
+            add_label(e.latlng);
+        }
     }
 });
-
 
 // UTILITY FUNCTIONS -----------------------------
 // focus on marker; coord offset depending on zoom level
@@ -570,4 +593,23 @@ function getTileURL(lat, lon, zoom) {
     let xtile = parseInt(Math.floor( (lon + 180) / 360 * (1<<zoom) ));
     let ytile = parseInt(Math.floor( (1 - Math.log(Math.tan((lat*Math.PI)/180) + 1 / Math.cos((lat*Math.PI)/180)) / Math.PI) / 2 * (1<<zoom) ));
     return "" + zoom + "/" + xtile + "/" + ytile;
+}
+
+function btn_tgl(btn, btn2){
+    btn2=btn2||"";
+    if(btn2==""){
+        if(document.getElementById(btn).getAttribute("data-checked")=="true"){
+            document.getElementById(btn).setAttribute("data-checked","false");
+        } else {
+            document.getElementById(btn).setAttribute("data-checked","true");
+        }
+    } else {
+        if(document.getElementById(btn).getAttribute("data-checked")=="true"){
+            document.getElementById(btn).setAttribute("data-checked","false");
+            document.getElementById(btn2).setAttribute("data-checked","true");
+        } else {
+            document.getElementById(btn).setAttribute("data-checked","true");
+            document.getElementById(btn2).setAttribute("data-checked","false");
+        }
+    }
 }
