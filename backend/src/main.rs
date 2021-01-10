@@ -8,6 +8,7 @@ extern crate log;
 use docopt::Docopt;
 use kdtree::distance::squared_euclidean;
 use kdtree::KdTree;
+use rocket::Data;
 use rocket::{Rocket, State};
 use rocket_contrib::json::{Json, JsonValue};
 use rusqlite::{params, Connection};
@@ -188,12 +189,29 @@ fn get_notes(db: State<'_, DbConnection>) -> Json<Vec<Note>> {
 }
 
 /// Upload an image file.
-#[post("/", data = "<url_str>")]
-fn upload_image(_state: State<'_, DbConnection>, url_str: String) -> ApiResult {
+#[post("/", data = "<data>")]
+async fn upload_image(_state: State<'_, DbConnection>, data: Data) -> ApiResult {
     use data_url::DataUrl;
     use image::io::Reader;
     use image::ImageFormat;
+    use rocket::data::ToByteUnit;
     use std::io::Cursor;
+
+    let url_str = {
+        if let Ok(url_str) = data.open(50_i32.mebibytes()).stream_to_string().await {
+            url_str
+        } else {
+            return ApiResult::Err(json!("Wrong encoding."));
+        }
+    };
+
+    // This is a nasty hack. Apparently Rocket secures a DataStream that we can only get a limited
+    // amount of bytes from it, but there seems to be no way to handle the case if the stream is
+    // longer than the limit. As in that case the resulting image will be invalid, we have to test
+    // this and send an error.
+    if url_str.len() >= 1024 * 1024 * 50 {
+        return ApiResult::Err(json!("Image can't be larger than 50MB."));
+    }
 
     let data_url = DataUrl::process(&url_str).unwrap();
     let (data_body, _) = data_url.decode_to_vec().unwrap();
