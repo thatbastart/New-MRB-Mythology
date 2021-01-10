@@ -33,6 +33,7 @@ in
         '';
         Restart = "always";
         StateDirectory = "mrb-mythology-backend";
+        DynamicUser = true;
       };
 
     };
