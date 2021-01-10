@@ -525,7 +525,10 @@ function change_view(lt,ln){
             offY=0.02;
             break;
     }
-    map.setView([lt+offY, ln-offX]);
+    map.flyTo([lt+offY, ln-offX], map.getZoom(), {
+        animate: true,
+        duration: 0.25
+    });
 }
 
 // reset rotation and focus
@@ -543,30 +546,6 @@ function setIcon(ico,size){
 
     for(let i=0;i<arr_marker.length;i++){
         arr_marker[i].setIcon(ico);
-    }
-}
-
-let rot_matrix={0: [-500,15],
-    30: [-360,245],
-    60: [-121,370],
-    90: [145,370],
-    120: [375,225],
-    150: [505, -10],
-    180: [500,-280],
-    210: [360, -510],
-    240: [125,-640],
-    270: [-145,-635],
-    300: [-378,-495],
-    330: [-505,-255],
-    360: [-500,15]} 
-
-// redefine pu anchor
-function setAnchor(){
-    let rot=document.getElementById("ctrl_rotate").value;
-    console.log(rot);
-    greenIconL.options.popupAnchor=rot_matrix[rot];
-    for(let i=0;i<arr_marker.length;i++){
-        arr_marker[i].setIcon(greenIconL);
     }
 }
 
