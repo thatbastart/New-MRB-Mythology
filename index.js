@@ -10,17 +10,36 @@ L.tileLayer('/Tiles/{z}/{x}/{y}.png', {
     'useCache': true
 }).addTo(map);
 
-let label = new L.marker([43.26, -91.26], { opacity: 0 }); //opacity may be set to zero
-label.bindTooltip("My Label", {permanent: true, className: "my-label", offset: [0, 0] });
+let label = new L.marker([43.26, -91.06], { opacity: 0 }); //opacity may be set to zero
+label.bindTooltip("My Label", {permanent: true, className: "my-label", direction: "center"});
 label.addTo(map);
 
 // OVERLAYS -----------------------------
-// panel topleft: zoom, rotation, edit mode, overview
+// panel topright: title
+L.control.custom({
+    position: "topleft",
+    content: "<h1 id='title' title='About the Project' style='font-size: max(4.5vh,30px); cursor: help;' onClick='showAbout()'>The New Mississippi River Basin Mythology</h1>" +
+            "<div id='about-arrow' class='about-arrow'></div><div id='about' class='about-outer'><div id='about' class='about-panel scroll' style='display:inline;'><span class='stories-panel_tiles_title'><center>About</center></span><br><br><span class='stories-panel_tiles_title'><center>Contribute Notes</center></span><br>Did you ever see what happens after locks and dams disrupt the river flow?<br> How the landscape turns into pictures, into stories that want to get told?<br> The Mississippi isn’t just a River, it’s all about the stories, group events, myths and legends that grow up around the current.<br> Are you familiar with the Mississippi River Child or the invasion of the carps?<br> Take your time, discover the hidden parts and above all participate and tell your own story, myth and relationship towards the river. Just click the Edit Box and go for it. Even the smallest note helps to understand the dimension of the Mississippi River Basin. <br><br><span class='stories-panel_tiles_title'><center>Stories</center></span><br>From Minnesota to New Orleans, the Story of the Mississippi fluently curated. <br>If you want to understand the Mississippi you need coherent connection lines between different stories. Because a wide variety of forces and diverse narratives are at work here which unite 40 percent of the U.S. surface area in the Mississippi River Basin. And this is where the story mode comes in. Just scroll through the tales and follow the lines." +
+            "</div></div>",
+}).addTo(map);    
+
+function showAbout(){
+    if(document.getElementById("about").style.display=="none"){
+        document.getElementById("about").style.display="block";
+        document.getElementById("about-arrow").style.display="block";
+    } else {
+        document.getElementById("about").style.display="none";
+        document.getElementById("about-arrow").style.display="none";
+    }
+}
+
+// panel topright: stories, new
 L.control.custom({
     position: "topright",
     content: "<div style='margin: 20px 20px 0 0;'><table style='margin-right: 0px; margin-left: auto;'><tr><td><div id='ctrl_st' class='btn_toggle' onclick='stories();' data-checked='false'>Stories&nbsp<clr-icon id='st_angle' shape='angle' dir='down' size='20'></clr-icon></div></td>" +
                 "<td><div id='ctrl_edit' class='btn_toggle' onclick='edit();' data-checked='false'>New</div></td>" +
-                "</tr></table>" +
+                "</tr><tr id='new_type' style='display: none'><td></td><td><div id='kind_sel' class='btn_toggle' data-checked='false' style='float: right;'><clr-icon shape='chat-bubble' size='22' style='#fff'></clr-icon></div>"+
+                "<div id='kind_sel' class='btn_toggle' data-checked='false'><clr-icon shape='note' size='22' style='#fff'></clr-icon></div></td></tr></table>" +
                 "<br><div id='stories-panel-outer' class='stories-outer'><div id='stories-panel' class='stories-panel scroll'></div></div><div id='story-outer' class='story-outer'><div id='story' class='story scroll' onScroll='scrollMarker()''></div></div></div>",
     style:
     {
@@ -34,10 +53,13 @@ L.control.mousePosition({prefix: "Lat ", separator: " | Lng ", numDigits: 2}).ad
 
 L.control.custom({
     position: "bottomleft",
-    content:    "<div class='nav_panel'><br><br><button type='button' id='ctrl_zp' class='ctrl_zoom' style='border-radius: 5px 0 0 5px; border-right:1px solid #005201' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' size='24' class='white is-solid'></clr-icon></button>" +
-                "<button type='button' id='ctrl_zm' class='ctrl_zoom' style='border-radius: 0 5px 5px 0;' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' size='24'></clr-icon></button><br><br>" +
-                "<input type='range' min='0' max='360' value='0' step='1' name='rotation' id='ctrl_rotate' class='ctrl_rotate'>"+
-                "<table style='margin-top: 5px; margin-bottom: 5px; table-layout: fixed; width: 100%; font-size: max(1.2vh,10px);'><colgroup><col style='width: 50%'><col style='width: 50%'></colgroup><tr><td style='text-align: left;'>0°</td><td style='text-align: right;'>360°</td></tr></table>" +
+    content:    "<div class='nav_panel'><br><br>"+
+                "<button type='button' id='ctrl_layer' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201' onClick=''><clr-icon shape='chat-bubble' size='22' style='#fff'></clr-icon></button>"+
+                "<br><button type='button' id='ctrl_layer' style='border-radius: 0 0 5px 5px;' onClick=''><clr-icon shape='info-circle' size='26' style='#fff'></clr-icon></button><br><br>" +
+                "<button type='button' id='ctrl_zp' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' size='24' style='#fff'></clr-icon></button>"+
+                "<br><button type='button' id='ctrl_zm' style='border-radius: 0 0 5px 5px;' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' size='24'></clr-icon></button>" +
+                "<br><br><br><input type='range' min='0' max='360' value='0' step='1' name='rotation' id='ctrl_rotate' class='ctrl_rotate'>"+
+                "<table style='margin-top: 5px; margin-bottom: 5px; table-layout: fixed; width: 100%; font-size: max(1.2vh,10px); text-shadow: 0 0 3px #000;'><colgroup><col style='width: 50%'><col style='width: 50%'></colgroup><tr><td style='text-align: left;'>0°</td><td style='text-align: right;'>360°</td></tr></table>" +
                 "<div id='ctrl_ov' class='ctrl_ov' onclick='overview();' data-checked='false'><div style='position: absolute; top: 0; left: 0; bottom: 0; right: 0; width: 100%;'><img id='img_ov' src='overview.jpg' style='width: 100%; height:auto;'></img></div></div></div>",
     style:
     {
@@ -144,23 +166,6 @@ function story_up(){
 }
 
 
-// panel topleft: title
-L.control.custom({
-    position: "topleft",
-    content: "<h1 id='title' title='About the Project' style='font-size: max(4.5vh,30px); cursor: help;' onClick='showAbout()'>The New Mississippi River Basin Mythology</h1>" +
-            "<br><br><div id='about' class='about-outer'><div id='about' class='about-panel scroll' style='display:inline;'><span class='stories-panel_tiles_title'><center>About</center></span><br><br><span class='stories-panel_tiles_title'><center>Contribute Notes</center></span><br>Did you ever see what happens after locks and dams disrupt the river flow?<br> How the landscape turns into pictures, into stories that want to get told?<br> The Mississippi isn’t just a River, it’s all about the stories, group events, myths and legends that grow up around the current.<br> Are you familiar with the Mississippi River Child or the invasion of the carps?<br> Take your time, discover the hidden parts and above all participate and tell your own story, myth and relationship towards the river. Just click the Edit Box and go for it. Even the smallest note helps to understand the dimension of the Mississippi River Basin. <br><br><span class='stories-panel_tiles_title'><center>Stories</center></span><br>From Minnesota to New Orleans, the Story of the Mississippi fluently curated. <br>If you want to understand the Mississippi you need coherent connection lines between different stories. Because a wide variety of forces and diverse narratives are at work here which unite 40 percent of the U.S. surface area in the Mississippi River Basin. And this is where the story mode comes in. Just scroll through the tales and follow the lines." +
-            "</div></div>",
-}).addTo(map);        
-     
-function showAbout(){
-    if(document.getElementById("about").style.display=="none"){
-        document.getElementById("about").style.display="block";
-    } else {
-        document.getElementById("about").style.display="none";
-    }
-}
-
-
 
 // OVERLAY FUNCTIONS -----------------------------
 // rotation slider
@@ -188,6 +193,7 @@ let curr_edit=false;
 
 function overview(){
     document.getElementById("about").style.display="none";
+    document.getElementById("about-arrow").style.display="none";
     if(document.getElementById("ctrl_ov").getAttribute("data-checked")=="false"){
         curr_edit=document.getElementById("ctrl_edit").checked;
         document.getElementById("ctrl_edit").checked=false;
@@ -235,6 +241,7 @@ function overview(){
 // set edit depending on overview
 function edit(){
     document.getElementById("about").style.display="none";
+    document.getElementById("about-arrow").style.display="none";
     if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="true"){
         document.getElementById("ctrl_edit").setAttribute("data-checked","false");
     } else {
@@ -259,6 +266,7 @@ function edit(){
 // stories
 function stories(){
     document.getElementById("about").style.display="none";
+    document.getElementById("about-arrow").style.display="none";
     if(document.getElementById("ctrl_st").getAttribute("data-checked")=="true"){
         document.getElementById("st_angle").dir="down";
         document.getElementById("ctrl_st").setAttribute("data-checked","false");
@@ -269,7 +277,6 @@ function stories(){
         document.getElementById("st_angle").dir="up";
         document.getElementById("ctrl_st").setAttribute("data-checked","true");
         document.getElementById("stories-panel-outer").style.display="block";
-        
     }
 }
 
@@ -316,6 +323,7 @@ let pu_flag=false;
 let hist_c=undefined;
 map.on('popupopen', function(e) {
     document.getElementById("about").style.display="none";
+    document.getElementById("about-arrow").style.display="none";
     setAnchor();
     curr_pu = e.popup._source;
     pu_flag=true;

@@ -23,7 +23,7 @@
             {
                 this.container.style[option] = this.options.style[option];
             }
-
+            
             for (var data in this.options.datas)
             {
                 this.container.dataset[data] = this.options.datas[data];
