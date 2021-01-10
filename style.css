@@ -333,11 +333,12 @@ p{
 
 .my-label{
     background: transparent;
-    color: rgb(157, 194, 255);
+    color: rgb(122, 173, 255);
     border: none;
     font-family: 'Titillium Web', sans-serif;
     font-size: max(2.2vh,12px);
     text-shadow: 0 0 1px #000;
+    box-shadow: 0 0 0 transparent;
 }
 
 .leaflet-top{
@@ -503,11 +504,13 @@ select:hover {
 .btn_toggle#kind_sel{
     background-color: #333;
     border: 1px solid transparent;
-    width: 3vw;
+    width: 1.5vw;
+    min-width: 25px;
     height: 2.5vh;
+    margin: 0;
 }
 .btn_toggle#kind_sel:hover{
-    border: 1px solid #fff;
+    border: 1px solid #fff !important;
 }
 .btn_toggle#kind_sel[data-checked="true"]{
     background-color: #005201;

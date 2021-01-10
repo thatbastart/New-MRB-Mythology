@@ -38,8 +38,8 @@ L.control.custom({
     position: "topright",
     content: "<div style='margin: 20px 20px 0 0;'><table style='margin-right: 0px; margin-left: auto;'><tr><td><div id='ctrl_st' class='btn_toggle' onclick='stories();' data-checked='false'>Stories&nbsp<clr-icon id='st_angle' shape='angle' dir='down' size='20'></clr-icon></div></td>" +
                 "<td><div id='ctrl_edit' class='btn_toggle' onclick='edit();' data-checked='false'>New</div></td>" +
-                "</tr><tr id='new_type' style='display: none'><td></td><td><div id='kind_sel' class='btn_toggle' data-checked='false' style='float: right;'><clr-icon shape='chat-bubble' size='22' style='#fff'></clr-icon></div>"+
-                "<div id='kind_sel' class='btn_toggle' data-checked='false'><clr-icon shape='note' size='22' style='#fff'></clr-icon></div></td></tr></table>" +
+                "</tr><tr id='new_type' style='display: none;'><td></td><td><div id='kind_sel' class='btn_toggle' data-checked='false' style='float: right; margin-right: 5px; border-radius: 0 5px 5px 0;'><clr-icon shape='chat-bubble' size='22' style='#fff'></clr-icon></div>"+
+                "<div id='kind_sel' class='btn_toggle' data-checked='false' style='float: right; margin-left: 5px; border-radius: 5px 0 0 5px; border-right: 1px solid #005201;'><clr-icon shape='note' size='22' style='#fff'></clr-icon></div></td></tr></table>" +
                 "<br><div id='stories-panel-outer' class='stories-outer'><div id='stories-panel' class='stories-panel scroll'></div></div><div id='story-outer' class='story-outer'><div id='story' class='story scroll' onScroll='scrollMarker()''></div></div></div>",
     style:
     {
@@ -172,11 +172,8 @@ function story_up(){
 window.onload = function() {
     let slider = document.getElementById("ctrl_rotate");
     slider.addEventListener('input', function () {
-        let rot=document.getElementById("ctrl_rotate").value;
-        if(pu_flag==true){
-            setAnchor();
-        }
-        map.setBearing(rot);
+        map.closePopup();
+        map.setBearing(document.getElementById("ctrl_rotate").value);
     });
 }
 
@@ -324,8 +321,8 @@ let hist_c=undefined;
 map.on('popupopen', function(e) {
     document.getElementById("about").style.display="none";
     document.getElementById("about-arrow").style.display="none";
-    setAnchor();
     curr_pu = e.popup._source;
+    view_reset(curr_pu._latlng.lat,curr_pu._latlng.lng);
     pu_flag=true;
     hist_c=0;
     isOverflown(document.getElementById("pu_title_ld"));
@@ -488,9 +485,8 @@ function add_marker(pos,title,content){
     marker.bindPopup(popupString(title, content, 1,document.getElementById("ctrl_edit").getAttribute("data-checked")));
     
     arr_marker.push(marker);
-    view_reset(pos.lat,pos.lng);
-    setAnchor();
     marker.openPopup();
+    view_reset(pos.lat,pos.lng);
     set_edit_btn();
 }
 
@@ -505,25 +501,31 @@ map.on('click', function(e){
 // UTILITY FUNCTIONS -----------------------------
 // focus on marker; coord offset depending on zoom level
 function change_view(lt,ln){
-    let offset=0;
+    let offX=0;
+    let offY=0;
     switch(map.getZoom()){
         case 10:
-            offset=0.275;
+            offX=0.6;
+            offY=0.3;
             break;
         case 11:
-            offset=0.15;
+            offX=0.3;
+            offY=0.15;
             break;
         case 12:
-            offset=0.075;
+            offX=0.15;
+            offY=0.075;
             break;
         case 13:
-            offset=0.04;
+            offX=0.08;
+            offY=0.04;
             break;
         case 14:
-            offset=0.015;
+            offX=0.04;
+            offY=0.02;
             break;
     }
-    map.setView([lt+offset, ln-offset]);
+    map.setView([lt+offY, ln-offX]);
 }
 
 // reset rotation and focus
