@@ -40,6 +40,7 @@ struct NoteContent {
     title: String,
     text: String,
     creation_date: Option<String>,
+    image_path: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -68,13 +69,13 @@ fn add_note(db: State<'_, DbConnection>, msg: Json<Note>) -> ApiResult {
         ));
     }
 
-    let NoteContent { title, text, .. } = versions.get(0).unwrap();
+    let NoteContent { title, text, image_path, .. } = versions.get(0).unwrap();
 
     let db_conn = db.lock().expect("db connection lock");
     let insert_op = db_conn.execute(
-        "INSERT INTO notes (creation_date, title, content, lat, lon, kind)
-            VALUES (STRFTIME('%Y-%m-%d %H:%M', 'NOW'), $1, $2, $3, $4, $5)",
-        params![title, text, lat, lon, kind],
+        "INSERT INTO notes (creation_date, title, content, lat, lon, kind, image_path)
+            VALUES (STRFTIME('%Y-%m-%d %H:%M', 'NOW'), $1, $2, $3, $4, $5, $6)",
+        params![title, text, lat, lon, kind, image_path],
     );
 
     match insert_op {
@@ -91,7 +92,7 @@ fn add_note(db: State<'_, DbConnection>, msg: Json<Note>) -> ApiResult {
 fn get_notes(db: State<'_, DbConnection>) -> Json<Vec<Note>> {
     let db_conn = db.lock().expect("db connection lock");
     let mut query = db_conn
-        .prepare("SELECT creation_date, title, content, lat, lon, kind FROM notes")
+        .prepare("SELECT creation_date, title, content, lat, lon, kind, image_path FROM notes")
         .unwrap();
 
     // Coordinates are our primary key here. But Rust doesn't have Eq for f64 (for good reasons),
@@ -123,6 +124,7 @@ fn get_notes(db: State<'_, DbConnection>) -> Json<Vec<Note>> {
                                 title: row.get(1)?,
                                 text: row.get(2)?,
                                 creation_date: row.get(0)?,
+                                image_path: row.get(6)?,
                             },
                             current_id,
                         ),
@@ -247,7 +249,7 @@ fn write_image(data: Vec<u8>, file_extension: &str) -> ApiResult {
 
     let path = format!("/images/{}.{}", hash_str, file_extension);
 
-    if let Ok(()) = fs::write(format!("/var/lib/mrb-mythology-backend/images{}", &path), &data) {
+    if let Ok(()) = fs::write(format!("images{}", &path), &data) {
         ApiResult::Ok(json!({ "file_path": path }))
     } else {
         ApiResult::Err(json!("Failed to create file."))
@@ -268,7 +270,8 @@ fn rocket() -> Rocket {
           , content TEXT NOT NULL
           , lat REAL NOT NULL
           , lon REAL NOT NULL
-          , kind TEXT NOT NULL)",
+          , kind TEXT NOT NULL
+          , image_path TEXT)",
         params![],
     )
     .unwrap();
