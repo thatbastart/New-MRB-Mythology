@@ -228,9 +228,10 @@ fn write_image(data: Vec<u8>, file_extension: &str) -> ApiResult {
     };
 
     let path = format!("images/{}.{}", hash_str, file_extension);
+    let abs_path = format!("/{}", path);
 
     if let Ok(()) = fs::write(&path, &data) {
-        ApiResult::Ok(json!({ "file_path": path }))
+        ApiResult::Ok(json!({ "file_path": abs_path }))
     } else {
         ApiResult::Err(json!("Failed to create file."))
     }
