@@ -245,11 +245,10 @@ fn write_image(data: Vec<u8>, file_extension: &str) -> ApiResult {
         format!("{:x}", hash)
     };
 
-    let path = format!("images/{}.{}", hash_str, file_extension);
-    let abs_path = format!("/{}", path);
+    let path = format!("/images/{}.{}", hash_str, file_extension);
 
-    if let Ok(()) = fs::write(&path, &data) {
-        ApiResult::Ok(json!({ "file_path": abs_path }))
+    if let Ok(()) = fs::write(format!("/var/lib/mrb-mythology-backend/images{}", &path), &data) {
+        ApiResult::Ok(json!({ "file_path": path }))
     } else {
         ApiResult::Err(json!("Failed to create file."))
     }
