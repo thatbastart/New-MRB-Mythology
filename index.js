@@ -443,18 +443,14 @@ fetch("/api/get_notes", {
 }))
 .catch(err => console.log(err));
 
-// ADD NOTES - popup submit function
-function pu_submit(){
-
-    // Wenn ein Bild hochgeladen wird, wird es unter diesem Pfad verfügbar sein.
+// Upload an image file. When the upload finished successfully, we receive the
+// URL of the uploaded image and call upload_note() with it.
+async function upload_note_with_image(image_file, note_object) {
     let image_path = null;
-
-    let image_file = document.getElementById("upload_image").files[0];
     let reader = new FileReader();
     reader.readAsDataURL(image_file);
-    reader.onload = function() {
-        console.log(reader.result);
-        fetch("/api/upload_image", {
+    reader.onload = async function() {
+        await fetch("/api/upload_image", {
             method: "POST",
             headers: { "Content-Type": "text/plain;charset=UTF-8" },
             cache: "no-cache",
@@ -464,43 +460,72 @@ function pu_submit(){
         .then(json => {
             console.log(json)
             image_path = json.file_path;
+            note_object.versions[0].image_path = image_path;
+            upload_note(note_object);
         })
         .catch(err => console.log(err));
     };
+    return image_path;
+}
+
+// Uploads a note version and logs the resulting message to the console.
+async function upload_note(note_object) {
+    fetch("/api/add_note", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        cache: "no-cache",
+        body: JSON.stringify( note_object )
+    })
+    .then(response => response.json())
+    .then(json => console.log(json))
+    .catch(err => console.log(err));
+}
+
+// ADD NOTES - popup submit function
+async function pu_submit(){
 
     let title = L.DomUtil.get("pu_title").value;
     let text = L.DomUtil.get("pu_content").value;
-    if (title=="" || text==""){
-        alert("Please enter a title and some content.");
-    } else {
-        let latlng = arr_marker[arr_marker.length-1]._latlng;
-        let converter = new showdown.Converter({extensions: ["htmlescape"]});
-        let content= converter.makeHtml(text);
-        arr_marker[arr_marker.length-1].title=title;
-        arr_marker[arr_marker.length-1].content=content;
-        arr_marker[arr_marker.length-1].bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").getAttribute("data-checked")));
-        isOverflown(document.getElementById("pu_title_ld"));
 
-        // push the created note to the database.
-        fetch("/api/add_note", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            cache: "no-cache",
-            // The backend only accepts this very request structure. Ping Kerstin for more fields etc.
-            body: JSON.stringify( {
-                versions: [ {
-                title: title,
-                text: content
-                } ],
-                lat: latlng.lat,
-                lon: latlng.lng,
-                kind: "note"
-            } )
-        })
-        .then(response => response.json())
-        .then(json => console.log(json))
-        .catch(err => console.log(err));
+    if (title === "" || text === ""){
+        alert("Please enter a title and some content.");
+        return;
     }
+
+    let { lat, lng } = arr_marker[arr_marker.length-1]._latlng;
+    let converter = new showdown.Converter({extensions: ["htmlescape"]});
+    let content = converter.makeHtml(text);
+
+    // The object that is going to be submitted.
+    let note_object = {
+        versions: [
+            {
+                title: title,
+                text: content,
+            }
+        ],
+        lat: lat,
+        lon: lng,
+        kind: "note"
+    };
+
+    let image_file = document.getElementById("upload_image").files[0];
+    if (image_file) {
+        upload_note_with_image(image_file, note_object);
+    } else {
+        upload_note(note_object);
+    }
+
+    arr_marker[arr_marker.length-1].title = title;
+    arr_marker[arr_marker.length-1].content = content;
+    arr_marker[arr_marker.length-1].bindPopup(
+        popupString(title,
+            content,
+            2,
+            document.getElementById("ctrl_edit").getAttribute("data-checked")
+        )
+    );
+    isOverflown(document.getElementById("pu_title_ld"));
 }
 
 function popupString(title, content, n, edit){ // n1: edit layout; n2: final layout
