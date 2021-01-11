@@ -557,18 +557,11 @@ function popupString(title, content, n, edit, image_src){ // n1: edit layout; n2
         case 1:
             return "<textarea id='pu_title' rows='1' style='text-align: center' maxlength='40' class='title_ta'>" + title + "</textarea><br><br>" +
             "<label class='custom-file-upload'><clr-icon shape='image' size='20'></clr-icon><input id='upload_image' type='file' accept='image/jpeg,image/png' onChange='img_value()'></label><span id='img_file'></span><br><br>"+
-<<<<<<< HEAD
             "<textarea id='pu_content' class='content_ta scroll'>" + content + "</textarea><br><br>" +
             "<table style='width: 101%;'><tr><td><div class='tooltip'>You can use Markdown to format the text." + 
             "<span class='tooltiptext'>Heading 1: # <br>Heading 2: ## <br>Italics: *Text* <br>Bold: **Text** <br>Blockquote: < Text <br>Horizontal Line: --- <br>Links: [Text](URL) <br>Paragraph: Empty Line</span></div></td>" +
             "<td style='text-align: right;'><button id='pu_btn' type='button' onclick='pu_submit()' style='border-radius: 5px 0 0 5px; border-right: 1px solid #005201'><clr-icon shape='check' size='20'></clr-icon></button>" +
             "<button id='pu_btn' type='button' onclick='pu_cancel()' style='border-radius: 0 5px 5px 0;'><clr-icon shape='times' size='20'></clr-icon></button></td></tr></table>"
-=======
-            "<textarea id='pu_content' rows='30' class='content_ta scroll'>" + content + "</textarea><br><br>" +
-            "<div class='tooltip'>You can use Markdown to format the text." +
-            "<span class='tooltiptext'>Heading 1: # <br>Heading 2: ## <br>Italics: *Text* <br>Bold: **Text** <br>Blockquote: < Text <br>Horizontal Line: --- <br>Links: [Text](URL) <br>Paragraph: Empty Line</span></div><br><br>" +
-            "<button id='pu_btn' type='button' onclick='pu_submit()'><clr-icon shape='check' size='20'></clr-icon></button>"
->>>>>>> 62a6de28ef0d0e93138ea649adcbea65cd41643a
         case 2:
             return "<h1 id='pu_title_ld' class='title' style='font-size: 30'>" + title + "</h1><br>" +
                 ((image_src) ? "<img src='" + image_src + "' style='height: 100%'>" : "") +
