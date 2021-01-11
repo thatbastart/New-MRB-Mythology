@@ -297,7 +297,8 @@ function edit(){
     if(curr_pu!=undefined){
         let title =  curr_pu.title;
         let content =  curr_pu.content;
-        curr_pu.bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").getAttribute("data-checked")));
+        let img = curr_pu.noteVersions.image_src;
+        curr_pu.bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").getAttribute("data-checked"), img));
         isOverflown(document.getElementById("pu_title_ld"));
     }
 }
@@ -611,7 +612,8 @@ function show_history(){
 function change_version(){
     title=curr_pu.noteVersions[document.getElementById("dd_ver").value].title;
     content=curr_pu.noteVersions[document.getElementById("dd_ver").value].text;
-    curr_pu.bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").getAttribute("data-checked")));
+    let img=curr_pu.noteVersions[document.getElementById("dd_ver").value].image_src;
+    curr_pu.bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").getAttribute("data-checked"), img));
     isOverflown(document.getElementById("pu_title_ld"));
 }
 
