@@ -295,10 +295,14 @@ function edit(){
     }
     // redraw popup to show/hide edit button
     if(curr_pu!=undefined){
-        let title =  curr_pu.title;
-        let content =  curr_pu.content;
-        let img = curr_pu.noteVersions.image_src;
-        curr_pu.bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").getAttribute("data-checked"), img));
+        let { title, content, image_path } = curr_pu;
+        curr_pu.bindPopup(popupString(
+            title,
+            content,
+            2,
+            document.getElementById("ctrl_edit").getAttribute("data-checked"),
+            image_path
+        ));
         isOverflown(document.getElementById("pu_title_ld"));
     }
 }
@@ -438,7 +442,7 @@ fetch("/api/get_notes", {
             text,
             2,
             document.getElementById("ctrl_edit").getAttribute("data-checked"),
-            image_src = image_path
+            image_path = image_path
         ));
         marker.noteVersions = note.versions;
         arr_marker.push(marker);
@@ -454,7 +458,10 @@ fetch("/api/get_notes", {
 // Upload an image file. When the upload finished successfully, we receive the
 // URL of the uploaded image and call upload_note() with it.
 async function upload_note_with_image(image_file, note_object) {
+
+    // The URL where the uploaded image is going to be available.
     let image_path = null;
+
     let reader = new FileReader();
     reader.readAsDataURL(image_file);
     reader.onload = async function() {
@@ -473,6 +480,7 @@ async function upload_note_with_image(image_file, note_object) {
         })
         .catch(err => console.log(err));
     };
+
     return image_path;
 }
 
@@ -522,7 +530,7 @@ async function pu_submit(){
 
     // Data URL for displaying the potentially uploaded image in the current session.
     // Stays null if there is no image submitted.
-    let image_src = null;
+    let image_path = null;
 
     // Push the note (and potentially an image) to DB.
     let image_file = document.getElementById("upload_image").files[0];
@@ -542,7 +550,7 @@ async function pu_submit(){
             content,
             2,
             document.getElementById("ctrl_edit").getAttribute("data-checked"),
-            image_src = image_src
+            image_path = image_path
         )
     );
     current_marker.noteVersions.push(
@@ -554,7 +562,7 @@ async function pu_submit(){
     isOverflown(document.getElementById("pu_title_ld"));
 }
 
-function popupString(title, content, n, edit, image_src){ // n1: edit layout; n2: final layout
+function popupString(title, content, n, edit, image_path){ // n1: edit layout; n2: final layout
     let disp="";
     if(edit=="true"){
         disp="inline";
@@ -572,7 +580,7 @@ function popupString(title, content, n, edit, image_src){ // n1: edit layout; n2
             "<button id='pu_btn' type='button' onclick='pu_cancel()' style='border-radius: 0 5px 5px 0;'><clr-icon shape='times' size='20'></clr-icon></button></td></tr></table>"
         case 2:
             return "<h1 id='pu_title_ld' class='title' style='font-size: 30'>" + title + "</h1><br>" +
-                ((image_src) ? "<img src='" + image_src + "' style='height: 100%'>" : "") +
+                ((image_path) ? "<img src='" + image_path + "' style='height: 100%'>" : "") +
                 "<div id='pu_content_ld' class='content scroll'>" + content +"</div><br>" +
                 "<button id='pu_btn' type='button' id='btn_edit' style='border-radius: 5px 0 0 5px; border-right: 1px solid #005201; display:" + disp + ";' onClick='invoke_pu_edit()' ><clr-icon shape='pencil' size='20'></clr-icon></button>" +
                 "<button id='pu_btn' type='button' id='btn_history' onClick='show_history()' style='border-radius: 0 5px 5px 0;'><clr-icon shape='history' size='20'></clr-icon></button>" +
@@ -616,10 +624,14 @@ function show_history(){
 
 // changes the version after dropdown select
 function change_version(){
-    title=curr_pu.noteVersions[document.getElementById("dd_ver").value].title;
-    content=curr_pu.noteVersions[document.getElementById("dd_ver").value].text;
-    let img=curr_pu.noteVersions[document.getElementById("dd_ver").value].image_src;
-    curr_pu.bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").getAttribute("data-checked"), img));
+    let { title, content, image_path } = curr_pu.noteVersions[document.getElementById("dd_ver").value];
+    curr_pu.bindPopup(popupString(
+        title,
+        content,
+        2,
+        document.getElementById("ctrl_edit").getAttribute("data-checked"),
+        image_path = image_path
+    ));
     isOverflown(document.getElementById("pu_title_ld"));
 }
 
