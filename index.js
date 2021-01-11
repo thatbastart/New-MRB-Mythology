@@ -427,11 +427,16 @@ fetch("/api/get_notes", {
 .then(json => json.map(note => {
     if(note.kind=="note"){
         let marker = new L.marker({ lat: note.lat, lng: note.lon }, {icon: greenIconL}).addTo(map);
-        let title = note.versions[note.versions.length-1].title;
-        let content =  note.versions[note.versions.length-1].text;
+        let { title, content, image_path } = note.versions[note.versions.length-1];
         marker.title=title;
         marker.content=content;
-        marker.bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").getAttribute("data-checked")));
+        marker.bindPopup(popupString(
+            title,
+            content,
+            2,
+            document.getElementById("ctrl_edit").getAttribute("data-checked"),
+            image_src = image_path
+        ));
         marker.noteVersions = note.versions;
         arr_marker.push(marker);
     } else if(note.kind=="label"){
