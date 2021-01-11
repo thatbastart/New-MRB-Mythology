@@ -492,7 +492,10 @@ async function pu_submit(){
         return;
     }
 
-    let { lat, lng } = arr_marker[arr_marker.length-1]._latlng;
+    // Let's just assume that the marker going to be submitted is the last in arr_marker.
+    let current_marker = arr_marker[arr_marker.length-1];
+
+    let { lat, lng } = current_marker._latlng;
     let converter = new showdown.Converter({extensions: ["htmlescape"]});
     let content = converter.makeHtml(text);
 
@@ -516,9 +519,11 @@ async function pu_submit(){
         upload_note(note_object);
     }
 
-    arr_marker[arr_marker.length-1].title = title;
-    arr_marker[arr_marker.length-1].content = content;
-    arr_marker[arr_marker.length-1].bindPopup(
+    // Bind all the note properties to the current marker, so the new note is
+    // directly present in the current session.
+    current_marker.title = title;
+    current_marker.content = content;
+    current_marker.bindPopup(
         popupString(title,
             content,
             2,
