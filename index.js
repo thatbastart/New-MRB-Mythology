@@ -50,8 +50,8 @@ L.control.mousePosition({prefix: "Lat ", separator: " | Lng ", numDigits: 2}).ad
 L.control.custom({
     position: "bottomleft",
     content:    "<div class='nav_panel'><br><br>"+
-                "<button type='button' id='ctrl_layer' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201' onClick=''><clr-icon shape='chat-bubble' size='22' style='#fff'></clr-icon></button>"+
-                "<br><button type='button' id='ctrl_layer' style='border-radius: 0 0 5px 5px;' onClick=''><clr-icon shape='info-circle' size='26' style='#fff'></clr-icon></button><br><br>" +
+                "<button type='button' id='ctrl_layer_l' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201' onClick='btn_layer_label()' data-checked='false'><clr-icon shape='chat-bubble' size='22' style='#fff'></clr-icon></button>"+
+                "<br><button type='button' id='ctrl_layer_i' style='border-radius: 0 0 5px 5px;' onClick='btn_layer_info()' data-checked='false'><clr-icon shape='info-circle' size='26' style='#fff'></clr-icon></button><br><br>" +
                 "<button type='button' id='ctrl_zp' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' size='24' style='#fff'></clr-icon></button>"+
                 "<br><button type='button' id='ctrl_zm' style='border-radius: 0 0 5px 5px;' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' size='24'></clr-icon></button>" +
                 "<br><br><br><input type='range' min='0' max='360' value='0' step='1' name='rotation' id='ctrl_rotate' class='ctrl_rotate'>"+
@@ -63,6 +63,35 @@ L.control.custom({
         padding: "0px 0 0 0",
     },
 }).addTo(map);
+
+let layer_labels = L.layerGroup();
+function btn_layer_label(){
+    console.log(document.getElementById("ctrl_layer_l").getAttribute("data-checked"));
+    if(document.getElementById("ctrl_layer_l").getAttribute("data-checked")=="true"){
+        map.removeLayer(layer_labels);
+        document.getElementById("ctrl_layer_l").style.background="#333";
+        document.getElementById("ctrl_layer_l").setAttribute("data-checked", "false");
+    } else {
+        map.addLayer(layer_labels);
+        document.getElementById("ctrl_layer_l").style.background="#005201";
+        document.getElementById("ctrl_layer_l").setAttribute("data-checked", "true");
+    }
+}
+
+let layer_info = L.layerGroup();
+function btn_layer_info(){
+    map.addLayer(layer_info);
+    console.log(document.getElementById("ctrl_layer_i").getAttribute("data-checked"));
+    if(document.getElementById("ctrl_layer_i").getAttribute("data-checked")=="true"){
+        map.removeLayer(layer_info);
+        document.getElementById("ctrl_layer_i").style.background="#333";
+        document.getElementById("ctrl_layer_i").setAttribute("data-checked", "false");
+    } else {
+        map.addLayer(layer_info);
+        document.getElementById("ctrl_layer_i").style.background="#005201";
+        document.getElementById("ctrl_layer_i").setAttribute("data-checked", "true");
+    }
+}
 
 
 class Story {
@@ -292,6 +321,13 @@ function stories(){
 // MARKER -----------------------------
 
 // intialize marker icons; green=community; blue=editorial; red=position
+let emptyIcon = L.icon({
+    iconUrl: 'marker_green.png',
+    iconSize:     [0, 0], 
+    iconAnchor:   [0, 0], 
+    popupAnchor:  [0, 0] 
+});
+
 let greenIconL = L.icon({
     iconUrl: 'marker_green.png',
     iconSize:     [30, 30], 
@@ -334,7 +370,14 @@ map.on('popupopen', function(e) {
     document.getElementById("about").style.display="none";
     document.getElementById("about-arrow").style.display="none";
     curr_pu = e.popup._source;
-    view_reset(curr_pu._latlng.lat,curr_pu._latlng.lng);
+    if(document.getElementById("kind_note").getAttribute("data-checked")=="true"){
+        view_reset(curr_pu._latlng.lat,curr_pu._latlng.lng);
+    } else {
+        map.flyTo([curr_pu._latlng.lat, curr_pu._latlng.lng], map.getZoom(), {
+            animate: true,
+            duration: 0.25
+        });
+    }
     pu_flag=true;
     hist_c=0;
     isOverflown(document.getElementById("pu_title_ld"));
@@ -382,19 +425,42 @@ fetch("/api/get_notes", {
 })
 .then(response => response.json())
 .then(json => json.map(note => {
-    let marker = new L.marker({ lat: note.lat, lng: note.lon }, {icon: greenIconL}).addTo(map);
-    let title = note.versions[note.versions.length-1].title;
-    let content =  note.versions[note.versions.length-1].text;
-    marker.title=title;
-    marker.content=content;
-    marker.bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").getAttribute("data-checked")));
-    marker.noteVersions = note.versions;
-    arr_marker.push(marker);
+    if(note.kind=="note"){
+        let marker = new L.marker({ lat: note.lat, lng: note.lon }, {icon: greenIconL}).addTo(map);
+        let title = note.versions[note.versions.length-1].title;
+        let content =  note.versions[note.versions.length-1].text;
+        marker.title=title;
+        marker.content=content;
+        marker.bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").getAttribute("data-checked")));
+        marker.noteVersions = note.versions;
+        arr_marker.push(marker);
+    } else if(note.kind=="label"){
+        let lbl = new L.marker({lat: note.lat, lng: note.lon}, {icon: emptyIcon});
+        let title = note.versions[note.versions.length-1].title;
+        lbl.bindTooltip(title, {permanent: true, className: "label", direction: "center"});
+        lbl.addTo(layer_labels);
+    }
 }))
 .catch(err => console.log(err));
 
 // ADD NOTES - popup submit function
 function pu_submit(){
+    let image_file = document.getElementById("upload_image").files[0];
+    let reader = new FileReader();
+    reader.readAsDataURL(image_file);
+    reader.onload = function() {
+        console.log(reader.result);
+        fetch("/api/upload_image", {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=UTF-8" },
+            cache: "no-cache",
+            body: reader.result
+        })
+        .then(response => response.json())
+        .then(json => console.log(json))
+        .catch(err => console.log(err));
+    };
+
     let title = L.DomUtil.get("pu_title").value;
     let text = L.DomUtil.get("pu_content").value;
     if (title=="" || text==""){
@@ -421,7 +487,7 @@ function pu_submit(){
                 } ],
                 lat: latlng.lat,
                 lon: latlng.lng,
-                kind: ""
+                kind: "note"
             } )
         })
         .then(response => response.json())
@@ -440,6 +506,7 @@ function popupString(title, content, n, edit){ // n1: edit layout; n2: final lay
     switch(n){
         case 1:
             return "<textarea id='pu_title' rows='1' style='text-align: center' maxlength='40' class='title_ta'>" + title + "</textarea><br><br>" +
+            "<label class='custom-file-upload'><clr-icon shape='image' size='20'></clr-icon><input id='upload_image' type='file' accept='image/jpeg,image/png' onChange='img_value()'></label><span id='img_file'></span><br><br>"+
             "<textarea id='pu_content' rows='30' class='content_ta scroll'>" + content + "</textarea><br><br>" +
             "<div class='tooltip'>You can use Markdown to format the text." + 
             "<span class='tooltiptext'>Heading 1: # <br>Heading 2: ## <br>Italics: *Text* <br>Bold: **Text** <br>Blockquote: < Text <br>Horizontal Line: --- <br>Links: [Text](URL) <br>Paragraph: Empty Line</span></div><br><br>" +
@@ -450,6 +517,13 @@ function popupString(title, content, n, edit){ // n1: edit layout; n2: final lay
             "<button id='pu_btn' type='button' id='btn_history' onClick='show_history()' style='border-radius: 0 5px 5px 0;'><clr-icon shape='history' size='20'></clr-icon></button>" +
             "<select id='dd_ver' style='visibility: hidden;' onChange='change_version()'></select>";
     }
+}
+
+function img_value(){
+    let str=document.getElementById("upload_image").value;
+    let parts=str.split("\\");
+    str=parts[parts.length-1];
+    document.getElementById("img_file").innerHTML=str;
 }
 
 // edit button for popup
@@ -504,18 +578,82 @@ function add_marker(pos,title,content){
 
 let label=undefined;
 function add_label(pos){
-    label = new L.marker(pos, { opacity: 0 });
-    label.bindTooltip("My Label", {permanent: true, className: "my-label", direction: "center"});
+    if(document.getElementById("ctrl_layer_l").getAttribute("data-checked")=="false"){
+        btn_layer_label();
+    }
+    let text="<textarea id='label_text' rows='1' style='text-align: center' maxlength='100' class='label_ta'></textarea>"+
+            "<button id='lbl_submit' type='button' onclick='label_submit()' style='left: 400px; border-radius:5px 0 0 5px; border-right: 1px solid #005201;'><clr-icon shape='check' size='20'></clr-icon></button>"+
+            "<button id='lbl_cancel' type='button' onclick='label_cancel()' style='left: 440px; border-radius:0 5px 5px 0;'><clr-icon shape='times' size='20'></clr-icon></button>";
+    label = new L.marker(pos, {icon: emptyIcon});
+    label.bindPopup(text, {closeButton: false});
     label.addTo(map);
-    
+    label.openPopup();
+}
+
+function label_submit(){
+    let lbl = new L.marker(label._latlng, {icon: emptyIcon});
+    let text=document.getElementById("label_text").value;
+    lbl.bindTooltip(text, {permanent: true, className: "label", direction: "center"});
+    lbl.addTo(layer_labels);
+    map.removeLayer(label);
+    fetch("/api/add_note", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        cache: "no-cache",
+        // The backend only accepts this very request structure. Ping Kerstin for more fields etc.
+        body: JSON.stringify( {
+            versions: [ {
+            title: text,
+            text: ""
+            } ],
+            lat: label._latlng.lat,
+            lon: label._latlng.lng,
+            kind: "label"
+        } )
+    })
+    .then(response => response.json())
+    .then(json => console.log(json))
+    .catch(err => console.log(err));
+}
+
+function label_cancel(){
+    map.removeLayer(label);
 }
 
 // onClick Event -> adding marker or label
 map.on('click', function(e){
     if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="true" && document.getElementById("ctrl_ov").getAttribute("data-checked")=="false"){
         if(document.getElementById("kind_note").getAttribute("data-checked")=="true"){
+            let rule=css_getClass(".leaflet-popup-content-wrapper");
+            rule.style.height="600px"
+            rule.style.transform="";
+
+            rule=css_getClass(".leaflet-popup-content");
+            rule.style.setProperty("width", "90%","important");
+            rule.style.setProperty("height", "95%","important");
+            rule.style.margin="5%";
+
+            rule=css_getClass(".leaflet-popup-tip-container");
+            rule.style.display="inline";
+
             add_marker(e.latlng);
         } else {
+            let rule=css_getClass(".leaflet-popup-content-wrapper");
+            rule.style.height="45px"
+            rule.style.transform="translateY(42px)";
+
+            rule=css_getClass(".leaflet-popup-content");
+            rule.style.setProperty("width", "100%","important");
+            rule.style.setProperty("height", "100%","important");
+            rule.style.margin="0";
+
+            rule=css_getClass(".leaflet-popup-tip-container");
+            rule.style.display="none";
+
+            map.flyTo(e.latlng, map.getZoom(), {
+                animate: true,
+                duration: 0.25
+            });
             add_label(e.latlng);
         }
     }
@@ -612,4 +750,13 @@ function btn_tgl(btn, btn2){
             document.getElementById(btn2).setAttribute("data-checked","false");
         }
     }
+}
+
+function css_getClass(name) {
+    let rules = {};
+    let cssRules = document.styleSheets[3].cssRules;
+    for (let j=0; j<cssRules.length; ++j){
+        rules[cssRules[j].selectorText] = cssRules[j];
+    }
+    return rules[name];
 }
