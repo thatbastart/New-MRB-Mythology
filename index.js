@@ -428,11 +428,16 @@ fetch("/api/get_notes", {
 .then(json => json.map(note => {
     if(note.kind=="note"){
         let marker = new L.marker({ lat: note.lat, lng: note.lon }, {icon: greenIconL}).addTo(map);
-        let title = note.versions[note.versions.length-1].title;
-        let content =  note.versions[note.versions.length-1].text;
+        let { title, content, image_path } = note.versions[note.versions.length-1];
         marker.title=title;
         marker.content=content;
-        marker.bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").getAttribute("data-checked")));
+        marker.bindPopup(popupString(
+            title,
+            content,
+            2,
+            document.getElementById("ctrl_edit").getAttribute("data-checked"),
+            image_src = image_path
+        ));
         marker.noteVersions = note.versions;
         arr_marker.push(marker);
     } else if(note.kind=="label"){
@@ -444,18 +449,14 @@ fetch("/api/get_notes", {
 }))
 .catch(err => console.log(err));
 
-// ADD NOTES - popup submit function
-function pu_submit(){
-
-    // Wenn ein Bild hochgeladen wird, wird es unter diesem Pfad verfügbar sein.
+// Upload an image file. When the upload finished successfully, we receive the
+// URL of the uploaded image and call upload_note() with it.
+async function upload_note_with_image(image_file, note_object) {
     let image_path = null;
-
-    let image_file = document.getElementById("upload_image").files[0];
     let reader = new FileReader();
     reader.readAsDataURL(image_file);
-    reader.onload = function() {
-        console.log(reader.result);
-        fetch("/api/upload_image", {
+    reader.onload = async function() {
+        await fetch("/api/upload_image", {
             method: "POST",
             headers: { "Content-Type": "text/plain;charset=UTF-8" },
             cache: "no-cache",
@@ -465,46 +466,87 @@ function pu_submit(){
         .then(json => {
             console.log(json)
             image_path = json.file_path;
+            note_object.versions[0].image_path = image_path;
+            upload_note(note_object);
         })
         .catch(err => console.log(err));
     };
+    return image_path;
+}
+
+// Uploads a note version and logs the resulting message to the console.
+async function upload_note(note_object) {
+    fetch("/api/add_note", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        cache: "no-cache",
+        body: JSON.stringify( note_object )
+    })
+    .then(response => response.json())
+    .then(json => console.log(json))
+    .catch(err => console.log(err));
+}
+
+// ADD NOTES - popup submit function
+async function pu_submit(){
 
     let title = L.DomUtil.get("pu_title").value;
     let text = L.DomUtil.get("pu_content").value;
-    if (title=="" || text==""){
-        alert("Please enter a title and some content.");
-    } else {
-        let latlng = arr_marker[arr_marker.length-1]._latlng;
-        let converter = new showdown.Converter({extensions: ["htmlescape"]});
-        let content= converter.makeHtml(text);
-        arr_marker[arr_marker.length-1].title=title;
-        arr_marker[arr_marker.length-1].content=content;
-        arr_marker[arr_marker.length-1].bindPopup(popupString(title, content, 2,document.getElementById("ctrl_edit").getAttribute("data-checked")));
-        isOverflown(document.getElementById("pu_title_ld"));
 
-        // push the created note to the database.
-        fetch("/api/add_note", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            cache: "no-cache",
-            // The backend only accepts this very request structure. Ping Kerstin for more fields etc.
-            body: JSON.stringify( {
-                versions: [ {
-                title: title,
-                text: content
-                } ],
-                lat: latlng.lat,
-                lon: latlng.lng,
-                kind: "note"
-            } )
-        })
-        .then(response => response.json())
-        .then(json => console.log(json))
-        .catch(err => console.log(err));
+    if (title === "" || text === ""){
+        alert("Please enter a title and some content.");
+        return;
     }
+
+    // Let's just assume that the marker going to be submitted is the last in arr_marker.
+    let current_marker = arr_marker[arr_marker.length-1];
+
+    let { lat, lng } = current_marker._latlng;
+    let converter = new showdown.Converter({extensions: ["htmlescape"]});
+    let content = converter.makeHtml(text);
+
+    // The object that is going to be submitted.
+    let note_object = {
+        versions: [
+            {
+                title: title,
+                text: content,
+            }
+        ],
+        lat: lat,
+        lon: lng,
+        kind: "note"
+    };
+
+    // Data URL for displaying the potentially uploaded image in the current session.
+    // Stays null if there is no image submitted.
+    let image_src = null;
+
+    // Push the note (and potentially an image) to DB.
+    let image_file = document.getElementById("upload_image").files[0];
+    if (image_file) {
+        image_src = URL.createObjectURL(image_file);
+        upload_note_with_image(image_file, note_object);
+    } else {
+        upload_note(note_object);
+    }
+
+    // Bind all the note properties to the current marker, so the new note is
+    // directly present in the current session.
+    current_marker.title = title;
+    current_marker.content = content;
+    current_marker.bindPopup(
+        popupString(title,
+            content,
+            2,
+            document.getElementById("ctrl_edit").getAttribute("data-checked"),
+            image_src = image_src
+        )
+    );
+    isOverflown(document.getElementById("pu_title_ld"));
 }
 
-function popupString(title, content, n, edit){ // n1: edit layout; n2: final layout
+function popupString(title, content, n, edit, image_src){ // n1: edit layout; n2: final layout
     let disp="";
     if(edit=="true"){
         disp="inline";
@@ -515,16 +557,25 @@ function popupString(title, content, n, edit){ // n1: edit layout; n2: final lay
         case 1:
             return "<textarea id='pu_title' rows='1' style='text-align: center' maxlength='40' class='title_ta'>" + title + "</textarea><br><br>" +
             "<label class='custom-file-upload'><clr-icon shape='image' size='20'></clr-icon><input id='upload_image' type='file' accept='image/jpeg,image/png' onChange='img_value()'></label><span id='img_file'></span><br><br>"+
+<<<<<<< HEAD
             "<textarea id='pu_content' class='content_ta scroll'>" + content + "</textarea><br><br>" +
             "<table style='width: 101%;'><tr><td><div class='tooltip'>You can use Markdown to format the text." + 
             "<span class='tooltiptext'>Heading 1: # <br>Heading 2: ## <br>Italics: *Text* <br>Bold: **Text** <br>Blockquote: < Text <br>Horizontal Line: --- <br>Links: [Text](URL) <br>Paragraph: Empty Line</span></div></td>" +
             "<td style='text-align: right;'><button id='pu_btn' type='button' onclick='pu_submit()' style='border-radius: 5px 0 0 5px; border-right: 1px solid #005201'><clr-icon shape='check' size='20'></clr-icon></button>" +
             "<button id='pu_btn' type='button' onclick='pu_cancel()' style='border-radius: 0 5px 5px 0;'><clr-icon shape='times' size='20'></clr-icon></button></td></tr></table>"
+=======
+            "<textarea id='pu_content' rows='30' class='content_ta scroll'>" + content + "</textarea><br><br>" +
+            "<div class='tooltip'>You can use Markdown to format the text." +
+            "<span class='tooltiptext'>Heading 1: # <br>Heading 2: ## <br>Italics: *Text* <br>Bold: **Text** <br>Blockquote: < Text <br>Horizontal Line: --- <br>Links: [Text](URL) <br>Paragraph: Empty Line</span></div><br><br>" +
+            "<button id='pu_btn' type='button' onclick='pu_submit()'><clr-icon shape='check' size='20'></clr-icon></button>"
+>>>>>>> 62a6de28ef0d0e93138ea649adcbea65cd41643a
         case 2:
-            return "<h1 id='pu_title_ld' class='title' style='font-size: 30'>" + title + "</h1><br><div id='pu_content_ld' class='content scroll'>" + content +"</div><br>" +
-            "<button id='pu_btn' type='button' id='btn_edit' style='border-radius: 5px 0 0 5px; border-right: 1px solid #005201; display:" + disp + ";' onClick='invoke_pu_edit()' ><clr-icon shape='pencil' size='20'></clr-icon></button>" +
-            "<button id='pu_btn' type='button' id='btn_history' onClick='show_history()' style='border-radius: 0 5px 5px 0;'><clr-icon shape='history' size='20'></clr-icon></button>" +
-            "<select id='dd_ver' style='visibility: hidden;' onChange='change_version()'></select>";
+            return "<h1 id='pu_title_ld' class='title' style='font-size: 30'>" + title + "</h1><br>" +
+                ((image_src) ? "<img src='" + image_src + "' style='height: 100%'>" : "") +
+                "<div id='pu_content_ld' class='content scroll'>" + content +"</div><br>" +
+                "<button id='pu_btn' type='button' id='btn_edit' style='border-radius: 5px 0 0 5px; border-right: 1px solid #005201; display:" + disp + ";' onClick='invoke_pu_edit()' ><clr-icon shape='pencil' size='20'></clr-icon></button>" +
+                "<button id='pu_btn' type='button' id='btn_history' onClick='show_history()' style='border-radius: 0 5px 5px 0;'><clr-icon shape='history' size='20'></clr-icon></button>" +
+                "<select id='dd_ver' style='visibility: hidden;' onChange='change_version()'></select>";
     }
 }
 
