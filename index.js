@@ -559,6 +559,7 @@ async function pu_submit(){
             image_path = image_path
         )
     );
+    if (!current_marker.noteVersions) current_marker.noteVersions = [];
     current_marker.noteVersions.push(
         {
             title: title,
