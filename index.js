@@ -544,6 +544,12 @@ async function pu_submit(){
             image_src = image_src
         )
     );
+    current_marker.noteVersions.push(
+        {
+            title: title,
+            text: content,
+        }
+    );
     isOverflown(document.getElementById("pu_title_ld"));
 }
 
