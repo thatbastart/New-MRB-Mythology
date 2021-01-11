@@ -50,7 +50,7 @@ L.control.mousePosition({prefix: "Lat ", separator: " | Lng ", numDigits: 2}).ad
 L.control.custom({
     position: "bottomleft",
     content:    "<div class='nav_panel'><br><br>"+
-                "<br><button type='button' id='ctrl_layer_s' title='Layer: Stories' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201;' onClick='btn_layer(0)' data-checked='false'><clr-icon shape='info-circle' size='26' style='#fff'></clr-icon></button>" +
+                "<br><button type='button' id='ctrl_layer_s' title='Layer: Stories' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201;' onClick='btn_layer(0)' data-checked='false'><clr-icon shape='book' size='22' style='#fff'></clr-icon></button>" +
                 "<br><button type='button' id='ctrl_layer_l' title='Layer: Comments' style='border-radius: 0; border-bottom:1px solid #005201;' onClick='btn_layer(1)' data-checked='false'><clr-icon shape='chat-bubble' size='22' style='#fff'></clr-icon></button>"+
                 "<br><button type='button' id='ctrl_layer_i' title='Layer: Information' style='border-radius: 0 0 5px 5px;' onClick='btn_layer(2)' data-checked='false'><clr-icon shape='info-circle' size='26' style='#fff'></clr-icon></button><br><br>" +
                 "<button type='button' id='ctrl_zp' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201' title='Navigation: Zoom In' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' size='24' style='#fff'></clr-icon></button>"+
