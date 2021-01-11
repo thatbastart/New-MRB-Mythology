@@ -71,6 +71,7 @@
             nodePackages.node2nix
             rustc
             cargo
+            rustfmt
             sqlite
           ];
         }
