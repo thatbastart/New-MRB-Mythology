@@ -291,6 +291,7 @@ function edit(){
 
     if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="false"){
         popup_close_check();
+        label_cancel();
     }
     // redraw popup to show/hide edit button
     if(curr_pu!=undefined){
@@ -514,10 +515,11 @@ function popupString(title, content, n, edit){ // n1: edit layout; n2: final lay
         case 1:
             return "<textarea id='pu_title' rows='1' style='text-align: center' maxlength='40' class='title_ta'>" + title + "</textarea><br><br>" +
             "<label class='custom-file-upload'><clr-icon shape='image' size='20'></clr-icon><input id='upload_image' type='file' accept='image/jpeg,image/png' onChange='img_value()'></label><span id='img_file'></span><br><br>"+
-            "<textarea id='pu_content' rows='30' class='content_ta scroll'>" + content + "</textarea><br><br>" +
-            "<div class='tooltip'>You can use Markdown to format the text." + 
-            "<span class='tooltiptext'>Heading 1: # <br>Heading 2: ## <br>Italics: *Text* <br>Bold: **Text** <br>Blockquote: < Text <br>Horizontal Line: --- <br>Links: [Text](URL) <br>Paragraph: Empty Line</span></div><br><br>" +
-            "<button id='pu_btn' type='button' onclick='pu_submit()'><clr-icon shape='check' size='20'></clr-icon></button>"
+            "<textarea id='pu_content' class='content_ta scroll'>" + content + "</textarea><br><br>" +
+            "<table style='width: 101%;'><tr><td><div class='tooltip'>You can use Markdown to format the text." + 
+            "<span class='tooltiptext'>Heading 1: # <br>Heading 2: ## <br>Italics: *Text* <br>Bold: **Text** <br>Blockquote: < Text <br>Horizontal Line: --- <br>Links: [Text](URL) <br>Paragraph: Empty Line</span></div></td>" +
+            "<td style='text-align: right;'><button id='pu_btn' type='button' onclick='pu_submit()' style='border-radius: 5px 0 0 5px; border-right: 1px solid #005201'><clr-icon shape='check' size='20'></clr-icon></button>" +
+            "<button id='pu_btn' type='button' onclick='pu_cancel()' style='border-radius: 0 5px 5px 0;'><clr-icon shape='times' size='20'></clr-icon></button></td></tr></table>"
         case 2:
             return "<h1 id='pu_title_ld' class='title' style='font-size: 30'>" + title + "</h1><br><div id='pu_content_ld' class='content scroll'>" + content +"</div><br>" +
             "<button id='pu_btn' type='button' id='btn_edit' style='border-radius: 5px 0 0 5px; border-right: 1px solid #005201; display:" + disp + ";' onClick='invoke_pu_edit()' ><clr-icon shape='pencil' size='20'></clr-icon></button>" +
@@ -588,7 +590,7 @@ function add_label(pos){
     if(document.getElementById("ctrl_layer_l").getAttribute("data-checked")=="false"){
         btn_layer_label();
     }
-    let text="<textarea id='label_text' rows='1' style='text-align: center' maxlength='100' class='label_ta'></textarea>"+
+    let text="<textarea id='label_text' rows='1' maxlength='100' class='label_ta'></textarea>"+
             "<button id='lbl_submit' type='button' onclick='label_submit()' style='left: 400px; border-radius:5px 0 0 5px; border-right: 1px solid #005201;'><clr-icon shape='check' size='20'></clr-icon></button>"+
             "<button id='lbl_cancel' type='button' onclick='label_cancel()' style='left: 440px; border-radius:0 5px 5px 0;'><clr-icon shape='times' size='20'></clr-icon></button>";
     label = new L.marker(pos, {icon: emptyIcon});
