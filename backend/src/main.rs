@@ -40,6 +40,7 @@ struct NoteContent {
     title: String,
     text: String,
     creation_date: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     image_path: Option<String>,
 }
 
