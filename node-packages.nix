@@ -121,15 +121,6 @@ let
         sha512 = "KaL7+6Fw6i5A2XSnsbhm/6B+NuEA7TZ4vqxnd5tXz9sbKtrN9Srj8ab4vKVdK8YAqZO9P1kg45Y6YLoduPf+kw==";
       };
     };
-    "dom-to-image-2.6.0" = {
-      name = "dom-to-image";
-      packageName = "dom-to-image";
-      version = "2.6.0";
-      src = fetchurl {
-        url = "https://registry.npmjs.org/dom-to-image/-/dom-to-image-2.6.0.tgz";
-        sha1 = "8a503608088c87b1c22f9034ae032e1898955867";
-      };
-    };
     "emoji-regex-7.0.3" = {
       name = "emoji-regex";
       packageName = "emoji-regex";
@@ -146,15 +137,6 @@ let
       src = fetchurl {
         url = "https://registry.npmjs.org/escape-latex/-/escape-latex-1.2.0.tgz";
         sha512 = "nV5aVWW1K0wEiUIEdZ4erkGGH8mDxGyxSeqPzRNtWP7ataw+/olFObw7hujFWlVjNsaDFw5VZ5NzVSIqRgfTiw==";
-      };
-    };
-    "file-saver-1.3.8" = {
-      name = "file-saver";
-      packageName = "file-saver";
-      version = "1.3.8";
-      src = fetchurl {
-        url = "https://registry.npmjs.org/file-saver/-/file-saver-1.3.8.tgz";
-        sha512 = "spKHSBQIxxS81N/O21WmuXA2F6wppUCsutpzenOeZzOCCJ5gEfcbqJP983IrpLXzYmXnMUa6J03SubcNPdKrlg==";
       };
     };
     "find-up-3.0.0" = {
@@ -202,13 +184,13 @@ let
         sha1 = "f9e2303d4507f6d74355a73664d1440fb5a0ef59";
       };
     };
-    "leaflet-easyprint-2.1.9" = {
-      name = "leaflet-easyprint";
-      packageName = "leaflet-easyprint";
-      version = "2.1.9";
+    "leaflet-1.7.1" = {
+      name = "leaflet";
+      packageName = "leaflet";
+      version = "1.7.1";
       src = fetchurl {
-        url = "https://registry.npmjs.org/leaflet-easyprint/-/leaflet-easyprint-2.1.9.tgz";
-        sha1 = "ed395c7e1e377a5cdd944f7cc07216feae9db833";
+        url = "https://registry.npmjs.org/leaflet/-/leaflet-1.7.1.tgz";
+        sha512 = "/xwPEBidtg69Q3HlqPdU3DnrXQOvQU/CCHA1tcDQVzOwm91YMYaILjNp7L4Eaw5Z4sOYdbBz6koWyibppd8Zqw==";
       };
     };
     "leaflet-rotate-map-0.2.2" = {
@@ -429,16 +411,14 @@ let
       sources."complex.js-2.0.11"
       sources."decamelize-1.2.0"
       sources."decimal.js-10.2.1"
-      sources."dom-to-image-2.6.0"
       sources."emoji-regex-7.0.3"
       sources."escape-latex-1.2.0"
-      sources."file-saver-1.3.8"
       sources."find-up-3.0.0"
       sources."fraction.js-4.0.13"
       sources."get-caller-file-2.0.5"
       sources."is-fullwidth-code-point-2.0.0"
       sources."javascript-natural-sort-0.7.1"
-      sources."leaflet-easyprint-2.1.9"
+      sources."leaflet-1.7.1"
       sources."leaflet-rotate-map-0.2.2"
       sources."locate-path-3.0.0"
       sources."mathjs-8.1.1"

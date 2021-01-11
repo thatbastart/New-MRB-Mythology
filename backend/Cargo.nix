@@ -1243,7 +1243,7 @@ rec {
           }
           {
             name = "pin-project-lite";
-            packageId = "pin-project-lite 0.2.2";
+            packageId = "pin-project-lite 0.2.3";
           }
           {
             name = "pin-utils";
@@ -1636,7 +1636,7 @@ rec {
           }
           {
             name = "pin-project";
-            packageId = "pin-project 1.0.3";
+            packageId = "pin-project 1.0.4";
           }
           {
             name = "socket2";
@@ -2643,18 +2643,18 @@ rec {
         ];
         
       };
-      "pin-project 1.0.3" = rec {
+      "pin-project 1.0.4" = rec {
         crateName = "pin-project";
-        version = "1.0.3";
+        version = "1.0.4";
         edition = "2018";
-        sha256 = "1rvmv48ynnnh526ylxhinyy9ypw5113p8qan6ijvmmma753810ss";
+        sha256 = "1wm2gjmgcsglw8yqka67fhvcj7zj1fh6yfw6awlal5wza1l0pdwm";
         authors = [
           "Taiki Endo <te316e89@gmail.com>"
         ];
         dependencies = [
           {
             name = "pin-project-internal";
-            packageId = "pin-project-internal 1.0.3";
+            packageId = "pin-project-internal 1.0.4";
             usesDefaultFeatures = false;
           }
         ];
@@ -2686,11 +2686,11 @@ rec {
         ];
         
       };
-      "pin-project-internal 1.0.3" = rec {
+      "pin-project-internal 1.0.4" = rec {
         crateName = "pin-project-internal";
-        version = "1.0.3";
+        version = "1.0.4";
         edition = "2018";
-        sha256 = "0flbvqy34ng3y21s8zqqm4glj62p66xyqpqwphaksi3kixmw9g5p";
+        sha256 = "0wcy3n9w856aw27f6ns2ipd2yac7jbl0n3pmn0cyhb7jjdimm8na";
         procMacro = true;
         authors = [
           "Taiki Endo <te316e89@gmail.com>"
@@ -2722,11 +2722,11 @@ rec {
         ];
         
       };
-      "pin-project-lite 0.2.2" = rec {
+      "pin-project-lite 0.2.3" = rec {
         crateName = "pin-project-lite";
-        version = "0.2.2";
+        version = "0.2.3";
         edition = "2018";
-        sha256 = "0g6ain5m0lnhz53h9brwj9ybw42lsl2hv9dp832bxkm40jvxx5k1";
+        sha256 = "05ssxwwima5sa12w3rsdgn2za2axslg4z67lfd868k2srjkf0dms";
         authors = [
           "Taiki Endo <te316e89@gmail.com>"
         ];
@@ -4541,7 +4541,7 @@ rec {
           }
           {
             name = "pin-project-lite";
-            packageId = "pin-project-lite 0.2.2";
+            packageId = "pin-project-lite 0.2.3";
           }
           {
             name = "tracing-core";

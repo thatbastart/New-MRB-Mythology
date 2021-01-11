@@ -445,6 +445,10 @@ fetch("/api/get_notes", {
 
 // ADD NOTES - popup submit function
 function pu_submit(){
+
+    // Wenn ein Bild hochgeladen wird, wird es unter diesem Pfad verfügbar sein.
+    let image_path = null;
+
     let image_file = document.getElementById("upload_image").files[0];
     let reader = new FileReader();
     reader.readAsDataURL(image_file);
@@ -457,7 +461,10 @@ function pu_submit(){
             body: reader.result
         })
         .then(response => response.json())
-        .then(json => console.log(json))
+        .then(json => {
+            console.log(json)
+            image_path = json.file_path;
+        })
         .catch(err => console.log(err));
     };
 
