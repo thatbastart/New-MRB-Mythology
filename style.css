@@ -386,7 +386,7 @@ button#pu_btn {
     margin-right: auto;
 }
 
-button#ctrl_layer_l:hover, button#ctrl_layer_i:hover{
+button#ctrl_layer_l:hover, button#ctrl_layer_i:hover, button#ctrl_layer_s:hover{
     border: 1px solid #ccc !important;
     background: #333;
 }
@@ -474,7 +474,7 @@ select:hover {
     height: 40vh;
     padding-right: 3vw;
     transition: width 0.5s, height 0.5s;
-    margin-bottom: 0.5vw;
+    margin-bottom: 3.2vw;
 }
 .nav_panel:hover{
     width: 15vw;

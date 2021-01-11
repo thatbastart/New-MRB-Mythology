@@ -34,8 +34,8 @@ L.control.custom({
     position: "topright",
     content: "<div style='margin: 20px 20px 0 0;'><table style='margin-right: 0px; margin-left: auto;'><tr><td><div id='ctrl_st' class='btn_toggle' onclick='stories();' data-checked='false'>Stories&nbsp<clr-icon id='st_angle' shape='angle' dir='down' size='20'></clr-icon></div></td>" +
                 "<td><div id='ctrl_edit' class='btn_toggle' onclick='edit();' data-checked='false'>New</div></td>" +
-                "</tr><tr><td></td><td><div id='new_type' style='display: none;'><div id='kind_label' class='btn_toggle' data-checked='false' style='float: right; margin-right: 5px; border-radius: 0 5px 5px 0;' onClick='kind_label()'><clr-icon shape='chat-bubble' size='22' style='#fff'></clr-icon></div>"+
-                "<div id='kind_note' class='btn_toggle' data-checked='true' style='float: right; margin-left: 5px; border-radius: 5px 0 0 5px; border-right: 1px solid #005201;' onClick='kind_note()'><clr-icon shape='note' size='22' style='#fff'></clr-icon></div></div></td></tr></table>" +
+                "</tr><tr><td></td><td><div id='new_type' style='display: none;'><div id='kind_label' class='btn_toggle' title='Create: Comment' data-checked='false' style='float: right; margin-right: 5px; border-radius: 0 5px 5px 0;' onClick='kind_label()'><clr-icon shape='chat-bubble' size='22' style='#fff'></clr-icon></div>"+
+                "<div id='kind_note' class='btn_toggle' title='Create: Note' data-checked='true' style='float: right; margin-left: 5px; border-radius: 5px 0 0 5px; border-right: 1px solid #005201;' onClick='kind_note()'><clr-icon shape='note' size='22' style='#fff'></clr-icon></div></div></td></tr></table>" +
                 "<br><div id='stories-panel-outer' class='stories-outer'><div id='stories-panel' class='stories-panel scroll'></div></div><div id='story-outer' class='story-outer'><div id='story' class='story scroll' onScroll='scrollMarker()''></div></div></div>",
     style:
     {
@@ -50,13 +50,14 @@ L.control.mousePosition({prefix: "Lat ", separator: " | Lng ", numDigits: 2}).ad
 L.control.custom({
     position: "bottomleft",
     content:    "<div class='nav_panel'><br><br>"+
-                "<button type='button' id='ctrl_layer_l' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201' onClick='btn_layer_label()' data-checked='false'><clr-icon shape='chat-bubble' size='22' style='#fff'></clr-icon></button>"+
-                "<br><button type='button' id='ctrl_layer_i' style='border-radius: 0 0 5px 5px;' onClick='btn_layer_info()' data-checked='false'><clr-icon shape='info-circle' size='26' style='#fff'></clr-icon></button><br><br>" +
-                "<button type='button' id='ctrl_zp' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' size='24' style='#fff'></clr-icon></button>"+
-                "<br><button type='button' id='ctrl_zm' style='border-radius: 0 0 5px 5px;' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' size='24'></clr-icon></button>" +
-                "<br><br><br><input type='range' min='0' max='360' value='0' step='1' name='rotation' id='ctrl_rotate' class='ctrl_rotate'>"+
+                "<br><button type='button' id='ctrl_layer_s' title='Layer: Stories' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201;' onClick='btn_layer(0)' data-checked='false'><clr-icon shape='info-circle' size='26' style='#fff'></clr-icon></button>" +
+                "<br><button type='button' id='ctrl_layer_l' title='Layer: Comments' style='border-radius: 0; border-bottom:1px solid #005201;' onClick='btn_layer(1)' data-checked='false'><clr-icon shape='chat-bubble' size='22' style='#fff'></clr-icon></button>"+
+                "<br><button type='button' id='ctrl_layer_i' title='Layer: Information' style='border-radius: 0 0 5px 5px;' onClick='btn_layer(2)' data-checked='false'><clr-icon shape='info-circle' size='26' style='#fff'></clr-icon></button><br><br>" +
+                "<button type='button' id='ctrl_zp' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201' title='Navigation: Zoom In' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' size='24' style='#fff'></clr-icon></button>"+
+                "<br><button type='button' id='ctrl_zm' style='border-radius: 0 0 5px 5px;' title='Navigation: Zoom Out' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' size='24'></clr-icon></button>" +
+                "<br><br><br><input type='range' min='0' max='360' value='0' step='1' name='rotation' id='ctrl_rotate' class='ctrl_rotate' title='Navigation: Rotate'>"+
                 "<table style='margin-top: 5px; margin-bottom: 5px; table-layout: fixed; width: 100%; font-size: max(1.2vh,10px); text-shadow: 0 0 3px #000;'><colgroup><col style='width: 50%'><col style='width: 50%'></colgroup><tr><td style='text-align: left;'>0°</td><td style='text-align: right;'>360°</td></tr></table>" +
-                "<div id='ctrl_ov' class='ctrl_ov' onclick='overview();' data-checked='false'><div style='position: absolute; top: 0; left: 0; bottom: 0; right: 0; width: 100%;'><img id='img_ov' src='overview.jpg' style='width: 100%; height:auto;'></img></div></div></div>",
+                "<div id='ctrl_ov' class='ctrl_ov' title='Navigation: Overview' onclick='overview();' data-checked='false'><div style='position: absolute; top: 0; left: 0; bottom: 0; right: 0; width: 100%;'><img id='img_ov' src='overview.jpg' style='width: 100%; height:auto;'></img></div></div></div>",
     style:
     {
         margin: "0",
@@ -64,34 +65,39 @@ L.control.custom({
     },
 }).addTo(map);
 
+let layer_info = L.layerGroup();
 let layer_labels = L.layerGroup();
-function btn_layer_label(){
-    console.log(document.getElementById("ctrl_layer_l").getAttribute("data-checked"));
-    if(document.getElementById("ctrl_layer_l").getAttribute("data-checked")=="true"){
-        map.removeLayer(layer_labels);
-        document.getElementById("ctrl_layer_l").style.background="#333";
-        document.getElementById("ctrl_layer_l").setAttribute("data-checked", "false");
+let layer_stories = L.layerGroup();
+
+function btn_layer(n){
+    let btn, layer;
+    switch(n){
+        case 0:
+            btn="ctrl_layer_s";
+            layer=layer_stories;
+            break;
+        case 1:
+            btn="ctrl_layer_l";
+            layer=layer_labels;
+            break;
+        case 2:
+            btn="ctrl_layer_i";
+            layer=layer_info;
+            break;
+    }
+    map.addLayer(layer);
+    console.log(document.getElementById(btn).getAttribute("data-checked"));
+    if(document.getElementById(btn).getAttribute("data-checked")=="true"){
+        map.removeLayer(layer);
+        document.getElementById(btn).style.background="#333";
+        document.getElementById(btn).setAttribute("data-checked", "false");
     } else {
-        map.addLayer(layer_labels);
-        document.getElementById("ctrl_layer_l").style.background="#005201";
-        document.getElementById("ctrl_layer_l").setAttribute("data-checked", "true");
+        map.addLayer(layer);
+        document.getElementById(btn).style.background="#005201";
+        document.getElementById(btn).setAttribute("data-checked", "true");
     }
 }
 
-let layer_info = L.layerGroup();
-function btn_layer_info(){
-    map.addLayer(layer_info);
-    console.log(document.getElementById("ctrl_layer_i").getAttribute("data-checked"));
-    if(document.getElementById("ctrl_layer_i").getAttribute("data-checked")=="true"){
-        map.removeLayer(layer_info);
-        document.getElementById("ctrl_layer_i").style.background="#333";
-        document.getElementById("ctrl_layer_i").setAttribute("data-checked", "false");
-    } else {
-        map.addLayer(layer_info);
-        document.getElementById("ctrl_layer_i").style.background="#005201";
-        document.getElementById("ctrl_layer_i").setAttribute("data-checked", "true");
-    }
-}
 
 
 class Story {
@@ -641,7 +647,7 @@ function add_marker(pos,title,content){
 let label=undefined;
 function add_label(pos){
     if(document.getElementById("ctrl_layer_l").getAttribute("data-checked")=="false"){
-        btn_layer_label();
+        btn_layer(1);
     }
     let text="<textarea id='label_text' rows='1' maxlength='100' class='label_ta'></textarea>"+
             "<button id='lbl_submit' type='button' onclick='label_submit()' style='left: 400px; border-radius:5px 0 0 5px; border-right: 1px solid #005201;'><clr-icon shape='check' size='20'></clr-icon></button>"+
