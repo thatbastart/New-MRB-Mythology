@@ -512,8 +512,14 @@ async function pu_submit(){
         kind: "note"
     };
 
+    // Data URL for displaying the potentially uploaded image in the current session.
+    // Stays null if there is no image submitted.
+    let image_src = null;
+
+    // Push the note (and potentially an image) to DB.
     let image_file = document.getElementById("upload_image").files[0];
     if (image_file) {
+        image_src = URL.createObjectURL(image_file);
         upload_note_with_image(image_file, note_object);
     } else {
         upload_note(note_object);
@@ -527,13 +533,14 @@ async function pu_submit(){
         popupString(title,
             content,
             2,
-            document.getElementById("ctrl_edit").getAttribute("data-checked")
+            document.getElementById("ctrl_edit").getAttribute("data-checked"),
+            image_src = image_src
         )
     );
     isOverflown(document.getElementById("pu_title_ld"));
 }
 
-function popupString(title, content, n, edit){ // n1: edit layout; n2: final layout
+function popupString(title, content, n, edit, image_src){ // n1: edit layout; n2: final layout
     let disp="";
     if(edit=="true"){
         disp="inline";
@@ -545,14 +552,16 @@ function popupString(title, content, n, edit){ // n1: edit layout; n2: final lay
             return "<textarea id='pu_title' rows='1' style='text-align: center' maxlength='40' class='title_ta'>" + title + "</textarea><br><br>" +
             "<label class='custom-file-upload'><clr-icon shape='image' size='20'></clr-icon><input id='upload_image' type='file' accept='image/jpeg,image/png' onChange='img_value()'></label><span id='img_file'></span><br><br>"+
             "<textarea id='pu_content' rows='30' class='content_ta scroll'>" + content + "</textarea><br><br>" +
-            "<div class='tooltip'>You can use Markdown to format the text." + 
+            "<div class='tooltip'>You can use Markdown to format the text." +
             "<span class='tooltiptext'>Heading 1: # <br>Heading 2: ## <br>Italics: *Text* <br>Bold: **Text** <br>Blockquote: < Text <br>Horizontal Line: --- <br>Links: [Text](URL) <br>Paragraph: Empty Line</span></div><br><br>" +
             "<button id='pu_btn' type='button' onclick='pu_submit()'><clr-icon shape='check' size='20'></clr-icon></button>"
         case 2:
-            return "<h1 id='pu_title_ld' class='title' style='font-size: 30'>" + title + "</h1><br><div id='pu_content_ld' class='content scroll'>" + content +"</div><br>" +
-            "<button id='pu_btn' type='button' id='btn_edit' style='border-radius: 5px 0 0 5px; border-right: 1px solid #005201; display:" + disp + ";' onClick='invoke_pu_edit()' ><clr-icon shape='pencil' size='20'></clr-icon></button>" +
-            "<button id='pu_btn' type='button' id='btn_history' onClick='show_history()' style='border-radius: 0 5px 5px 0;'><clr-icon shape='history' size='20'></clr-icon></button>" +
-            "<select id='dd_ver' style='visibility: hidden;' onChange='change_version()'></select>";
+            return "<h1 id='pu_title_ld' class='title' style='font-size: 30'>" + title + "</h1><br>" +
+                ((image_src) ? "<img src='" + image_src + "' style='height: 100%'>" : "") +
+                "<div id='pu_content_ld' class='content scroll'>" + content +"</div><br>" +
+                "<button id='pu_btn' type='button' id='btn_edit' style='border-radius: 5px 0 0 5px; border-right: 1px solid #005201; display:" + disp + ";' onClick='invoke_pu_edit()' ><clr-icon shape='pencil' size='20'></clr-icon></button>" +
+                "<button id='pu_btn' type='button' id='btn_history' onClick='show_history()' style='border-radius: 0 5px 5px 0;'><clr-icon shape='history' size='20'></clr-icon></button>" +
+                "<select id='dd_ver' style='visibility: hidden;' onChange='change_version()'></select>";
     }
 }
 
