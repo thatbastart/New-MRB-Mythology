@@ -66,20 +66,14 @@ p{
 .content{
     flex-grow: 0;
     width: 100%;
-    overflow: hidden;
+    overflow: auto;
     font-size: max(1.75vh,12px);
-    padding-right: 21px;
     line-height:1.4;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     margin-top: 10px;
     margin-bottom: 10px;
-}
-
-.content:hover{
-    overflow: auto;
-    padding-right: 10px;
 }
 
 .content_ta{

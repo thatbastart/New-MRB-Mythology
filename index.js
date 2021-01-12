@@ -457,7 +457,7 @@ fetch("/api/get_notes", {
         let newest_version = note.versions[note.versions.length-1];
         let { title, text, image_path } = newest_version;
         marker.title=title;
-        marker.content=content;
+        marker.content=text;
         marker.bindPopup(popupString(
             title,
             text,
@@ -560,8 +560,10 @@ async function pu_submit(){
         upload_note_with_image(image_file, note_object);
     } else {
         upload_note(note_object);
+        if(current_marker.noteVersions.length>1){
+            image_path=current_marker.noteVersions[current_marker.noteVersions.length-1].image_path;
+        }   
     }
-
     // Bind all the note properties to the current marker, so the new note is
     // directly present in the current session.
     current_marker.title = title;
@@ -579,6 +581,7 @@ async function pu_submit(){
         {
             title: title,
             text: content,
+            image_path: image_path,
         }
     );
     isOverflown(document.getElementById("pu_title_ld"));
@@ -603,8 +606,8 @@ function popupString(title, content, n, edit, image_path){ // n1: edit layout; n
                 "<div id='pu_content_ld' class='content scroll'>" +    
                 ((image_path) ? "<div style='max-height: 55%; margin-top: 10px; margin-bottom: 10px; overflow: hidden;'><img src='" + image_path + "' style='width: 100%; height:auto;'></div>" : "") +
                 content +"</div><br>" +
-                "<div style='position: relative;'><button id='pu_btn' type='button' id='btn_edit' style='border-radius: 5px 0 0 5px; border-right: 1px solid #005201;' onClick='invoke_pu_edit()' ><clr-icon shape='pencil' size='20'></clr-icon></button>" +
-                "<button id='pu_btn' type='button' id='btn_history' onClick='show_history()' style='border-radius: 0 5px 5px 0;'><clr-icon shape='history' size='20'></clr-icon></button>" +
+                "<div style='position: relative;'><button id='pu_btn' type='button' id='btn_edit' style='border-radius: 5px 0 0 5px; border-right: 1px solid #005201;' onClick='invoke_pu_edit()' ><clr-icon shape='pencil' size='18'></clr-icon></button>" +
+                "<button id='pu_btn' type='button' id='btn_history' onClick='show_history()' style='border-radius: 0 5px 5px 0;'><clr-icon shape='history' size='18'></clr-icon></button>" +
                 "<select id='dd_ver' style='visibility: hidden;' onChange='change_version()'></select></div>";
     }
 }
