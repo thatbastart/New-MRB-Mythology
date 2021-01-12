@@ -43,7 +43,7 @@ h1{
     font-size: max(3.5vh,20px);
     font-weight: normal;
     text-align: center;
-    margin: 5px !important;
+    margin: 5px;
 }
 
 h1#title {
@@ -64,15 +64,17 @@ p{
     margin: 0px !important;
 }
 .content{
-    height: 84%; 
+    flex-grow: 0;
     width: 100%;
     overflow: hidden;
     font-size: max(1.75vh,12px);
     padding-right: 21px;
-
+    line-height:1.4;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .content:hover{
@@ -81,26 +83,31 @@ p{
 }
 
 .content_ta{
-    height: 75%; 
+    height: 100%;
     width: 100%;
     overflow: auto;
     font-family: 'Titillium Web', sans-serif !important;
     font-size: max(1.75vh,12px);
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .title{
-    height: 5%; 
+    flex: 0 0 5%;
     width: 100%;
+    margin-bottom: 10px;
+    margin-top: -10px;
 }
 
 .title_ta{
-    height: 5%; 
+    flex: 0 0 5%;
     width: 100%;
     padding-top: 1.25%;
     font-family: 'Titillium Web', sans-serif !important;
     font-size: max(1.5vh,11px);
     white-space: nowrap;
-    overflow-x: hidden;
+    overflow: hidden;
+    margin-bottom: 10px;
 }
 
 .label_ta{
@@ -123,6 +130,8 @@ p{
     height: 95% !important;
     margin: 5%;
     line-height: 1;
+    display: flex;
+    flex-flow: column;
 }
 
 .leaflet-popup-content-wrapper {
@@ -351,6 +360,30 @@ p{
     text-shadow: 0 0 1px #000;
     box-shadow: 0 0 0 transparent;
 }
+.label::before{
+    display: none;
+}
+
+.label-info{
+    background: rgba(0,0,0,0.6);
+    color: rgb(255, 0, 0);
+    border: none;
+    border-radius: 10px;
+    font-family: 'Titillium Web', sans-serif;
+    font-size: max(1.75vh,12px);
+    font-weight: bold;
+    box-shadow: 0 0 0 transparent;
+}
+.label-info::before{
+    display: none;
+}
+@supports ((-webkit-backdrop-filter: blur(15px)) or (backdrop-filter: blur(15px))){
+    .label-info{
+        background:rgba(0,0,0,0.5); 
+        -webkit-backdrop-filter: blur(15px);
+        backdrop-filter: blur(15px);
+    }
+}
 
 .label-input{
     width: 35vw;
@@ -379,11 +412,14 @@ button {
     height: 10%;
     min-height: 20px; 
     font-weight: bold;
+    outline: none;
 }
 
 button#pu_btn {
     height: 25px;
     margin-right: auto;
+    margin-top: 5px;
+    margin-bottom: 10px;
 }
 
 button#ctrl_layer_l:hover, button#ctrl_layer_i:hover, button#ctrl_layer_s:hover{
@@ -508,6 +544,7 @@ select:hover {
     -webkit-appearance: none;
     cursor: pointer;
     box-shadow: 0 0 3px #000;
+    outline: none;
 }
 
 #ctrl_rotate::-webkit-slider-thumb{

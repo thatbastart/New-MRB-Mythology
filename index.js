@@ -34,8 +34,8 @@ L.control.custom({
     position: "topright",
     content: "<div style='margin: 20px 20px 0 0;'><table style='margin-right: 0px; margin-left: auto;'><tr><td><div id='ctrl_st' class='btn_toggle' onclick='stories();' data-checked='false'>Stories&nbsp<clr-icon id='st_angle' shape='angle' dir='down' size='20'></clr-icon></div></td>" +
                 "<td><div id='ctrl_edit' class='btn_toggle' onclick='edit();' data-checked='false'>New</div></td>" +
-                "</tr><tr><td></td><td><div id='new_type' style='display: none;'><div id='kind_label' class='btn_toggle' title='Create: Comment' data-checked='false' style='float: right; margin-right: 5px; border-radius: 0 5px 5px 0;' onClick='kind_label()'><clr-icon shape='chat-bubble' size='22' style='#fff'></clr-icon></div>"+
-                "<div id='kind_note' class='btn_toggle' title='Create: Note' data-checked='true' style='float: right; margin-left: 5px; border-radius: 5px 0 0 5px; border-right: 1px solid #005201;' onClick='kind_note()'><clr-icon shape='note' size='22' style='#fff'></clr-icon></div></div></td></tr></table>" +
+                "</tr><tr><td></td><td><div id='new_type' style='display: none;'><div id='kind_label' class='btn_toggle' title='Create: Comment' data-checked='false' style='float: right; margin-right: 5px; border-radius: 0 5px 5px 0;' onClick='kind_label()'><clr-icon id='ico_label' shape='chat-bubble' size='22' style='#fff'></clr-icon></div>"+
+                "<div id='kind_note' class='btn_toggle' title='Create: Note' data-checked='true' style='float: right; margin-left: 5px; border-radius: 5px 0 0 5px; border-right: 1px solid #005201;' onClick='kind_note()'><clr-icon id='ico_note' shape='note' class='is-solid' size='22' style='#fff'></clr-icon></div></div></td></tr></table>" +
                 "<br><div id='stories-panel-outer' class='stories-outer'><div id='stories-panel' class='stories-panel scroll'></div></div><div id='story-outer' class='story-outer'><div id='story' class='story scroll' onScroll='scrollMarker()''></div></div></div>",
     style:
     {
@@ -45,14 +45,14 @@ L.control.custom({
 }).addTo(map);
 
 // panel bottomleft: Lat and Lng at cursor
-L.control.mousePosition({prefix: "Lat ", separator: " | Lng ", numDigits: 2}).addTo(map);
+L.control.mousePosition({prefix: "Lat ", separator: " | Lng ", numDigits: 5}).addTo(map);
 
 L.control.custom({
     position: "bottomleft",
     content:    "<div class='nav_panel'><br><br>"+
-                "<br><button type='button' id='ctrl_layer_s' title='Layer: Stories' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201;' onClick='btn_layer(0)' data-checked='false'><clr-icon shape='book' size='22' style='#fff'></clr-icon></button>" +
-                "<br><button type='button' id='ctrl_layer_l' title='Layer: Comments' style='border-radius: 0; border-bottom:1px solid #005201;' onClick='btn_layer(1)' data-checked='false'><clr-icon shape='chat-bubble' size='22' style='#fff'></clr-icon></button>"+
-                "<br><button type='button' id='ctrl_layer_i' title='Layer: Information' style='border-radius: 0 0 5px 5px;' onClick='btn_layer(2)' data-checked='false'><clr-icon shape='info-circle' size='26' style='#fff'></clr-icon></button><br><br>" +
+                "<br><button type='button' id='ctrl_layer_s' title='Layer: Stories' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201;' onClick='btn_layer(0)' data-checked='false'><clr-icon id='ico_layer_s' shape='book' size='22' style='#fff'></clr-icon></button>" +
+                "<br><button type='button' id='ctrl_layer_l' title='Layer: Comments' style='border-radius: 0; border-bottom:1px solid #005201;' onClick='btn_layer(1)' data-checked='false'><clr-icon id='ico_layer_l' shape='chat-bubble' size='22' style='#fff'></clr-icon></button>"+
+                "<br><button type='button' id='ctrl_layer_i' title='Layer: Information' style='border-radius: 0 0 5px 5px;' onClick='btn_layer(2)' data-checked='false'><clr-icon id='ico_layer_i' shape='info-circle' size='26' style='#fff'></clr-icon></button><br><br>" +
                 "<button type='button' id='ctrl_zp' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201' title='Navigation: Zoom In' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' size='24' style='#fff'></clr-icon></button>"+
                 "<br><button type='button' id='ctrl_zm' style='border-radius: 0 0 5px 5px;' title='Navigation: Zoom Out' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' size='24'></clr-icon></button>" +
                 "<br><br><br><input type='range' min='0' max='360' value='0' step='1' name='rotation' id='ctrl_rotate' class='ctrl_rotate' title='Navigation: Rotate'>"+
@@ -66,65 +66,86 @@ L.control.custom({
 }).addTo(map);
 
 let layer_info = L.layerGroup();
-let layer_labels = L.layerGroup();
 let layer_stories = L.layerGroup();
+let layer_labels = L.layerGroup();
 
-function btn_layer(n){
-    let btn, layer;
-    switch(n){
-        case 0:
-            btn="ctrl_layer_s";
-            layer=layer_stories;
+// intialize marker icons; green=community; blue=editorial; red=position
+let emptyIcon = L.icon({
+    iconUrl: 'marker_green.png',
+    iconSize:     [0, 0], 
+    iconAnchor:   [0, 0], 
+    popupAnchor:  [0, 0] 
+});
+
+let greenIconL = L.icon({
+    iconUrl: 'marker_green.png',
+    iconSize:     [30, 30], 
+    iconAnchor:   [15, 15], 
+    popupAnchor:  [-500, 15] 
+});
+
+let blueIconL = L.icon({
+    iconUrl: 'marker_blue.png',
+    iconSize:     [30, 30], 
+    iconAnchor:   [15, 15], 
+    popupAnchor:  [-500, 15] 
+});
+
+let greenIconS = L.icon({
+    iconUrl: 'marker_green.png',
+    iconSize:     [12, 12], 
+    iconAnchor:   [6, 6], 
+    popupAnchor:  [-500, 6] 
+});
+
+let blueIconS = L.icon({
+    iconUrl: 'marker_blue.png',
+    iconSize:     [12, 12], 
+    iconAnchor:   [6, 6], 
+    popupAnchor:  [-500, 6] 
+});
+
+let redIcon = L.icon({
+    iconUrl: 'marker_red.png',
+    iconSize:     [16, 16], 
+    iconAnchor:   [8, 8], 
+});
+
+let arr_marker = [];
+
+
+for(let i=0; i<arr_info_label.length;i++){
+    let lbl = new L.marker([arr_info_label[i][1],arr_info_label[i][2]], {icon: emptyIcon});
+    let dir="";
+    switch(arr_info_label[i][3]){
+        case "L":
+            dir="left";
             break;
-        case 1:
-            btn="ctrl_layer_l";
-            layer=layer_labels;
+        case "R":
+            dir="right";
             break;
-        case 2:
-            btn="ctrl_layer_i";
-            layer=layer_info;
+        case "C":
+            dir="center";
             break;
     }
-    map.addLayer(layer);
-    console.log(document.getElementById(btn).getAttribute("data-checked"));
-    if(document.getElementById(btn).getAttribute("data-checked")=="true"){
-        map.removeLayer(layer);
-        document.getElementById(btn).style.background="#333";
-        document.getElementById(btn).setAttribute("data-checked", "false");
-    } else {
-        map.addLayer(layer);
-        document.getElementById(btn).style.background="#005201";
-        document.getElementById(btn).setAttribute("data-checked", "true");
-    }
+    lbl.bindTooltip(arr_info_label[i][0], {permanent: true, className: "label-info", direction: dir});
+    lbl.addTo(layer_info);
 }
-
-
-
-class Story {
-    constructor(title, author, text, img, img_sub, thumb, date, arr_marker){
-        this.title=title;
-        this.author=author;
-        this.text=text;
-        this.img=img;
-        this.img_sub=img_sub
-        this.thumb=thumb;
-        this.date=date;
-        this.marker=arr_marker;
-    }
-}
-
-arr_stories=[];
-arr_stories[0]=new Story("Hello World", "Chuck Norris", "stories/text/story_01.txt", "/stories/img/story_01.jpg", "much picture", "/stories/thumb/story_01.jpg", "31.12.2020", [[43.16,-91.15,13],[42.75,-91.08,11],[41.9,-90.16,11]]);
-arr_stories[1]=new Story("My Old Friend", "Chuck Norris", "hi there", "/stories/img/story_01.jpg", "much wow", "/stories/thumb/story_01.jpg", "31.12.2020", [[43.16,-91.15,10]]);
-arr_stories[2]=new Story("Mississippi Isabell", "Chuck Norris", "hi there", "/stories/img/story_01.jpg", "cat", "/stories/thumb/story_01.jpg", "31.12.2020", [[43.16,-91.15,10]]);
 
 // load story tiles
 let tiles="";
+let arr_story_markers=[];
 for (let i=0;i<arr_stories.length;i++){
     tiles=tiles+"<div class='stories-panel_tiles' onClick='createStory("+i+")'><div style='height: 60%; overflow: hidden;'><img src='" + arr_stories[i].thumb + "' style='width: 100%; height:auto;'></img></div><div class='stories-panel_tiles_title'>"+arr_stories[i].title+"</div></div>";
+    for(let k=0;k<arr_stories[i].marker.length;k++){
+        let pos = [arr_stories[i].marker[k][0],arr_stories[i].marker[k][1]];
+        let m = new L.marker(pos, {icon: blueIconL}).addTo(layer_stories);
+        arr_story_markers.push(m);
+        m.story=i;
+    }
+    L.polyline(arr_stories[i].marker, {color: '#355AD9'}).addTo(layer_stories);
 }
 document.getElementById("stories-panel").innerHTML="<center>"+tiles+"</center>";
-
 
 // construct the story
 let curr_st=undefined;
@@ -152,7 +173,10 @@ function createStory(id){
     
     fetch(arr_stories[id].text)
         .then(response => response.text())
-        .then(text => {document.getElementById("story").innerHTML="<clr-icon shape='arrow' dir='left' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; top: 10px; left:10px;' onClick='story_back()'></clr-icon><center><span class='stories-panel_tiles_title'>" + arr_stories[id].title + "</span></center>" + arr_stories[id].author + ", " + arr_stories[id].date + "<span id='story_marker_0'></span><br><br><img src='" + arr_stories[id].img + "' style='width: 100%; height:auto;'></img>" + arr_stories[id].img_sub + "<br><br>" + text + "<br><br><clr-icon shape='arrow' dir='up' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; right:10px;' onClick='story_up()'></clr-icon><br>";})
+        .then(text => {document.getElementById("story").innerHTML="<clr-icon shape='arrow' dir='left' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; top: 10px; left:10px;' onClick='story_back()'></clr-icon>"+
+                        "<center><span class='stories-panel_tiles_title'>" + arr_stories[id].title + "</span></center>" + arr_stories[id].author + ", " + arr_stories[id].date + "<span id='story_marker_0'></span><br><br>"+
+                        "<img src='" + arr_stories[id].img + "' style='width: 100%; height:auto;'></img>" + arr_stories[id].img_sub + "<br><br>"+
+                        text + "<br><br><clr-icon shape='arrow' dir='up' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; right:10px;' onClick='story_up()'></clr-icon><br>";})
     story_up();
 }
 
@@ -218,6 +242,8 @@ document.getElementById("ctrl_rotate").oninput = function() {
 let curr_view=[0.0,0.0,0]
 let curr_pos=undefined;
 let curr_edit=false;
+let curr_layer_l="false";
+let curr_layer_i="false";
 
 function overview(){
     document.getElementById("about").style.display="none";
@@ -233,7 +259,6 @@ function overview(){
             let tilefile=getTileURL(curr_view[0], curr_view[1], i);
             let img=new Image();
             img.src="/Tiles/" + tilefile + ".png";
-            console.log(img.src);
             if (img.height!=0){
                 document.getElementById("img_ov").src=img.src;
                 break;
@@ -243,11 +268,21 @@ function overview(){
         
         chngIcon(arr_marker, greenIconS);
         chngIcon(st_marker, blueIconS);
+        chngIcon(arr_story_markers, blueIconS);
 
         map.options.minZoom=6;
         map.options.maxZoom=6;
         map.setView([curr_view[0], curr_view[1]], 6);
         map.closePopup();
+
+        curr_layer_l=document.getElementById("ctrl_layer_l").getAttribute("data-checked");
+        curr_layer_i=document.getElementById("ctrl_layer_i").getAttribute("data-checked");
+        if(curr_layer_l=="true"){
+            btn_layer(1);
+        } 
+        if(curr_layer_i=="true"){
+            btn_layer(2);
+        }
         document.getElementById("ctrl_ov").setAttribute("data-checked", "true");
     } else {
         document.getElementById("ctrl_edit").checked=curr_edit;
@@ -258,26 +293,42 @@ function overview(){
 
         chngIcon(arr_marker, greenIconL);
         chngIcon(st_marker, blueIconL);
+        chngIcon(arr_story_markers, blueIconL);
 
         map.options.minZoom=10;
         map.options.maxZoom=14;
         map.setView([curr_view[0], curr_view[1]], curr_view[2]);
+
         document.getElementById("ctrl_ov").setAttribute("data-checked", "false");
+        if(curr_layer_l=="true"){
+            btn_layer(1);
+        }
+        if(curr_layer_i=="true"){
+            btn_layer(2);
+        }
     }
 }
 
 function kind_note(){
-    btn_tgl("kind_note","kind_label");
+    btn_tgl("kind_note","kind_label", "ico_note", "ico_label");
 }
 
 function kind_label(){
-    btn_tgl("kind_label","kind_note");
+    btn_tgl("kind_label","kind_note", "ico_label", "ico_note");
 }
 
 // set edit depending on overview
 function edit(){
     document.getElementById("about").style.display="none";
     document.getElementById("about-arrow").style.display="none";
+
+    if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="true"){
+        if(document.getElementById("kind_note").getAttribute("data-checked")=="true"){
+            pu_cancel();
+        } else {
+            label_cancel();
+        }
+    }
 
     if(document.getElementById("ctrl_ov").getAttribute("data-checked")=="true"){
         document.getElementById("ctrl_edit").setAttribute("data-checked","false");
@@ -293,11 +344,6 @@ function edit(){
         } else {
             document.getElementById("new_type").style.display="inline";
         }
-    }
-
-    if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="false"){
-        popup_close_check();
-        label_cancel();
     }
     // redraw popup to show/hide edit button
     if(curr_pu!=undefined){
@@ -331,49 +377,6 @@ function stories(){
 }
 
 // MARKER -----------------------------
-
-// intialize marker icons; green=community; blue=editorial; red=position
-let emptyIcon = L.icon({
-    iconUrl: 'marker_green.png',
-    iconSize:     [0, 0], 
-    iconAnchor:   [0, 0], 
-    popupAnchor:  [0, 0] 
-});
-
-let greenIconL = L.icon({
-    iconUrl: 'marker_green.png',
-    iconSize:     [30, 30], 
-    iconAnchor:   [15, 15], 
-    popupAnchor:  [-500, 15] 
-});
-
-let blueIconL = L.icon({
-    iconUrl: 'marker_blue.png',
-    iconSize:     [30, 30], 
-    iconAnchor:   [15, 15], 
-    popupAnchor:  [-500, 15] 
-});
-
-let greenIconS = L.icon({
-    iconUrl: 'marker_green.png',
-    iconSize:     [12, 12], 
-    iconAnchor:   [6, 6], 
-    popupAnchor:  [-500, 6] 
-});
-
-let blueIconS = L.icon({
-    iconUrl: 'marker_blue.png',
-    iconSize:     [12, 12], 
-    iconAnchor:   [6, 6], 
-    popupAnchor:  [-500, 6] 
-});
-
-let redIcon = L.icon({
-    iconUrl: 'marker_red.png',
-    iconSize:     [16, 16], 
-    iconAnchor:   [8, 8], 
-});
-
 // POPUP OPEN
 let curr_pu=undefined;
 let pu_flag=false;
@@ -397,23 +400,38 @@ map.on('popupopen', function(e) {
 
 // POPUP CLOSE
 map.on("popupclose", function(e) {
-    pu_flag=false;
-    popup_close_check();
+    if(pu_flag==true){
+        popup_close_check();
+    }
 });
 
 function popup_close_check(){
+    pu_flag=false;
     if(document.getElementById("pu_title")!=null && document.getElementById("pu_content")!=null){
         if(document.getElementById("pu_title").value=="" && document.getElementById("pu_content").value==""){
             map.removeLayer(arr_marker[arr_marker.length-1]);
             arr_marker.pop();
         } else {
-            if (confirm("The content of this marker is not submitted yet. Are you sure you want to close it? All content will be lost!")){
-                document.getElementById("pu_title").value="";
-                document.getElementById("pu_content").value="";
-                map.removeLayer(arr_marker[arr_marker.length-1]);
-                arr_marker.pop();
+            if (confirm("The content of this marker is not submitted yet. Are you sure you want to close it? All changes will be lost!")){
+                if(arr_marker[arr_marker.length-1].noteVersions==undefined){
+                    map.removeLayer(arr_marker[arr_marker.length-1]);
+                    arr_marker.pop(); 
+                } else {
+                    let note=arr_marker[arr_marker.length-1];
+                        
+                    let title=document.getElementById("pu_title").value=note.noteVersions[note.noteVersions.length-1].title;
+                    let content=document.getElementById("pu_content").value=note.noteVersions[note.noteVersions.length-1].text;
+                    //let img=document.getElementById("pu_content").value=note.noteVersions[note.noteVersions.length-1].image_path;
+                    note.bindPopup(
+                        popupString(title,
+                            content,
+                            2,
+                            document.getElementById("ctrl_edit").getAttribute("data-checked")
+                        )
+                    );
+                }
             } else {
-                let pu_ll=marker._latlng;
+                let pu_ll=arr_marker[arr_marker.length-1]._latlng;
                 let pu_t=document.getElementById("pu_title").value;
                 let pu_c=document.getElementById("pu_content").value;
                 document.getElementById("pu_title").value="";
@@ -426,10 +444,6 @@ function popup_close_check(){
         }
     }
 }
-
-
-
-let arr_marker = [];
 
 // GET NOTES - Fetch all notes from the database and add them to the map.
 fetch("/api/get_notes", {
@@ -541,7 +555,7 @@ async function pu_submit(){
     // Push the note (and potentially an image) to DB.
     let image_file = document.getElementById("upload_image").files[0];
     if (image_file) {
-        image_src = URL.createObjectURL(image_file);
+        image_path = URL.createObjectURL(image_file);
         upload_note_with_image(image_file, note_object);
     } else {
         upload_note(note_object);
@@ -569,29 +583,28 @@ async function pu_submit(){
     isOverflown(document.getElementById("pu_title_ld"));
 }
 
+function pu_cancel(){
+    map.closePopup();
+}
+
 function popupString(title, content, n, edit, image_path){ // n1: edit layout; n2: final layout
-    let disp="";
-    if(edit=="true"){
-        disp="inline";
-    } else {
-        disp="none";
-    }
     switch(n){
         case 1:
-            return "<textarea id='pu_title' rows='1' style='text-align: center' maxlength='40' class='title_ta'>" + title + "</textarea><br><br>" +
-            "<label class='custom-file-upload'><clr-icon shape='image' size='20'></clr-icon><input id='upload_image' type='file' accept='image/jpeg,image/png' onChange='img_value()'></label><span id='img_file'></span><br><br>"+
-            "<textarea id='pu_content' class='content_ta scroll'>" + content + "</textarea><br><br>" +
-            "<table style='width: 101%;'><tr><td><div class='tooltip'>You can use Markdown to format the text." + 
+            return "<textarea id='pu_title' rows='1' style='text-align: center' maxlength='40' class='title_ta'>" + title + "</textarea>" +
+            "<table><tr><td><label class='custom-file-upload'><clr-icon id='img_upload' shape='image' size='20'></clr-icon><input id='upload_image' type='file' accept='image/jpeg,image/png' onChange='img_value()'></label><span id='img_file'></span></td></tr></table>"+
+            "<textarea id='pu_content' class='content_ta scroll'>" + content + "</textarea>" +
+            "<table style='width: 101%; margin-bottom: 10px;'><tr><td><div class='tooltip'>You can use Markdown to format the text." + 
             "<span class='tooltiptext'>Heading 1: # <br>Heading 2: ## <br>Italics: *Text* <br>Bold: **Text** <br>Blockquote: < Text <br>Horizontal Line: --- <br>Links: [Text](URL) <br>Paragraph: Empty Line</span></div></td>" +
             "<td style='text-align: right;'><button id='pu_btn' type='button' onclick='pu_submit()' style='border-radius: 5px 0 0 5px; border-right: 1px solid #005201'><clr-icon shape='check' size='20'></clr-icon></button>" +
             "<button id='pu_btn' type='button' onclick='pu_cancel()' style='border-radius: 0 5px 5px 0;'><clr-icon shape='times' size='20'></clr-icon></button></td></tr></table>"
         case 2:
             return "<h1 id='pu_title_ld' class='title' style='font-size: 30'>" + title + "</h1><br>" +
-                ((image_path) ? "<img src='" + image_path + "' style='height: 100%'>" : "") +
-                "<div id='pu_content_ld' class='content scroll'>" + content +"</div><br>" +
-                "<button id='pu_btn' type='button' id='btn_edit' style='border-radius: 5px 0 0 5px; border-right: 1px solid #005201; display:" + disp + ";' onClick='invoke_pu_edit()' ><clr-icon shape='pencil' size='20'></clr-icon></button>" +
+                "<div id='pu_content_ld' class='content scroll'>" +    
+                ((image_path) ? "<div style='max-height: 55%; margin-top: 10px; margin-bottom: 10px; overflow: hidden;'><img src='" + image_path + "' style='width: 100%; height:auto;'></div>" : "") +
+                content +"</div><br>" +
+                "<div style='position: relative;'><button id='pu_btn' type='button' id='btn_edit' style='border-radius: 5px 0 0 5px; border-right: 1px solid #005201;' onClick='invoke_pu_edit()' ><clr-icon shape='pencil' size='20'></clr-icon></button>" +
                 "<button id='pu_btn' type='button' id='btn_history' onClick='show_history()' style='border-radius: 0 5px 5px 0;'><clr-icon shape='history' size='20'></clr-icon></button>" +
-                "<select id='dd_ver' style='visibility: hidden;' onChange='change_version()'></select>";
+                "<select id='dd_ver' style='visibility: hidden;' onChange='change_version()'></select></div>";
     }
 }
 
@@ -600,6 +613,7 @@ function img_value(){
     let parts=str.split("\\");
     str=parts[parts.length-1];
     document.getElementById("img_file").innerHTML=str;
+    document.getElementById("img_upload").classList.add("is-solid");
 }
 
 // edit button for popup
@@ -814,21 +828,31 @@ function getTileURL(lat, lon, zoom) {
     return "" + zoom + "/" + xtile + "/" + ytile;
 }
 
-function btn_tgl(btn, btn2){
+function btn_tgl(btn1, btn2, ico1, ico2){
     btn2=btn2||"";
+    ico1=ico1||"";
+    ico2=ico2||"";
     if(btn2==""){
-        if(document.getElementById(btn).getAttribute("data-checked")=="true"){
-            document.getElementById(btn).setAttribute("data-checked","false");
+        if(document.getElementById(btn1).getAttribute("data-checked")=="true"){
+            document.getElementById(btn1).setAttribute("data-checked","false");
         } else {
-            document.getElementById(btn).setAttribute("data-checked","true");
+            document.getElementById(btn1).setAttribute("data-checked","true");
         }
     } else {
-        if(document.getElementById(btn).getAttribute("data-checked")=="true"){
-            document.getElementById(btn).setAttribute("data-checked","false");
+        if(document.getElementById(btn1).getAttribute("data-checked")=="true"){
+            document.getElementById(btn1).setAttribute("data-checked","false");
             document.getElementById(btn2).setAttribute("data-checked","true");
+            if(ico1!=""){
+                document.getElementById(ico1).classList.remove("is-solid");
+                document.getElementById(ico2).classList.add("is-solid");
+            }
         } else {
-            document.getElementById(btn).setAttribute("data-checked","true");
+            document.getElementById(btn1).setAttribute("data-checked","true");
             document.getElementById(btn2).setAttribute("data-checked","false");
+            if(ico1!=""){
+                document.getElementById(ico1).classList.add("is-solid");
+                document.getElementById(ico2).classList.remove("is-solid");
+            }
         }
     }
 }
@@ -840,4 +864,41 @@ function css_getClass(name) {
         rules[cssRules[j].selectorText] = cssRules[j];
     }
     return rules[name];
+}
+
+
+
+function btn_layer(n){
+    let btn, ico, layer;
+    switch(n){
+        case 0:
+            btn="ctrl_layer_s";
+            ico="ico_layer_s";
+            layer=layer_stories;
+            break;
+        case 1:
+            btn="ctrl_layer_l";
+            ico="ico_layer_l";
+            layer=layer_labels;
+            break;
+        case 2:
+            btn="ctrl_layer_i";
+            ico="ico_layer_i";
+            layer=layer_info;
+            break;
+    }
+    if(document.getElementById("ctrl_ov").getAttribute("data-checked")=="false" || btn=="ctrl_layer_s"){
+        map.addLayer(layer);
+        if(document.getElementById(btn).getAttribute("data-checked")=="true"){
+            map.removeLayer(layer);
+            document.getElementById(btn).style.background="#333";
+            document.getElementById(ico).classList.remove("is-solid");
+            document.getElementById(btn).setAttribute("data-checked", "false");
+        } else {
+            map.addLayer(layer);
+            document.getElementById(btn).style.background="#005201";
+            document.getElementById(ico).classList.add("is-solid");
+            document.getElementById(btn).setAttribute("data-checked", "true");
+        }
+    }
 }
