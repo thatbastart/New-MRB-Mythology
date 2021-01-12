@@ -50,6 +50,13 @@ h1#title {
     letter-spacing: 0.12vw;
 }
 
+hr {
+    height: 1px;
+    border-width:0;
+    color:#ccc;
+    background-color:#ccc;
+}
+
 textarea{
     width: 100%; 
     resize: none;
@@ -285,6 +292,7 @@ p{
     font-size: max(2vh,12px);
     text-align:left;
 }
+
 @supports ((-webkit-backdrop-filter: blur(15px)) or (backdrop-filter: blur(15px))){
     .story {
         background:rgba(255,255,255,0.7); 
@@ -305,6 +313,7 @@ p{
     align-items: center;
     justify-content: center;
     display: none;
+    cursor: pointer;
 }
 
 @supports ((-webkit-backdrop-filter: blur(15px)) or (backdrop-filter: blur(15px))){

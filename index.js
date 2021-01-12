@@ -233,9 +233,11 @@ function createStory(id){
     fetch(arr_stories[id].text)
         .then(response => response.text())
         .then(text => {document.getElementById("story").innerHTML="<clr-icon shape='arrow' dir='left' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; top: 10px; left:10px;' onClick='story_back()'></clr-icon>"+
-                        "<center><span class='stories-panel_tiles_title'>" + arr_stories[id].title + "</span></center>" + arr_stories[id].author + ", " + arr_stories[id].date + "<span id='story_marker_0'></span><br><br>"+
-                        "<img src='" + arr_stories[id].img + "' style='width: 100%; height:auto;' onClick='larger_image(this.src)'></img>" + arr_stories[id].img_sub + "<br><br>"+
-                        text + "<br><br><clr-icon shape='arrow' dir='up' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; right:10px;' onClick='story_up()'></clr-icon><br>";})
+                        "<center><span class='stories-panel_tiles_title'>" + arr_stories[id].title + "</span></center><br>" + arr_stories[id].author + ", " + arr_stories[id].date + "<span id='story_marker_0'></span><br><br>"+
+                        "<img src='" + arr_stories[id].img + "' style='width: 100%; height:auto; cursor: nesw-resize;' onClick='larger_image(this.src)'></img>" + arr_stories[id].img_sub + "<br><br>"+
+                        text + "<br><br><hr><br>" +
+                        "<p style='font-weight: bold;'>If you also got a story to tell just contact us via E-Mail.</p><br><br><br>"+
+                        "<clr-icon shape='arrow' dir='up' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; right:10px;' onClick='story_up()'></clr-icon><br><br>";})
     story_up();
 }
 
@@ -253,7 +255,7 @@ function scrollMarker(){
     for(let i=0;i<arr_stories[curr_st].marker.length;i++){
         let m="story_marker_" + i;
         let spanY=document.getElementById(m).getBoundingClientRect().y - document.getElementById("story").getBoundingClientRect().y;
-        let thld=document.getElementById("story").getBoundingClientRect().height / 3;
+        let thld=document.getElementById("story").getBoundingClientRect().height / 2;
 
         if(spanY<thld && spanY>0 && i!=curr_st_m){
             map.flyTo([arr_stories[curr_st].marker[i][0],arr_stories[curr_st].marker[i][1]], arr_stories[curr_st].marker[i][2], {
@@ -691,7 +693,7 @@ function popupString(title, content, n, image_path){ // n1: edit layout; n2: fin
         case 2:
             return "<h1 id='pu_title_ld' class='title' style='font-size: 30'>" + title + "</h1><br>" +
                 "<div id='pu_content_ld' class='content scroll'>" +    
-                ((image_path) ? "<div style='max-height: 55%; margin-top: 10px; margin-bottom: 10px; overflow: hidden;'><img src='" + image_path + "' style='width: 100%; height:auto;' onClick='larger_image(this.src)'></div>" : "") +
+                ((image_path) ? "<div style='max-height: 55%; margin-top: 10px; margin-bottom: 10px; overflow: hidden;'><img src='" + image_path + "' style='width: 100%; height:auto; cursor: nesw-resize;' onClick='larger_image(this.src)'></div>" : "") +
                 content +"</div><br>" +
                 "<div style='position: relative;'><button id='pu_btn' type='button' id='btn_edit' style='border-radius: 5px 0 0 5px; border-right: 1px solid #005201;' onClick='invoke_pu_edit()' ><clr-icon shape='pencil' size='18'></clr-icon></button>" +
                 "<button id='pu_btn' type='button' id='btn_history' onClick='show_history()' style='border-radius: 0 5px 5px 0;'><clr-icon shape='history' size='18'></clr-icon></button>" +
