@@ -2,7 +2,22 @@
 // maxBounds
 // initialize map
 let map = L.map('map', {minZoom: 10, maxZoom: 14, rotate: true, zoomControl: false});
-map.setView([43.18, -91.15], 12); // map center
+
+let cookie = document.cookie;
+let cookie_sub=cookie.split("/");
+if(cookie_sub.length>1){
+    map.setView([parseFloat(cookie_sub[1]), parseFloat(cookie_sub[2])], parseInt(cookie_sub[3]));
+} else {
+    map.setView([43.18, -91.15], 12);
+}
+
+
+map.on('moveend', function(e) {
+    let date = new Date();
+    date.setTime(date.getTime() + (604800000)); // 7 days
+    let expires = "expires="+ date.toUTCString();
+    document.cookie = "MRB_position=/" + map.getCenter().lat + "/" + map.getCenter().lng + "/" + map.getZoom() + "/;" + expires;    
+});
 
 // custom tiles
 L.tileLayer('/Tiles/{z}/{x}/{y}.png', {
@@ -579,7 +594,7 @@ async function pu_submit(){
     // directly present in the current session.
     current_marker.title = title;
     current_marker.content = content;
-    if(image_path==null){
+    if(image_path==null && current_marker.noteVersions!=undefined){
         image_path=current_marker.noteVersions[current_marker.noteVersions.length-1].image_path;
     }
     current_marker.bindPopup(
