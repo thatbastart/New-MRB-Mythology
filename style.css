@@ -64,7 +64,7 @@ p{
     margin: 0px !important;
 }
 .content{
-    flex-grow: 0;
+    height: 84%;
     width: 100%;
     overflow: auto;
     font-size: max(1.75vh,12px);
