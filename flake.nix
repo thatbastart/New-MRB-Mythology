@@ -48,9 +48,18 @@
                   (type != "symlink")
                 )
                 ./.;
-              postInstall = ''
-                ln -s ${pkgs.google-fonts}/share/fonts fonts/google-fonts
-              '';
+              postInstall =
+                let
+                  gitRevision =
+                    if (self ? rev)
+                    then
+                      "<a href='https://github.com/The-bastART/New-MRB-Mythology/commit/${self.rev}'><pre>${self.rev}</pre></a>"
+                    else "<pre>dirty</pre>";
+                in
+                ''
+                  ln -s ${pkgs.google-fonts}/share/fonts fonts/google-fonts
+                  sed -i 's|VERSIONVERSIONVERSION|${gitRevision}|g' index.js
+                '';
             };
           backend =
             let
