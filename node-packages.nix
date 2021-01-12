@@ -13,6 +13,15 @@ let
         sha512 = "YDyNwmPsdiw78fdVcPtk8LTqsiO1saVmMaNapSiyfLBmSRJ7hYoWNko1EQKKPxEAlcLEIKLgb53PWOz/lLFvwg==";
       };
     };
+    "@popperjs/core-2.6.0" = {
+      name = "_at_popperjs_slash_core";
+      packageName = "@popperjs/core";
+      version = "2.6.0";
+      src = fetchurl {
+        url = "https://registry.npmjs.org/@popperjs/core/-/core-2.6.0.tgz";
+        sha512 = "cPqjjzuFWNK3BSKLm0abspP0sp/IGOli4p5I5fKFAzdS8fvjdOwDCfZqAaIiXd9lPkOWi3SUUfZof3hEb7J/uw==";
+      };
+    };
     "@types/geojson-7946.0.7" = {
       name = "_at_types_slash_geojson";
       packageName = "@types/geojson";
@@ -337,6 +346,15 @@ let
         sha512 = "NB6Dk1A9xgQPMoGqC5CVXn123gWyte215ONT5Pp5a0yt4nlEoO1ZWeCwpncaekPHXO60i47ihFnZPiRPjRMq4Q==";
       };
     };
+    "tippy.js-6.2.7" = {
+      name = "tippy.js";
+      packageName = "tippy.js";
+      version = "6.2.7";
+      src = fetchurl {
+        url = "https://registry.npmjs.org/tippy.js/-/tippy.js-6.2.7.tgz";
+        sha512 = "k+kWF9AJz5xLQHBi3K/XlmJiyu+p9gsCyc5qZhxxGaJWIW8SMjw1R+C7saUnP33IM8gUhDA2xX//ejRSwqR0tA==";
+      };
+    };
     "typed-function-2.0.0" = {
       name = "typed-function";
       packageName = "typed-function";
@@ -399,6 +417,7 @@ let
     src = ./.;
     dependencies = [
       sources."@clr/icons-4.0.9"
+      sources."@popperjs/core-2.6.0"
       sources."@types/geojson-7946.0.7"
       sources."@types/leaflet-1.5.19"
       sources."@webcomponents/custom-elements-1.4.3"
@@ -435,6 +454,7 @@ let
       sources."string-width-3.1.0"
       sources."strip-ansi-5.2.0"
       sources."tiny-emitter-2.1.0"
+      sources."tippy.js-6.2.7"
       sources."typed-function-2.0.0"
       sources."which-module-2.0.0"
       sources."wrap-ansi-5.1.0"
