@@ -14,7 +14,7 @@ L.tileLayer('/Tiles/{z}/{x}/{y}.png', {
 // panel topright: title
 L.control.custom({
     position: "topleft",
-    content: "<h1 id='title' title='About the Project' style='font-size: max(4.5vh,30px); cursor: help;' onClick='showAbout()'>The New Mississippi River Basin Mythology</h1>" +
+    content: "<h1 id='title' style='font-size: max(4.5vh,30px); cursor: help;' onClick='showAbout()'>The New Mississippi River Basin Mythology</h1>" +
             "<div id='about-arrow' class='about-arrow'></div><div id='about' class='about-outer'><div id='about' class='about-panel scroll' style='display:inline;'><span class='stories-panel_tiles_title'><center>About</center></span><br><br><span class='stories-panel_tiles_title'><center>Contribute Notes</center></span><br>Did you ever see what happens after locks and dams disrupt the river flow?<br> How the landscape turns into pictures, into stories that want to get told?<br> The Mississippi isn’t just a River, it’s all about the stories, group events, myths and legends that grow up around the current.<br> Are you familiar with the Mississippi River Child or the invasion of the carps?<br> Take your time, discover the hidden parts and above all participate and tell your own story, myth and relationship towards the river. Just click the Edit Box and go for it. Even the smallest note helps to understand the dimension of the Mississippi River Basin. <br><br><span class='stories-panel_tiles_title'><center>Stories</center></span><br>From Minnesota to New Orleans, the Story of the Mississippi fluently curated. <br>If you want to understand the Mississippi you need coherent connection lines between different stories. Because a wide variety of forces and diverse narratives are at work here which unite 40 percent of the U.S. surface area in the Mississippi River Basin. And this is where the story mode comes in. Just scroll through the tales and follow the lines." +
             "</div></div>",
 }).addTo(map);    
@@ -34,8 +34,8 @@ L.control.custom({
     position: "topright",
     content: "<div style='margin: 20px 20px 0 0;'><table style='margin-right: 0px; margin-left: auto;'><tr><td><div id='ctrl_st' class='btn_toggle' onclick='stories();' data-checked='false'>Stories&nbsp<clr-icon id='st_angle' shape='angle' dir='down' size='20'></clr-icon></div></td>" +
                 "<td><div id='ctrl_edit' class='btn_toggle' onclick='edit();' data-checked='false'>New</div></td>" +
-                "</tr><tr><td></td><td><div id='new_type' style='display: none;'><div id='kind_label' class='btn_toggle' title='Create: Comment' data-checked='false' style='float: right; margin-right: 5px; border-radius: 0 5px 5px 0;' onClick='kind_label()'><clr-icon id='ico_label' shape='chat-bubble' size='22' style='#fff'></clr-icon></div>"+
-                "<div id='kind_note' class='btn_toggle' title='Create: Note' data-checked='true' style='float: right; margin-left: 5px; border-radius: 5px 0 0 5px; border-right: 1px solid #005201;' onClick='kind_note()'><clr-icon id='ico_note' shape='note' class='is-solid' size='22' style='#fff'></clr-icon></div></div></td></tr></table>" +
+                "</tr><tr><td></td><td><div id='new_type' style='display: none;'><div id='kind_label' class='btn_toggle' data-checked='false' style='float: right; margin-right: 5px; border-radius: 0 5px 5px 0;' onClick='kind_label()'><clr-icon id='ico_label' shape='chat-bubble' size='22' style='#fff'></clr-icon></div>"+
+                "<div id='kind_note' class='btn_toggle' data-checked='true' style='float: right; margin-left: 5px; border-radius: 5px 0 0 5px; border-right: 1px solid #005201;' onClick='kind_note()'><clr-icon id='ico_note' shape='note' class='is-solid' size='22' style='#fff'></clr-icon></div></div></td></tr></table>" +
                 "<br><div id='stories-panel-outer' class='stories-outer'><div id='stories-panel' class='stories-panel scroll'></div></div><div id='story-outer' class='story-outer'><div id='story' class='story scroll' onScroll='scrollMarker()''></div></div></div>",
     style:
     {
@@ -50,14 +50,14 @@ L.control.mousePosition({prefix: "Lat ", separator: " | Lng ", numDigits: 5}).ad
 L.control.custom({
     position: "bottomleft",
     content:    "<div class='nav_panel'><br><br>"+
-                "<br><button type='button' id='ctrl_layer_s' title='Layer: Stories' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201;' onClick='btn_layer(0)' data-checked='false'><clr-icon id='ico_layer_s' shape='book' size='22' style='#fff'></clr-icon></button>" +
-                "<br><button type='button' id='ctrl_layer_l' title='Layer: Comments' style='border-radius: 0; border-bottom:1px solid #005201;' onClick='btn_layer(1)' data-checked='false'><clr-icon id='ico_layer_l' shape='chat-bubble' size='22' style='#fff'></clr-icon></button>"+
-                "<br><button type='button' id='ctrl_layer_i' title='Layer: Information' style='border-radius: 0 0 5px 5px;' onClick='btn_layer(2)' data-checked='false'><clr-icon id='ico_layer_i' shape='info-circle' size='26' style='#fff'></clr-icon></button><br><br>" +
-                "<button type='button' id='ctrl_zp' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201' title='Navigation: Zoom In' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' size='24' style='#fff'></clr-icon></button>"+
-                "<br><button type='button' id='ctrl_zm' style='border-radius: 0 0 5px 5px;' title='Navigation: Zoom Out' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' size='24'></clr-icon></button>" +
-                "<br><br><br><input type='range' min='0' max='360' value='0' step='1' name='rotation' id='ctrl_rotate' class='ctrl_rotate' title='Navigation: Rotate'>"+
-                "<table style='margin-top: 5px; margin-bottom: 5px; table-layout: fixed; width: 100%; font-size: max(1.2vh,10px); text-shadow: 0 0 3px #000;'><colgroup><col style='width: 50%'><col style='width: 50%'></colgroup><tr><td style='text-align: left;'>0°</td><td style='text-align: right;'>360°</td></tr></table>" +
-                "<div id='ctrl_ov' class='ctrl_ov' title='Navigation: Overview' onclick='overview();' data-checked='false'><div style='position: absolute; top: 0; left: 0; bottom: 0; right: 0; width: 100%;'><img id='img_ov' src='overview.jpg' style='width: 100%; height:auto;'></img></div></div></div>",
+                "<br><button type='button' id='ctrl_layer_s' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201;' onClick='btn_layer(0)' data-checked='false'><clr-icon id='ico_layer_s' shape='book' size='22' style='#fff'></clr-icon></button>" +
+                "<br><button type='button' id='ctrl_layer_l' style='border-radius: 0; border-bottom:1px solid #005201;' onClick='btn_layer(1)' data-checked='false'><clr-icon id='ico_layer_l' shape='chat-bubble' size='22' style='#fff'></clr-icon></button>"+
+                "<br><button type='button' id='ctrl_layer_i' style='border-radius: 0 0 5px 5px;' onClick='btn_layer(2)' data-checked='false'><clr-icon id='ico_layer_i' shape='info-circle' size='26' style='#fff'></clr-icon></button><br><br>" +
+                "<button type='button' id='ctrl_zp' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' size='24' style='#fff'></clr-icon></button>"+
+                "<br><button type='button' id='ctrl_zm' style='border-radius: 0 0 5px 5px;' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' size='24'></clr-icon></button>" +
+                "<br><br><br><span id='ctrl_rotate_span'><input type='range' min='0' max='360' value='0' step='1' name='rotation' id='ctrl_rotate' class='ctrl_rotate'>"+
+                "<table style='margin-top: 5px; margin-bottom: 5px; table-layout: fixed; width: 100%; font-size: max(1.2vh,10px); text-shadow: 0 0 3px #000;'><colgroup><col style='width: 50%'><col style='width: 50%'></colgroup><tr><td style='text-align: left;'>0°</td><td style='text-align: right;'>360°</td></tr></table></span>" +
+                "<div id='ctrl_ov' class='ctrl_ov' onclick='overview();' data-checked='false'><div style='position: absolute; top: 0; left: 0; bottom: 0; right: 0; width: 100%;'><img id='img_ov' src='overview.jpg' style='width: 100%; height:auto;'></img></div></div></div>",
     style:
     {
         margin: "0",
@@ -859,7 +859,7 @@ function btn_tgl(btn1, btn2, ico1, ico2){
 
 function css_getClass(name) {
     let rules = {};
-    let cssRules = document.styleSheets[3].cssRules;
+    let cssRules = document.styleSheets[4].cssRules;
     for (let j=0; j<cssRules.length; ++j){
         rules[cssRules[j].selectorText] = cssRules[j];
     }
@@ -902,3 +902,57 @@ function btn_layer(n){
         }
     }
 }
+
+tippy("#title", {
+    content: "About the Project",
+    placement: "bottom",
+});
+
+tippy("#ctrl_layer_s", {
+    content: "Layer: Stories",
+    placement: "right",
+});
+tippy("#ctrl_layer_l", {
+    content: "Layer: Comments",
+    placement: "right",
+});
+tippy("#ctrl_layer_i", {
+    content: "Layer: Infos",
+    placement: "right",
+});
+
+tippy("#ctrl_zp", {
+    content: "Navigation: Zoom In",
+    placement: "right",
+});
+tippy("#ctrl_zm", {
+    content: "Navigation: Zoom Out",
+    placement: "right",
+});
+
+tippy("#ctrl_rotate_span", {
+    content: "Navigation: Rotate",
+    placement: "top",
+});
+tippy("#ctrl_ov", {
+    content: "Navigation: Overview",
+    placement: "top",
+});
+
+tippy("#ctrl_st", {
+    content: "Read curated Stories",
+    placement: "bottom",
+});
+tippy("#ctrl_edit", {
+    content: "Create New Content",
+    placement: "bottom",
+});
+
+tippy("#kind_note", {
+    content: "Create: Note",
+    placement: "bottom",
+});
+tippy("#kind_label", {
+    content: "Create: Comment",
+    placement: "bottom",
+});
