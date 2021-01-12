@@ -45,7 +45,7 @@ L.control.custom({
 }).addTo(map);
 
 // panel bottomleft: Lat and Lng at cursor
-L.control.mousePosition({prefix: "Lat ", separator: " | Lng ", numDigits: 5}).addTo(map);
+L.control.mousePosition({prefix: "Lat ", separator: " | Lng ", numDigits: 3}).addTo(map);
 
 L.control.custom({
     position: "bottomleft",
@@ -388,6 +388,7 @@ map.on('popupopen', function(e) {
     if(document.getElementById("kind_note").getAttribute("data-checked")=="true"){
         view_reset(curr_pu._latlng.lat,curr_pu._latlng.lng);
     } else {
+        document.getElementById("label_text").focus();
         map.flyTo([curr_pu._latlng.lat, curr_pu._latlng.lng], map.getZoom(), {
             animate: true,
             duration: 0.25
@@ -591,12 +592,12 @@ function popupString(title, content, n, edit, image_path){ // n1: edit layout; n
     switch(n){
         case 1:
             return "<textarea id='pu_title' rows='1' style='text-align: center' maxlength='40' class='title_ta'>" + title + "</textarea>" +
-            "<table><tr><td><label class='custom-file-upload'><clr-icon id='img_upload' shape='image' size='20'></clr-icon><input id='upload_image' type='file' accept='image/jpeg,image/png' onChange='img_value()'></label><span id='img_file'></span></td></tr></table>"+
-            "<textarea id='pu_content' class='content_ta scroll'>" + content + "</textarea>" +
-            "<table style='width: 101%; margin-bottom: 10px;'><tr><td><div class='tooltip'>You can use Markdown to format the text." + 
-            "<span class='tooltiptext'>Heading 1: # <br>Heading 2: ## <br>Italics: *Text* <br>Bold: **Text** <br>Blockquote: < Text <br>Horizontal Line: --- <br>Links: [Text](URL) <br>Paragraph: Empty Line</span></div></td>" +
-            "<td style='text-align: right;'><button id='pu_btn' type='button' onclick='pu_submit()' style='border-radius: 5px 0 0 5px; border-right: 1px solid #005201'><clr-icon shape='check' size='20'></clr-icon></button>" +
-            "<button id='pu_btn' type='button' onclick='pu_cancel()' style='border-radius: 0 5px 5px 0;'><clr-icon shape='times' size='20'></clr-icon></button></td></tr></table>"
+                "<table><tr id='img_upload_tr'><td><label class='custom-file-upload'><clr-icon id='img_upload' shape='image' size='20'></clr-icon><input id='upload_image' type='file' accept='image/jpeg,image/png' onChange='img_value()'></label><span id='img_file'></span></td></tr></table>"+
+                "<textarea id='pu_content' class='content_ta scroll'>" + content + "</textarea>" +
+                "<table style='width: 101%; margin-bottom: 10px;'><tr><td><div class='tooltip'>You can use Markdown to format the text." + 
+                "<span class='tooltiptext'>Heading 1: # <br>Heading 2: ## <br>Italics: *Text* <br>Bold: **Text** <br>Blockquote: < Text <br>Horizontal Line: --- <br>Links: [Text](URL) <br>Paragraph: Empty Line</span></div></td>" +
+                "<td style='text-align: right;'><button id='pu_btn' type='button' onclick='pu_submit()' style='border-radius: 5px 0 0 5px; border-right: 1px solid #005201'><clr-icon shape='check' size='20'></clr-icon></button>" +
+                "<button id='pu_btn' type='button' onclick='pu_cancel()' style='border-radius: 0 5px 5px 0;'><clr-icon shape='times' size='20'></clr-icon></button></td></tr></table>"
         case 2:
             return "<h1 id='pu_title_ld' class='title' style='font-size: 30'>" + title + "</h1><br>" +
                 "<div id='pu_content_ld' class='content scroll'>" +    
@@ -940,7 +941,7 @@ tippy("#ctrl_ov", {
 });
 
 tippy("#ctrl_st", {
-    content: "Read curated Stories",
+    content: "Read Curated Stories",
     placement: "bottom",
 });
 tippy("#ctrl_edit", {
