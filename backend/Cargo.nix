@@ -339,11 +339,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" "std" ];
       };
-      "bytes 1.0.0" = rec {
+      "bytes 1.0.1" = rec {
         crateName = "bytes";
-        version = "1.0.0";
+        version = "1.0.1";
         edition = "2018";
-        sha256 = "0wpsy2jwmbrsn7x6vcd00hw9vvz071lv8nrb25wrspvmkna8w7xd";
+        sha256 = "0h6h1c8g3yj2b4k8g25gr3246mq985y0kl3z685cs784fr1ww05p";
         authors = [
           "Carl Lerche <me@carllerche.com>"
           "Sean McArthur <sean@seanmonstar.com>"
@@ -876,9 +876,9 @@ rec {
       };
       "figment" = rec {
         crateName = "figment";
-        version = "0.10.0";
+        version = "0.10.1";
         edition = "2018";
-        sha256 = "0j04ldjij8b91n93ycwx0i7p0v2dg6cfnbsn7xavayq63zwb4wzj";
+        sha256 = "0i7d3sc1zi0hy8spwxmp5qim0jwn4qcz727kvnqfsl79y86nkqxn";
         authors = [
           "Sergio Benitez <sb@sergio.bz>"
         ];
@@ -1243,7 +1243,7 @@ rec {
           }
           {
             name = "pin-project-lite";
-            packageId = "pin-project-lite 0.2.3";
+            packageId = "pin-project-lite 0.2.4";
           }
           {
             name = "pin-utils";
@@ -1524,7 +1524,7 @@ rec {
         dependencies = [
           {
             name = "bytes";
-            packageId = "bytes 1.0.0";
+            packageId = "bytes 1.0.1";
           }
           {
             name = "fnv";
@@ -1996,9 +1996,9 @@ rec {
       };
       "log" = rec {
         crateName = "log";
-        version = "0.4.11";
+        version = "0.4.13";
         edition = "2015";
-        sha256 = "12xzqaflpiljn5cmxsbnbv9sjaj13ykhwsvll0gysbx4blbyvasg";
+        sha256 = "1cj2bbbd317qlp6calxpmm4c3sxj5jgfpkqd0y35pfw08ifq1wzw";
         authors = [
           "The Rust Project Developers"
         ];
@@ -2009,6 +2009,7 @@ rec {
           }
         ];
         features = {
+          "kv_unstable_std" = [ "kv_unstable" "std" ];
           "kv_unstable_sval" = [ "kv_unstable" "sval/fmt" ];
         };
         resolvedDefaultFeatures = [ "std" ];
@@ -2722,11 +2723,11 @@ rec {
         ];
         
       };
-      "pin-project-lite 0.2.3" = rec {
+      "pin-project-lite 0.2.4" = rec {
         crateName = "pin-project-lite";
-        version = "0.2.3";
+        version = "0.2.4";
         edition = "2018";
-        sha256 = "05ssxwwima5sa12w3rsdgn2za2axslg4z67lfd868k2srjkf0dms";
+        sha256 = "09x8chns8apal89pndqdrr0c2nv8jw6nmi8hl38acjbc6sprg5j3";
         authors = [
           "Taiki Endo <te316e89@gmail.com>"
         ];
@@ -3678,9 +3679,9 @@ rec {
       };
       "serde" = rec {
         crateName = "serde";
-        version = "1.0.118";
+        version = "1.0.119";
         edition = "2015";
-        sha256 = "0028kv3dh3ix5g7jfws22zb9hcqq4cnpwn2lnlpam1wxhmil5ih6";
+        sha256 = "1hwwx4a7lk4sxsrd11i2zmhmjagxd307zanqxx4ivdimkvs3dpcv";
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -3706,9 +3707,9 @@ rec {
       };
       "serde_derive" = rec {
         crateName = "serde_derive";
-        version = "1.0.118";
+        version = "1.0.119";
         edition = "2015";
-        sha256 = "1pvj4v8k107ichsnm7jgm9kxyi2lf971x52bmxhm5mcwd4k3akf8";
+        sha256 = "1kg1zyp1h0801hw70j97nb51bgbl4dcp3hk8zpaxsnd0g7758aam";
         procMacro = true;
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
@@ -4541,7 +4542,7 @@ rec {
           }
           {
             name = "pin-project-lite";
-            packageId = "pin-project-lite 0.2.3";
+            packageId = "pin-project-lite 0.2.4";
           }
           {
             name = "tracing-core";
