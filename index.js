@@ -3,20 +3,14 @@
 // initialize map
 let map = L.map('map', {minZoom: 10, maxZoom: 14, rotate: true, zoomControl: false});
 
-let cookie = document.cookie;
-let cookie_sub=cookie.split("/");
-if(cookie_sub.length>1){
-    map.setView([parseFloat(cookie_sub[1]), parseFloat(cookie_sub[2])], parseInt(cookie_sub[3]));
-} else {
-    map.setView([43.18, -91.15], 12);
-}
-
-
 map.on('moveend', function(e) {
     let date = new Date();
     date.setTime(date.getTime() + (604800000)); // 7 days
     let expires = "expires="+ date.toUTCString();
-    document.cookie = "MRB_position=/" + map.getCenter().lat + "/" + map.getCenter().lng + "/" + map.getZoom() + "/;" + expires;    
+    document.cookie = "MRB_position=/" + map.getCenter().lat + "/" + map.getCenter().lng + "/" + map.getZoom() + "/;" + expires; 
+    
+    document.getElementById("ov_pos").style.top=mapRange(map.getCenter().lat,49.753,28.623,0.0,100.0)+"%";
+    document.getElementById("ov_pos").style.left=mapRange(map.getCenter().lng,-113.976,-77.779,0.0,100.0)+"%";
 });
 
 // custom tiles
@@ -74,13 +68,55 @@ L.control.custom({
                 "<br><button type='button' id='ctrl_zm' style='border-radius: 0 0 5px 5px;' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' size='24'></clr-icon></button>" +
                 "<br><br><br><span id='ctrl_rotate_span'><input type='range' min='0' max='360' value='0' step='1' name='rotation' id='ctrl_rotate' class='ctrl_rotate'>"+
                 "<table style='margin-top: 5px; margin-bottom: 5px; table-layout: fixed; width: 100%; font-size: max(1.2vh,10px); text-shadow: 0 0 3px #000;'><colgroup><col style='width: 50%'><col style='width: 50%'></colgroup><tr><td style='text-align: left;'>0°</td><td style='text-align: right;'>360°</td></tr></table></span>" +
-                "<div id='ctrl_ov' class='ctrl_ov' onclick='overview();' data-checked='false'><div style='position: absolute; top: 0; left: 0; bottom: 0; right: 0; width: 100%;'><img id='img_ov' src='overview.jpg' style='width: 100%; height:auto;'></img></div></div></div>",
+                "<div id='ctrl_ov' class='ctrl_ov' onclick='overview();' data-checked='false'><div style='position: absolute; top: 0; left: 0; bottom: 0; right: 0; width: 100%;'><img id='img_ov' src='overview.jpg' style='width: 100%; height:auto;'></img><div id='ov_pos' style='position: absolute; width: 5px; height: 5px; background:#ff0000; border-radius: 2px; box-shadow: 0 0 1px #fff'></div</div></div></div>",
     style:
     {
         margin: "0",
         padding: "0px 0 0 0",
     },
 }).addTo(map);
+
+
+let cookie = document.cookie;
+let cookie_sub=cookie.split("/");
+if(cookie_sub.length>1){
+    map.setView([parseFloat(cookie_sub[1]), parseFloat(cookie_sub[2])], parseInt(cookie_sub[3]));
+} else {
+    let lt, ln;
+    let rand=parseInt(math.random(7));
+    switch(rand){
+        case 0:
+        case 1:
+            lt=43.18;
+            ln=-91.15;
+            break;
+        case 2:
+            lt=33.8;
+            ln=-91.1;
+            break;
+        case 3:
+            lt=36.87;
+            ln=-85.1;
+            break;
+        case 4:
+            lt=39.2;
+            ln=-96.65;
+            break;
+        case 5:
+            lt=44.44;
+            ln=-100.4;
+            break;
+        case 6:
+        case 7:
+            lt=48.0;
+            ln=-106.4;
+            break;
+    }
+    document.getElementById("ov_pos").style.top=mapRange(lt,49.753,28.623,0.0,100.0)+"%";
+    document.getElementById("ov_pos").style.left=mapRange(ln,-113.976,-77.779,0.0,100.0)+"%";
+    map.setView([lt, ln], 12);
+}
+
 
 let layer_info = L.layerGroup();
 let layer_stories = L.layerGroup();
@@ -295,6 +331,7 @@ function overview(){
             }
         }
         document.getElementById("img_ov").style.transform="translateY(-12.5%)";
+        document.getElementById("ov_pos").style.display="none";
         
         chngIcon(arr_marker, greenIconS);
         chngIcon(st_marker, blueIconS);
@@ -320,6 +357,7 @@ function overview(){
 
         document.getElementById("img_ov").src="overview.jpg";
         document.getElementById("img_ov").style.transform="translateY(0)";
+        document.getElementById("ov_pos").style.display="inline";
 
         chngIcon(arr_marker, greenIconL);
         chngIcon(st_marker, blueIconL);
@@ -960,6 +998,11 @@ function btn_layer(n){
             document.getElementById(btn).setAttribute("data-checked", "true");
         }
     }
+}
+
+function mapRange (value, a, b, c, d) {
+    value = (value - a) / (b - a);
+    return c + value * (d - c);
 }
 
 function larger_image(img){
