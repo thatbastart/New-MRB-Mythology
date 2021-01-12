@@ -67,9 +67,9 @@ L.control.mousePosition({prefix: "Lat ", separator: " | Lng ", numDigits: 3}).ad
 L.control.custom({
     position: "bottomleft",
     content:    "<div class='nav_panel'><br><br>"+
-                "<br><button type='button' id='ctrl_layer_s' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201;' onClick='btn_layer(0)' data-checked='false'><clr-icon id='ico_layer_s' shape='book' size='22' style='#fff'></clr-icon></button>" +
+                "<br><button type='button' id='ctrl_layer_s' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201;' onClick='btn_layer(0)' data-checked='false'><clr-icon id='ico_layer_s' shape='file-group' size='24' style='#fff'></clr-icon></button>" +
                 "<br><button type='button' id='ctrl_layer_l' style='border-radius: 0; border-bottom:1px solid #005201;' onClick='btn_layer(1)' data-checked='false'><clr-icon id='ico_layer_l' shape='chat-bubble' size='22' style='#fff'></clr-icon></button>"+
-                "<br><button type='button' id='ctrl_layer_i' style='border-radius: 0 0 5px 5px;' onClick='btn_layer(2)' data-checked='false'><clr-icon id='ico_layer_i' shape='info-circle' size='26' style='#fff'></clr-icon></button><br><br>" +
+                "<br><button type='button' id='ctrl_layer_i' style='border-radius: 0 0 5px 5px;' onClick='btn_layer(2)' data-checked='false'><clr-icon id='ico_layer_i' shape='info-circle' size='28' style='#fff'></clr-icon></button><br><br>" +
                 "<button type='button' id='ctrl_zp' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' size='24' style='#fff'></clr-icon></button>"+
                 "<br><button type='button' id='ctrl_zm' style='border-radius: 0 0 5px 5px;' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' size='24'></clr-icon></button>" +
                 "<br><br><br><span id='ctrl_rotate_span'><input type='range' min='0' max='360' value='0' step='1' name='rotation' id='ctrl_rotate' class='ctrl_rotate'>"+
@@ -414,15 +414,28 @@ map.on('popupopen', function(e) {
     document.getElementById("about").style.display="none";
     document.getElementById("about-arrow").style.display="none";
     curr_pu = e.popup._source;
-    if(document.getElementById("kind_note").getAttribute("data-checked")=="true"){
-        view_reset(curr_pu._latlng.lat,curr_pu._latlng.lng);
+
+    if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="true"){
+        if(document.getElementById("kind_note").getAttribute("data-checked")=="true"){
+            popup_style("note");
+            view_reset(curr_pu._latlng.lat,curr_pu._latlng.lng);
+        } else {
+            if(curr_pu.kind=="note"){
+                popup_style("note");
+                view_reset(curr_pu._latlng.lat,curr_pu._latlng.lng);
+            } else {
+                popup_style("label");
+                document.getElementById("label_text").focus();
+                map.flyTo([curr_pu._latlng.lat, curr_pu._latlng.lng], map.getZoom(), {
+                animate: true,
+                duration: 0.25
+            });
+            }
+        }
     } else {
-        document.getElementById("label_text").focus();
-        map.flyTo([curr_pu._latlng.lat, curr_pu._latlng.lng], map.getZoom(), {
-            animate: true,
-            duration: 0.25
-        });
+        view_reset(curr_pu._latlng.lat,curr_pu._latlng.lng);
     }
+    
     pu_flag=true;
     hist_c=0;
     isOverflown(document.getElementById("pu_title_ld"));
@@ -494,10 +507,12 @@ fetch("/api/get_notes", {
             image_path = image_path
         ));
         marker.noteVersions = note.versions;
+        marker.kind=note.kind;
         arr_marker.push(marker);
     } else if (note.kind === "label") {
         let lbl = new L.marker({lat: note.lat, lng: note.lon}, {icon: emptyIcon});
         let title = note.versions[note.versions.length-1].title;
+        lbl.kind=note.kind;
         lbl.bindTooltip(title, {permanent: true, className: "label", direction: "center"});
         lbl.addTo(layer_labels);
     }
@@ -594,6 +609,7 @@ async function pu_submit(){
     // directly present in the current session.
     current_marker.title = title;
     current_marker.content = content;
+    current_marker.kind="note";
     if(image_path==null && current_marker.noteVersions!=undefined){
         image_path=current_marker.noteVersions[current_marker.noteVersions.length-1].image_path;
     }
@@ -713,6 +729,7 @@ function add_label(pos){
             "<button id='lbl_submit' type='button' onclick='label_submit()' style='left: 400px; border-radius:5px 0 0 5px; border-right: 1px solid #005201;'><clr-icon shape='check' size='20'></clr-icon></button>"+
             "<button id='lbl_cancel' type='button' onclick='label_cancel()' style='left: 440px; border-radius:0 5px 5px 0;'><clr-icon shape='times' size='20'></clr-icon></button>";
     label = new L.marker(pos, {icon: emptyIcon});
+    label.kind="label";
     label.bindPopup(text, {closeButton: false});
     label.addTo(map);
     label.openPopup();
@@ -748,11 +765,11 @@ function label_cancel(){
     map.removeLayer(label);
 }
 
-// onClick Event -> adding marker or label
-map.on('click', function(e){
-    if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="true" && document.getElementById("ctrl_ov").getAttribute("data-checked")=="false"){
-        if(document.getElementById("kind_note").getAttribute("data-checked")=="true"){
-            let rule=css_getClass(".leaflet-popup-content-wrapper");
+function popup_style(n){
+    let rule=css_getClass(".leaflet-popup-content-wrapper");
+    switch(n){
+        case "note":
+            
             rule.style.height="600px"
             rule.style.transform="";
 
@@ -763,10 +780,8 @@ map.on('click', function(e){
 
             rule=css_getClass(".leaflet-popup-tip-container");
             rule.style.display="inline";
-
-            add_marker(e.latlng);
-        } else {
-            let rule=css_getClass(".leaflet-popup-content-wrapper");
+            break;
+        case "label":
             rule.style.height="45px"
             rule.style.transform="translateY(42px)";
 
@@ -777,7 +792,18 @@ map.on('click', function(e){
 
             rule=css_getClass(".leaflet-popup-tip-container");
             rule.style.display="none";
+            break;
+    }
+}
 
+// onClick Event -> adding marker or label
+map.on('click', function(e){
+    if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="true" && document.getElementById("ctrl_ov").getAttribute("data-checked")=="false"){
+        if(document.getElementById("kind_note").getAttribute("data-checked")=="true"){
+            popup_style("note");
+            add_marker(e.latlng);
+        } else {
+            popup_style("label");
             map.flyTo(e.latlng, map.getZoom(), {
                 animate: true,
                 duration: 0.25
