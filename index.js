@@ -36,7 +36,8 @@ L.control.custom({
                 "<td><div id='ctrl_edit' class='btn_toggle' onclick='edit();' data-checked='false'>New</div></td>" +
                 "</tr><tr><td></td><td><div id='new_type' style='display: none;'><div id='kind_label' class='btn_toggle' data-checked='false' style='float: right; margin-right: 5px; border-radius: 0 5px 5px 0;' onClick='kind_label()'><clr-icon id='ico_label' shape='chat-bubble' size='22' style='#fff'></clr-icon></div>"+
                 "<div id='kind_note' class='btn_toggle' data-checked='true' style='float: right; margin-left: 5px; border-radius: 5px 0 0 5px; border-right: 1px solid #005201;' onClick='kind_note()'><clr-icon id='ico_note' shape='note' class='is-solid' size='22' style='#fff'></clr-icon></div></div></td></tr></table>" +
-                "<br><div id='stories-panel-outer' class='stories-outer'><div id='stories-panel' class='stories-panel scroll'></div></div><div id='story-outer' class='story-outer'><div id='story' class='story scroll' onScroll='scrollMarker()''></div></div></div>",
+                "<br><div id='stories-panel-outer' class='stories-outer'><div id='stories-panel' class='stories-panel scroll'></div></div>"+
+                "<div id='story-outer' class='story-outer'><div id='story' class='story scroll' onScroll='scrollMarker()''></div></div></div>",
     style:
     {
         margin: "0",
@@ -133,13 +134,18 @@ for(let i=0; i<arr_info_label.length;i++){
 }
 
 // load story tiles
+let curr_st=undefined;
+let curr_st_m=-1;
+let st_marker;
+let st_line;
+
 let tiles="";
 let arr_story_markers=[];
 for (let i=0;i<arr_stories.length;i++){
     tiles=tiles+"<div class='stories-panel_tiles' onClick='createStory("+i+")'><div style='height: 60%; overflow: hidden;'><img src='" + arr_stories[i].thumb + "' style='width: 100%; height:auto;'></img></div><div class='stories-panel_tiles_title'>"+arr_stories[i].title+"</div></div>";
     for(let k=0;k<arr_stories[i].marker.length;k++){
         let pos = [arr_stories[i].marker[k][0],arr_stories[i].marker[k][1]];
-        let m = new L.marker(pos, {icon: blueIconL}).addTo(layer_stories);
+        let m = new L.marker(pos, {icon: blueIconL}).addTo(layer_stories).on('click', st_marker_click);
         arr_story_markers.push(m);
         m.story=i;
     }
@@ -147,11 +153,9 @@ for (let i=0;i<arr_stories.length;i++){
 }
 document.getElementById("stories-panel").innerHTML="<center>"+tiles+"</center>";
 
+
 // construct the story
-let curr_st=undefined;
-let curr_st_m=-1;
-let st_marker;
-let st_line;
+
 function createStory(id){
     st_marker=[];
     curr_st=id;
@@ -180,6 +184,14 @@ function createStory(id){
     story_up();
 }
 
+function st_marker_click(e){
+    if(document.getElementById("story-outer").style.display=="none" || document.getElementById("story-outer").style.display==""){
+        story_back();
+        btn_layer(0);
+        stories();
+        createStory(e.target.story);
+    }
+}
 
 // jump to markers while scrolling
 function scrollMarker(){
@@ -211,7 +223,9 @@ function rmStoryMarkers(){
 function story_back(){
     document.getElementById("story-outer").style.display="none";
     document.getElementById("stories-panel-outer").style.display="block";
-    rmStoryMarkers();
+    if(st_marker!=undefined){
+        rmStoryMarkers();
+    }
 }
 
 // in story back to top
@@ -352,7 +366,6 @@ function edit(){
             title,
             content,
             2,
-            document.getElementById("ctrl_edit").getAttribute("data-checked"),
             image_path
         ));
         isOverflown(document.getElementById("pu_title_ld"));
@@ -422,12 +435,12 @@ function popup_close_check(){
                         
                     let title=document.getElementById("pu_title").value=note.noteVersions[note.noteVersions.length-1].title;
                     let content=document.getElementById("pu_content").value=note.noteVersions[note.noteVersions.length-1].text;
-                    //let img=document.getElementById("pu_content").value=note.noteVersions[note.noteVersions.length-1].image_path;
+                    let img=document.getElementById("pu_content").value=note.noteVersions[note.noteVersions.length-1].image_path;
                     note.bindPopup(
                         popupString(title,
                             content,
                             2,
-                            document.getElementById("ctrl_edit").getAttribute("data-checked")
+                            img
                         )
                     );
                 }
@@ -462,7 +475,6 @@ fetch("/api/get_notes", {
             title,
             text,
             2,
-            document.getElementById("ctrl_edit").getAttribute("data-checked"),
             image_path = image_path
         ));
         marker.noteVersions = note.versions;
@@ -572,7 +584,6 @@ async function pu_submit(){
         popupString(title,
             content,
             2,
-            document.getElementById("ctrl_edit").getAttribute("data-checked"),
             image_path = image_path
         )
     );
@@ -591,7 +602,7 @@ function pu_cancel(){
     map.closePopup();
 }
 
-function popupString(title, content, n, edit, image_path){ // n1: edit layout; n2: final layout
+function popupString(title, content, n, image_path){ // n1: edit layout; n2: final layout
     switch(n){
         case 1:
             return "<textarea id='pu_title' rows='1' style='text-align: center' maxlength='40' class='title_ta'>" + title + "</textarea>" +
@@ -626,7 +637,7 @@ function invoke_pu_edit(){
     let content =  curr_pu.content;
     let converter = new showdown.Converter();
     content = converter.makeMarkdown(content);
-    curr_pu.bindPopup(popupString(title, content, 1,document.getElementById("ctrl_edit").getAttribute("data-checked")));
+    curr_pu.bindPopup(popupString(title, content, 1));
 }
 
 // shows the versions dropdown
@@ -654,7 +665,6 @@ function change_version(){
         title,
         content,
         2,
-        document.getElementById("ctrl_edit").getAttribute("data-checked"),
         image_path = image_path
     ));
     isOverflown(document.getElementById("pu_title_ld"));
@@ -667,7 +677,7 @@ function add_marker(pos,title,content){
     
     title = (typeof title !== 'undefined') ?  title : "";
     content = (typeof content !== 'undefined') ?  content : "";
-    marker.bindPopup(popupString(title, content, 1,document.getElementById("ctrl_edit").getAttribute("data-checked")));
+    marker.bindPopup(popupString(title, content, 1));
     
     arr_marker.push(marker);
     marker.openPopup();
