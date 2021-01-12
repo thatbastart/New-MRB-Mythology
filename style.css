@@ -293,6 +293,28 @@ p{
     }
 }
 
+.larger-img {
+    position: absolute; 
+    left:0; 
+    top:0;
+    height: 100%; 
+    width: 100%; 
+    background: rgba(0,0,0,0.9); 
+    z-Index: 1600; 
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    display: none;
+}
+
+@supports ((-webkit-backdrop-filter: blur(15px)) or (backdrop-filter: blur(15px))){
+    .larger-img {
+        background: rgba(0,0,0,0.7); 
+        -webkit-backdrop-filter: blur(15px);
+        backdrop-filter: blur(15px);
+    }
+}
+
 /* About Panel */
 .about-outer{
     position: absolute;
