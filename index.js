@@ -554,7 +554,7 @@ async function pu_submit(){
         versions: [
             {
                 title: title,
-                text: content,
+                text: content, 
             }
         ],
         lat: lat,
@@ -572,22 +572,25 @@ async function pu_submit(){
         image_path = URL.createObjectURL(image_file);
         upload_note_with_image(image_file, note_object);
     } else {
-        upload_note(note_object);
-        if(current_marker.noteVersions.length>1){
-            image_path=current_marker.noteVersions[current_marker.noteVersions.length-1].image_path;
-        }   
+        upload_note(note_object);  
     }
+    
     // Bind all the note properties to the current marker, so the new note is
     // directly present in the current session.
     current_marker.title = title;
     current_marker.content = content;
+    if(image_path==null){
+        image_path=current_marker.noteVersions[current_marker.noteVersions.length-1].image_path;
+    }
     current_marker.bindPopup(
         popupString(title,
             content,
             2,
-            image_path = image_path
+            image_path
         )
     );
+    
+
     if (!current_marker.noteVersions) current_marker.noteVersions = [];
     current_marker.noteVersions.push(
         {
