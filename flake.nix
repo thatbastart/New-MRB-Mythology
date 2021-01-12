@@ -53,8 +53,8 @@
                   gitRevision =
                     if (self ? rev)
                     then
-                      "<a href='https://github.com/The-bastART/New-MRB-Mythology/commit/${self.rev}'><pre>${self.rev}</pre></a>"
-                    else "<pre>dirty</pre>";
+                      "<a href='https://github.com/The-bastART/New-MRB-Mythology/commit/${self.rev}'><code>${self.rev}</code></a>"
+                    else "dirty checkout";
                 in
                 ''
                   ln -s ${pkgs.google-fonts}/share/fonts fonts/google-fonts
