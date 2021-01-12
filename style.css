@@ -50,6 +50,10 @@ h1#title {
     letter-spacing: 0.12vw;
 }
 
+#title:hover {
+    text-shadow: 0 0 8px rgba(255,0,0,0.7);
+}
+
 hr {
     height: 1px;
     border-width:0;
@@ -343,7 +347,7 @@ p{
     position: absolute;
     left: 0px;
     text-align: left;
-    font-size: max(1.75vh,12px);
+    font-size: max(2vh,12px);
     color: #000;
     padding: 2vh;
     background:rgba(255,255,255,0.8); 
