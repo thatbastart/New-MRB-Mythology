@@ -23,14 +23,14 @@ L.tileLayer('/Tiles/{z}/{x}/{y}.png', {
 // panel topright: title
 L.control.custom({
     position: "topleft",
-    content: "<h1 id='title' style='font-size: max(4.5vh,30px); cursor: pointer;' onClick='showAbout()'>The New Mississippi River Basin Mythology</h1>" +
+    content: "<h1 id='title' onClick='showAbout()'>The New Mississippi River Basin Mythology</h1>" +
             "<div id='about-arrow' class='about-arrow'></div><div id='about' class='about-outer'><div id='about' class='about-panel scroll' style='display:inline;'>"+
-            "<span class='stories-panel_tiles_title'><center>About</center></span><br>Join us to collectively travel along the Mississippi River and its tributaries, dive deep in to the stories and content produced from all the people who are related to the land and water. Use the rivers to navigate yourself through the basin, comment on the river, set markers or read the stories surrounding it.<br><br>Project by "+
+            "<span class='about-panel_tiles_title'><center>About</center></span><br>Join us to collectively travel along the Mississippi River and its tributaries, dive deep in to the stories and content produced from all the people who are related to the land and water. Use the rivers to navigate yourself through the basin, comment on the river, set markers or read the stories surrounding it.<br><br>Project by "+
             "<a href=''>Kerstin Humm</a>, "+
             "<a href=''>Marielouis Hippler</a> and "+
             "<a href='https://www.instagram.com/thatbastart/'>Tilmann Finner</a> at the University of Applied Sciences Potsdam (winter semester 2020/21).<br><br>"+
-            "<span class='stories-panel_tiles_title'><center>Contribute Notes</center></span><br>Did you ever see what happens after locks and dams disrupt the river flow?<br> How the landscape turns into pictures, into stories that want to get told?<br> The Mississippi isn’t just a River, it’s all about the stories, group events, myths and legends that grow up around the current.<br> Are you familiar with the Mississippi River Child or the invasion of the carps?<br> Take your time, discover the hidden parts and above all participate and tell your own story, myth and relationship towards the river. Just click the Edit Box and go for it. Even the smallest note helps to understand the dimension of the Mississippi River Basin. <br><br>"+
-            "<span class='stories-panel_tiles_title'><center>Stories</center></span><br>From Minnesota to New Orleans, the Story of the Mississippi fluently curated. <br>If you want to understand the Mississippi you need coherent connection lines between different stories. Because a wide variety of forces and diverse narratives are at work here which unite 40 percent of the U.S. surface area in the Mississippi River Basin. And this is where the story mode comes in. Just scroll through the tales and follow the lines.<br><br>" +
+            "<span class='about-panel_tiles_title'><center>Contribute Notes</center></span><br>Did you ever see what happens after locks and dams disrupt the river flow?<br> How the landscape turns into pictures, into stories that want to get told?<br> The Mississippi isn’t just a River, it’s all about the stories, group events, myths and legends that grow up around the current.<br> Are you familiar with the Mississippi River Child or the invasion of the carps?<br> Take your time, discover the hidden parts and above all participate and tell your own story, myth and relationship towards the river. Just click the Edit Box and go for it. Even the smallest note helps to understand the dimension of the Mississippi River Basin. <br><br>"+
+            "<span class='about-panel_tiles_title'><center>Stories</center></span><br>From Minnesota to New Orleans, the Story of the Mississippi fluently curated. <br>If you want to understand the Mississippi you need coherent connection lines between different stories. Because a wide variety of forces and diverse narratives are at work here which unite 40 percent of the U.S. surface area in the Mississippi River Basin. And this is where the story mode comes in. Just scroll through the tales and follow the lines.<br><br>" +
             "Running revision: VERSIONVERSIONVERSION<br><br>" +
             "</div></div>",
 }).addTo(map);    
@@ -52,8 +52,8 @@ L.control.custom({
                 "<td><div id='ctrl_edit' class='btn_toggle' onclick='edit();' data-checked='false'>New</div></td>" +
                 "</tr><tr><td></td><td><div id='new_type' style='display: none;'><div id='kind_label' class='btn_toggle' data-checked='false' style='float: right; margin-right: 5px; border-radius: 0 5px 5px 0;' onClick='kind_label()'><clr-icon id='ico_label' shape='chat-bubble' size='22' style='#fff'></clr-icon></div>"+
                 "<div id='kind_note' class='btn_toggle' data-checked='true' style='float: right; margin-left: 5px; border-radius: 5px 0 0 5px; border-right: 1px solid #005201;' onClick='kind_note()'><clr-icon id='ico_note' shape='note' class='is-solid' size='22' style='#fff'></clr-icon></div></div></td></tr></table>" +
-                "<br><div id='stories-panel-outer' class='stories-outer'><div id='stories-panel' class='stories-panel scroll'></div></div>"+
-                "<div id='story-outer' class='story-outer'><div id='story' class='story scroll' onScroll='scrollMarker()''></div></div></div>",
+                "<br><div id='stories-panel-outer' class='stories-outer'><div id='stories-panel' class='stories-panel story-scroll'></div></div>"+
+                "<div id='story-outer' class='story-outer'><div id='story' class='story story-scroll' onScroll='scrollMarker()''></div></div></div>",
     style:
     {
         margin: "0",
@@ -144,7 +144,7 @@ let greenIconL = L.icon({
 });
 
 let blueIconL = L.icon({
-    iconUrl: 'marker_blue.png',
+    iconUrl: 'marker_violet.png',
     iconSize:     [30, 30], 
     iconAnchor:   [15, 15], 
     popupAnchor:  [-500, 15] 
@@ -207,13 +207,12 @@ for (let i=0;i<arr_stories.length;i++){
         arr_story_markers.push(m);
         m.story=i;
     }
-    L.polyline(arr_stories[i].marker, {color: '#355AD9'}).addTo(layer_stories);
+    L.polyline(arr_stories[i].marker, {color: '#7A6FDE'}).addTo(layer_stories);
 }
 document.getElementById("stories-panel").innerHTML="<center>"+tiles+"</center>";
 
 
 // construct the story
-
 function createStory(id){
     st_marker=[];
     curr_st=id;
@@ -226,7 +225,7 @@ function createStory(id){
         st_marker.push(m);
     }
     curr_st_m=0;
-    st_line = L.polyline(arr_stories[id].marker, {color: '#355AD9'}).addTo(map);
+    st_line = L.polyline(arr_stories[id].marker, {color: '#7A6FDE'}).addTo(map);
     
     map.flyTo([arr_stories[curr_st].marker[0][0],arr_stories[curr_st].marker[0][1]], arr_stories[curr_st].marker[0][2], {
         animate: true,
@@ -237,7 +236,7 @@ function createStory(id){
         .then(response => response.text())
         .then(text => {document.getElementById("story").innerHTML="<clr-icon shape='arrow' dir='left' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; top: 10px; left:10px;' onClick='story_back()'></clr-icon>"+
                         "<center><span class='stories-panel_tiles_title'>" + arr_stories[id].title + "</span></center><br>" + arr_stories[id].author + ", " + arr_stories[id].date + "<span id='story_marker_0'></span><br><br>"+
-                        "<img src='" + arr_stories[id].img + "' style='width: 100%; height:auto; cursor: nesw-resize;' onClick='larger_image(this.src)'></img>" + arr_stories[id].img_sub + "<br><br>"+
+                        "<img src='" + arr_stories[id].img + "' class='story-images' onClick='larger_image(this.src)'></img>" + arr_stories[id].img_sub + "<br><br>"+
                         text + "<br><br><hr><br>" +
                         "<p style='font-weight: bold;'>If you also got a story to tell just contact us via E-Mail.</p><br><br><br>"+
                         "<clr-icon shape='arrow' dir='up' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; right:10px;' onClick='story_up()'></clr-icon><br><br>";})

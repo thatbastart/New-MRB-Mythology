@@ -39,7 +39,7 @@ a{
 h1{
     color: #00a104 !important;
     font-family: mySlab;
-    text-shadow: 0 0 4px rgba(0,0,0,0.5);
+    text-shadow: 0 0 3px rgba(0,0,0,0.5);
     font-size: max(3.5vh,20px);
     font-weight: normal;
     text-align: center;
@@ -48,10 +48,12 @@ h1{
 
 h1#title {
     letter-spacing: 0.12vw;
+    font-size: max(5vh,40px);
+    cursor: pointer;
 }
 
 #title:hover {
-    text-shadow: 0 0 8px rgba(255,0,0,0.7);
+    text-shadow: 0 0 8px rgba(53,90,218,0.6);
 }
 
 hr {
@@ -193,11 +195,19 @@ p{
 ::-webkit-scrollbar-thumb:hover {
     background: #00a104;
 }    
+div.story-scroll::-webkit-scrollbar-thumb:hover {
+    background: #433D7A;
+}    
 
 /* Firefox */
 .scroll {
     scrollbar-width: 10px;
     scrollbar-color: #00a104 transparent;
+}
+
+.story-scroll {
+    scrollbar-width: 10px;
+    scrollbar-color: #433D7A transparent;
 }
 
 /* attribution style */
@@ -264,7 +274,7 @@ p{
 
 .stories-panel_tiles_title{
     height: 40%;
-    color: #000;
+    color: #433D7A;
     font-family: mySlab;;
     font-size: max(max(3.5vh,2vw),30px);
     text-align: left;
@@ -303,6 +313,12 @@ p{
         -webkit-backdrop-filter: blur(15px);
         backdrop-filter: blur(15px);
     }
+}
+
+.story-images{
+    width: 100%;
+    height: auto;
+    cursor: nesw-resize;
 }
 
 .larger-img {
@@ -363,6 +379,18 @@ p{
     border-bottom: 20px solid rgba(255,255,255,0.8);
     margin: 0 0 -5px 100px;
 }
+
+.about-panel_tiles_title{
+    height: 40%;
+    color: #000;
+    font-family: mySlab;;
+    font-size: max(max(3.5vh,2vw),30px);
+    text-align: left;
+    vertical-align: middle;
+    line-height: max(3.5vh,25px);
+    padding-top: max(1vh,10px);
+}
+
 @supports ((-webkit-backdrop-filter: blur(15px)) or (backdrop-filter: blur(15px))){
     .about-panel {
         background:rgba(255,255,255,0.7); 
@@ -382,7 +410,7 @@ p{
 
 .label{
     background: transparent;
-    color: rgb(122, 173, 255);
+    color: #69C7C5;
     border: none;
     font-family: 'Titillium Web', sans-serif;
     font-size: max(1.75vh,12px);
@@ -395,7 +423,7 @@ p{
 
 .label-info{
     background: rgba(0,0,0,0.6);
-    color: rgb(255, 0, 0);
+    color: rgb(200, 0, 0);
     border: none;
     border-radius: 10px;
     font-family: 'Titillium Web', sans-serif;
@@ -608,11 +636,11 @@ select:hover {
 }
 
 .btn_toggle#ctrl_edit:hover{
-    border: 4px solid #ccc;
+    border: 4px solid #005201;
 }
 
 .btn_toggle#ctrl_edit[data-checked="true"] {
-    border: 4px solid #ccc; 
+    border: 4px solid #005201; 
 }
 
 .btn_toggle#ctrl_st{
@@ -621,10 +649,11 @@ select:hover {
 }
 .btn_toggle#ctrl_st:hover{
     border: 4px solid #ccc;
+    background-color: #433D7A;
 }
 
 .btn_toggle#ctrl_st[data-checked="true"] {
-    border: 4px solid #ccc;
+    background-color:#433D7A;
 }
 
 .btn_toggle#kind_note, .btn_toggle#kind_label{
