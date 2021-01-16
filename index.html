@@ -37,8 +37,27 @@
     </head>
 
     <body style="background: #000000; color: #ffffff; text-align: center; margin: 0;">  
+        <span style="display: none;">Running revision: VERSIONVERSIONVERSION</span>
         <div id="map" style="height: 100%; width: 100%; background: #000000; z-Index: 1000;"></div>
         <div id="img_container" class="larger-img" onClick="larger_image_close()"></div>
+        <div id="about_bg" style="width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); position: absolute; top:0; left: 0; z-Index: 1999;" onClick="tutorial_skip()"></div>
+        
+        <div id="about" class="about">
+            <table style='width: 100%; text-align: center;'><tr><td>
+                <div id='about_text' class='about-text' style='font-size: 24px;'>
+                    <span class='about-panel_tiles_title'><center>About</center></span><br>Join us to collectively travel along the Mississippi River and its tributaries, dive deep in to the stories and content produced from all the people who are related to the land and water.<br><br> Use the rivers to navigate yourself through the basin, comment on the river, set markers or read the stories surrounding it.<br><br><br>
+                    <span style="font-size: max(1.75vh,12px);">Project by
+                    <a href='https://erictapen.name/'>Kerstin Humm</a>, 
+                    <a href=''>Marielouis Hippler</a> and 
+                    <a href='https://www.instagram.com/thatbastart/'>Tilmann Finner</a>.</span>
+                </div>
+            </td></tr>
+            <tr><td>
+                <button type='button' id='tut_start' onClick='tutorial_start()' counter='0'>Start Tutorial</button>
+            </td></tr></table></div>
+        
+        <img src="howmuchami.png" style="width: 7vw; height: auto; position:absolute; bottom: 5%; right: 36px; z-Index: 1700;"></img>
+
         <script src="stories.js"></script>
         <script src="infos.js"></script>
         <script src="index.js"></script>

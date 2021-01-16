@@ -4,125 +4,30 @@
 let map = L.map('map', {minZoom: 10, maxZoom: 14, rotate: true, zoomControl: false});
 
 map.on('moveend', function(e) {
-    let date = new Date();
-    date.setTime(date.getTime() + (604800000)); // 7 days
-    let expires = "expires="+ date.toUTCString();
-    document.cookie = "MRB_position=/" + map.getCenter().lat + "/" + map.getCenter().lng + "/" + map.getZoom() + "/;" + expires; 
-    
+    bakeCookie_pos();
     document.getElementById("ov_pos").style.top=mapRange(map.getCenter().lat,49.753,28.623,0.0,100.0)+"%";
     document.getElementById("ov_pos").style.left=mapRange(map.getCenter().lng,-113.976,-77.779,0.0,100.0)+"%";
 });
 
-// custom tiles
-L.tileLayer('/Tiles/{z}/{x}/{y}.png', {
-    'attribution':  "Map Data &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> | <a href='https://github.com/The-bastART/New-MRB-Mythology'>GitHub</a>", // panel bottomright
-    'useCache': true
-}).addTo(map);
 
-// OVERLAYS -----------------------------
-// panel topright: title
-L.control.custom({
-    position: "topleft",
-    content: "<h1 id='title' onClick='showAbout()'>The New Mississippi River Basin Mythology</h1>" +
-            "<div id='about-arrow' class='about-arrow'></div><div id='about' class='about-outer'><div id='about' class='about-panel scroll' style='display:inline;'>"+
-            "<span class='about-panel_tiles_title'><center>About</center></span><br>Join us to collectively travel along the Mississippi River and its tributaries, dive deep in to the stories and content produced from all the people who are related to the land and water. Use the rivers to navigate yourself through the basin, comment on the river, set markers or read the stories surrounding it.<br><br>Project by "+
-            "<a href=''>Kerstin Humm</a>, "+
-            "<a href=''>Marielouis Hippler</a> and "+
-            "<a href='https://www.instagram.com/thatbastart/'>Tilmann Finner</a> at the University of Applied Sciences Potsdam (winter semester 2020/21).<br><br>"+
-            "<span class='about-panel_tiles_title'><center>Contribute Notes</center></span><br>Did you ever see what happens after locks and dams disrupt the river flow?<br> How the landscape turns into pictures, into stories that want to get told?<br> The Mississippi isn’t just a River, it’s all about the stories, group events, myths and legends that grow up around the current.<br> Are you familiar with the Mississippi River Child or the invasion of the carps?<br> Take your time, discover the hidden parts and above all participate and tell your own story, myth and relationship towards the river. Just click the Edit Box and go for it. Even the smallest note helps to understand the dimension of the Mississippi River Basin. <br><br>"+
-            "<span class='about-panel_tiles_title'><center>Stories</center></span><br>From Minnesota to New Orleans, the Story of the Mississippi fluently curated. <br>If you want to understand the Mississippi you need coherent connection lines between different stories. Because a wide variety of forces and diverse narratives are at work here which unite 40 percent of the U.S. surface area in the Mississippi River Basin. And this is where the story mode comes in. Just scroll through the tales and follow the lines.<br><br>" +
-            "Running revision: VERSIONVERSIONVERSION<br><br>" +
-            "</div></div>",
-}).addTo(map);    
+// GLOBAL VARIABLES
+let curr_view=[0.0,0.0,0]
+let curr_pos=undefined;
+let curr_edit=false;
+let curr_layer_l="false";
+let curr_layer_i="false";
 
-function showAbout(){
-    if(document.getElementById("about").style.display=="none"){
-        document.getElementById("about").style.display="block";
-        document.getElementById("about-arrow").style.display="block";
-    } else {
-        document.getElementById("about").style.display="none";
-        document.getElementById("about-arrow").style.display="none";
-    }
-}
+let curr_pu=undefined;
+let pu_flag=false;
+let hist_c=undefined;
 
-// panel topright: stories, new
-L.control.custom({
-    position: "topright",
-    content: "<div style='margin: 20px 20px 0 0;'><table style='margin-right: 0px; margin-left: auto;'><tr><td><div id='ctrl_st' class='btn_toggle' onclick='stories();' data-checked='false'>Stories&nbsp<clr-icon id='st_angle' shape='angle' dir='down' size='20'></clr-icon></div></td>" +
-                "<td><div id='ctrl_edit' class='btn_toggle' onclick='edit();' data-checked='false'>New</div></td>" +
-                "</tr><tr><td></td><td><div id='new_type' style='display: none;'><div id='kind_label' class='btn_toggle' data-checked='false' style='float: right; margin-right: 5px; border-radius: 0 5px 5px 0;' onClick='kind_label()'><clr-icon id='ico_label' shape='chat-bubble' size='22' style='#fff'></clr-icon></div>"+
-                "<div id='kind_note' class='btn_toggle' data-checked='true' style='float: right; margin-left: 5px; border-radius: 5px 0 0 5px; border-right: 1px solid #005201;' onClick='kind_note()'><clr-icon id='ico_note' shape='note' class='is-solid' size='22' style='#fff'></clr-icon></div></div></td></tr></table>" +
-                "<br><div id='stories-panel-outer' class='stories-outer'><div id='stories-panel' class='stories-panel story-scroll'></div></div>"+
-                "<div id='story-outer' class='story-outer'><div id='story' class='story story-scroll' onScroll='scrollMarker()''></div></div></div>",
-    style:
-    {
-        margin: "0",
-        padding: "0px 0 0 0",
-    },
-}).addTo(map);
+let curr_st=undefined;
+let curr_st_m=-1;
+let st_marker;
+let st_line;
 
-// panel bottomleft: Lat and Lng at cursor
-L.control.mousePosition({prefix: "Lat ", separator: " | Lng ", numDigits: 3}).addTo(map);
-
-L.control.custom({
-    position: "bottomleft",
-    content:    "<div class='nav_panel'><br><br>"+
-                "<br><button type='button' id='ctrl_layer_s' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201;' onClick='btn_layer(0)' data-checked='false'><clr-icon id='ico_layer_s' shape='file-group' size='24' style='#fff'></clr-icon></button>" +
-                "<br><button type='button' id='ctrl_layer_l' style='border-radius: 0; border-bottom:1px solid #005201;' onClick='btn_layer(1)' data-checked='false'><clr-icon id='ico_layer_l' shape='chat-bubble' size='22' style='#fff'></clr-icon></button>"+
-                "<br><button type='button' id='ctrl_layer_i' style='border-radius: 0 0 5px 5px;' onClick='btn_layer(2)' data-checked='false'><clr-icon id='ico_layer_i' shape='info-circle' size='28' style='#fff'></clr-icon></button><br><br>" +
-                "<button type='button' id='ctrl_zp' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' size='24' style='#fff'></clr-icon></button>"+
-                "<br><button type='button' id='ctrl_zm' style='border-radius: 0 0 5px 5px;' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' size='24'></clr-icon></button>" +
-                "<br><br><br><span id='ctrl_rotate_span'><input type='range' min='0' max='360' value='0' step='1' name='rotation' id='ctrl_rotate' class='ctrl_rotate'>"+
-                "<table style='margin-top: 5px; margin-bottom: 5px; table-layout: fixed; width: 100%; font-size: max(1.2vh,10px); text-shadow: 0 0 3px #000;'><colgroup><col style='width: 50%'><col style='width: 50%'></colgroup><tr><td style='text-align: left;'>0°</td><td style='text-align: right;'>360°</td></tr></table></span>" +
-                "<div id='ctrl_ov' class='ctrl_ov' onclick='overview();' data-checked='false'><div style='position: absolute; top: 0; left: 0; bottom: 0; right: 0; width: 100%;'><img id='img_ov' src='overview.jpg' style='width: 100%; height:auto;'></img><div id='ov_pos' style='position: absolute; width: 5px; height: 5px; background:#ff0000; border-radius: 2px; box-shadow: 0 0 1px #fff'></div</div></div></div>",
-    style:
-    {
-        margin: "0",
-        padding: "0px 0 0 0",
-    },
-}).addTo(map);
-
-
-let cookie = document.cookie;
-let cookie_sub=cookie.split("/");
-if(cookie_sub.length>1){
-    map.setView([parseFloat(cookie_sub[1]), parseFloat(cookie_sub[2])], parseInt(cookie_sub[3]));
-} else {
-    let lt, ln;
-    let rand=parseInt(math.random(7));
-    switch(rand){
-        case 0:
-        case 1:
-            lt=43.18;
-            ln=-91.15;
-            break;
-        case 2:
-            lt=33.8;
-            ln=-91.1;
-            break;
-        case 3:
-            lt=36.87;
-            ln=-85.1;
-            break;
-        case 4:
-            lt=39.2;
-            ln=-96.65;
-            break;
-        case 5:
-            lt=44.44;
-            ln=-100.4;
-            break;
-        case 6:
-        case 7:
-            lt=48.0;
-            ln=-106.4;
-            break;
-    }
-    document.getElementById("ov_pos").style.top=mapRange(lt,49.753,28.623,0.0,100.0)+"%";
-    document.getElementById("ov_pos").style.left=mapRange(ln,-113.976,-77.779,0.0,100.0)+"%";
-    map.setView([lt, ln], 12);
-}
-
+let tiles="";
+let arr_story_markers=[];
 
 let layer_info = L.layerGroup();
 let layer_stories = L.layerGroup();
@@ -173,6 +78,302 @@ let redIcon = L.icon({
 let arr_marker = [];
 
 
+
+
+// custom tiles
+L.tileLayer('/Tiles/{z}/{x}/{y}.png', {
+    'attribution':  "Map Data &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> | <a href='https://github.com/The-bastART/New-MRB-Mythology'>GitHub</a>", // panel bottomright
+    'useCache': true
+}).addTo(map);
+
+// OVERLAYS -----------------------------
+// panel topright: title
+L.control.custom({
+    position: "topleft",
+    content: "<h1 id='title'>The New Mississippi River Basin Mythology</h1>" +
+            "<div id='tut' class='tut-panel scroll' style='display:none;'>"+
+            "<table style='width: 100%; text-align: right;'><tr><td><div id='tut_text' class='tut-text' style='font-size: 24px;'></div></td></tr>"+
+            "<tr><td><button type='button' id='tut_skp' style='border-radius: 5px 0 0 5px; border-right:1px solid #005201;' onClick='tutorial_skip()'>Skip All</button>"+
+            "<button type='button' id='tut_nxt' style='border-radius: 0 5px 5px 0;' onClick='tutorial_next()' counter='0'>Next</button>"+
+            "</td></tr></table></div>",
+}).addTo(map);    
+
+
+
+let tut_content=["Click the zoom buttons to zoom in and out (or use the mouse wheel). Adjust the view to your perspective",
+                    "Click the map to get to the overview for better orientation. The red point is your current position.",
+                    "Do you see the green markers?",
+                    "Here you can participate and tell your own story, myth and relationship towards the river. Take your time and discover the hidden parts of the river. Just select ‚New’ and go for it. Click anywhere you want and follow the directions. Even the smallest note helps to understand the dimension of the Mississippi River Basin.",
+                    "But wait, there is more. You can also comment on the river if you want. It's a short and easy way to collect thoughts about the Mississippi. Especially if you don’t want to fill the whole marker pop-up… Just click anywhere you want and write down anything you like.",
+                    "From Minnesota to New Orleans, the Story of the Mississippi fluently curated.",
+                    "If you want to understand the Mississippi you need coherent connection lines between different stories. And this is where the story mode comes in. Just scroll through and follow the lines."];
+
+
+// panel topright: stories, new
+L.control.custom({
+    position: "topright",
+    content: "<div style='margin: 20px 20px 0 0;'><table style='margin-right: 0px; margin-left: auto;'><tr><td><div id='ctrl_st' class='btn_toggle' onclick='stories();' data-checked='false'>Stories&nbsp<clr-icon id='st_angle' shape='angle' dir='down' size='20'></clr-icon></div></td>" +
+                "<td><div id='ctrl_edit' class='btn_toggle' onclick='edit();' data-checked='false'>New</div></td>" +
+                "</tr><tr><td></td><td><div id='new_type' style='display: none;'><div id='kind_label' class='btn_toggle' data-checked='false' style='float: right; margin-right: 5px; border-radius: 0 5px 5px 0;' onClick='kind_label()'><clr-icon id='ico_label' shape='chat-bubble' size='22' style='#fff'></clr-icon></div>"+
+                "<div id='kind_note' class='btn_toggle' data-checked='true' style='float: right; margin-left: 5px; border-radius: 5px 0 0 5px; border-right: 1px solid #005201;' onClick='kind_note()'><clr-icon id='ico_note' shape='note' class='is-solid' size='22' style='#fff'></clr-icon></div></div></td></tr></table>" +
+                "<br><div id='stories-panel-outer' class='stories-outer'><div id='stories-panel' class='stories-panel story-scroll'></div></div>"+
+                "<div id='story-outer' class='story-outer'><div id='story' class='story story-scroll' onScroll='scrollMarker()''></div></div></div>",
+    style:
+    {
+        margin: "0",
+        padding: "0px 0 0 0",
+    },
+}).addTo(map);
+
+// panel bottomleft: Lat and Lng at cursor
+L.control.mousePosition({prefix: "Lat ", separator: " | Lng ", numDigits: 3}).addTo(map);
+
+L.control.custom({
+    position: "bottomleft",
+    content:    "<div class='nav_panel'><br><br>"+
+                "<br><button type='button' id='ctrl_layer_s' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201;' onClick='btn_layer(0)' data-checked='false'><clr-icon id='ico_layer_s' shape='file-group' size='24' style='#fff'></clr-icon></button>" +
+                "<br><button type='button' id='ctrl_layer_l' style='border-radius: 0; border-bottom:1px solid #005201;' onClick='btn_layer(1)' data-checked='false'><clr-icon id='ico_layer_l' shape='chat-bubble' size='22' style='#fff'></clr-icon></button>"+
+                "<br><button type='button' id='ctrl_layer_i' style='border-radius: 0 0 5px 5px;' onClick='btn_layer(2)' data-checked='false'><clr-icon id='ico_layer_i' shape='info-circle' size='28' style='#fff'></clr-icon></button><br><br>" +
+                "<button type='button' id='ctrl_zp' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' size='24' style='#fff'></clr-icon></button>"+
+                "<br><button type='button' id='ctrl_zm' style='border-radius: 0 0 5px 5px;' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' size='24'></clr-icon></button>" +
+                "<br><br><br><span id='ctrl_rotate_span'><input type='range' min='0' max='360' value='0' step='1' name='rotation' id='ctrl_rotate' class='ctrl_rotate'>"+
+                "<table style='margin-top: 5px; margin-bottom: 5px; table-layout: fixed; width: 100%; font-size: max(1.2vh,10px); text-shadow: 0 0 3px #000;'><colgroup><col style='width: 50%'><col style='width: 50%'></colgroup><tr><td style='text-align: left;'>0°</td><td style='text-align: right;'>360°</td></tr></table></span>" +
+                "<div id='ctrl_ov' class='ctrl_ov' onclick='overview();' data-checked='false'><div style='position: absolute; top: 0; left: 0; bottom: 0; right: 0; width: 100%;'><img id='img_ov' src='overview.jpg' style='width: 100%; height:auto;'></img><div id='ov_pos' style='position: absolute; width: 5px; height: 5px; background:#ff0000; border-radius: 2px; box-shadow: 0 0 1px #fff'></div</div></div></div>",
+    style:
+    {
+        margin: "0",
+        padding: "0px 0 0 0",
+    },
+}).addTo(map);
+
+
+let cookie_pos=getCookie("MRB_position");
+
+if(cookie_pos){
+    map.setView([parseFloat(cookie_pos[1]), parseFloat(cookie_pos[2])], parseInt(cookie_pos[3]));
+} else {
+    let lt, ln;
+    let rand=parseInt(math.random(7));
+    switch(rand){
+        case 0:
+        case 1:
+            lt=43.18;
+            ln=-91.15;
+            break;
+        case 2:
+            lt=33.8;
+            ln=-91.1;
+            break;
+        case 3:
+            lt=36.87;
+            ln=-85.1;
+            break;
+        case 4:
+            lt=39.2;
+            ln=-96.65;
+            break;
+        case 5:
+            lt=44.44;
+            ln=-100.4;
+            break;
+        case 6:
+        case 7:
+            lt=48.0;
+            ln=-106.4;
+            break;
+    }
+    document.getElementById("ov_pos").style.top=mapRange(lt,49.753,28.623,0.0,100.0)+"%";
+    document.getElementById("ov_pos").style.left=mapRange(ln,-113.976,-77.779,0.0,100.0)+"%";
+    map.setView([lt, ln], 12);
+    bakeCookie_pos();
+
+}
+
+let cookie_tut=getCookie("MRB_tutorial");
+if(cookie_tut){
+    document.getElementById("tut").style.display="inline";
+    document.getElementById("tut_nxt").setAttribute("counter", cookie_tut[1]);
+    tutorial_next();
+}
+
+function tutorial_next(){
+    let c=parseInt(document.getElementById("tut_nxt").getAttribute("counter"));
+    document.getElementById("tut_text").innerHTML=tut_content[c];
+    document.getElementById("tut_text").style.fontSize="24px";
+    isOverflown(document.getElementById("tut_text"), "h");
+    switch(c){
+        case 0:
+            document.getElementById("ctrl_layer_s").style.filter="blur(4px)";
+            document.getElementById("ctrl_layer_l").style.filter="blur(4px)";
+            document.getElementById("ctrl_layer_i").style.filter="blur(4px)";
+            document.getElementById("ctrl_st").style.filter="blur(4px)";
+            document.getElementById("ctrl_edit").style.filter="blur(4px)";
+            document.getElementById("ctrl_ov").style.filter="blur(4px)";
+            document.getElementById("ctrl_zp").style.filter="blur(0)";
+            document.getElementById("ctrl_zm").style.filter="blur(0)";
+            document.getElementById("ctrl_rotate").style.filter="blur(0)";
+            document.getElementById("ctrl_rotate_span").style.filter="blur(0)";
+            break;
+        case 1:
+            document.getElementById("ctrl_layer_s").style.filter="blur(4px)";
+            document.getElementById("ctrl_layer_l").style.filter="blur(4px)";
+            document.getElementById("ctrl_layer_i").style.filter="blur(4px)";
+            document.getElementById("ctrl_st").style.filter="blur(4px)";
+            document.getElementById("ctrl_edit").style.filter="blur(4px)";
+            document.getElementById("ctrl_ov").style.filter="blur(0)";
+            document.getElementById("ctrl_zp").style.filter="blur(4px)";
+            document.getElementById("ctrl_zm").style.filter="blur(4px)";
+            document.getElementById("ctrl_rotate").style.filter="blur(4px)";
+            document.getElementById("ctrl_rotate_span").style.filter="blur(4px)";
+            if(document.getElementById("ctrl_ov").getAttribute("data-checked")=="false"){
+                overview();
+            }
+            break;
+        case 2:
+            document.getElementById("ctrl_layer_s").style.filter="blur(4px)";
+            document.getElementById("ctrl_layer_l").style.filter="blur(4px)";
+            document.getElementById("ctrl_layer_i").style.filter="blur(4px)";
+            document.getElementById("ctrl_st").style.filter="blur(4px)";
+            document.getElementById("ctrl_edit").style.filter="blur(4px)";
+            document.getElementById("ctrl_ov").style.filter="blur(4px)";
+            document.getElementById("ctrl_zp").style.filter="blur(4px)";
+            document.getElementById("ctrl_zm").style.filter="blur(4px)";
+            document.getElementById("ctrl_rotate").style.filter="blur(4px)";
+            document.getElementById("ctrl_rotate_span").style.filter="blur(4px)";
+            if(document.getElementById("ctrl_ov").getAttribute("data-checked")=="true"){
+                overview();
+            }
+            break;
+        case 3:
+            document.getElementById("ctrl_layer_s").style.filter="blur(4px)";
+            document.getElementById("ctrl_layer_l").style.filter="blur(4px)";
+            document.getElementById("ctrl_layer_i").style.filter="blur(4px)";
+            document.getElementById("ctrl_st").style.filter="blur(4px)";
+            document.getElementById("ctrl_edit").style.filter="blur(0)";
+            document.getElementById("ctrl_ov").style.filter="blur(4px)";
+            document.getElementById("ctrl_zp").style.filter="blur(4px)";
+            document.getElementById("ctrl_zm").style.filter="blur(4px)";
+            document.getElementById("ctrl_rotate").style.filter="blur(4px)";
+            document.getElementById("ctrl_rotate_span").style.filter="blur(4px)";
+            if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="false"){
+                edit();
+            }
+            break;
+        case 4:
+            document.getElementById("ctrl_layer_s").style.filter="blur(4px)";
+            document.getElementById("ctrl_layer_l").style.filter="blur(4px)";
+            document.getElementById("ctrl_layer_i").style.filter="blur(4px)";
+            document.getElementById("ctrl_st").style.filter="blur(4px)";
+            document.getElementById("ctrl_edit").style.filter="blur(0)";
+            document.getElementById("ctrl_ov").style.filter="blur(4px)";
+            document.getElementById("ctrl_zp").style.filter="blur(4px)";
+            document.getElementById("ctrl_zm").style.filter="blur(4px)";
+            document.getElementById("ctrl_rotate").style.filter="blur(4px)";
+            document.getElementById("ctrl_rotate_span").style.filter="blur(4px)";
+            if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="false"){
+                edit();
+            }
+            if(document.getElementById("kind_label").getAttribute("data-checked")=="false"){
+                kind_label();
+            }
+            break;
+        case 5:
+            document.getElementById("ctrl_layer_s").style.filter="blur(4px)";
+            document.getElementById("ctrl_layer_l").style.filter="blur(4px)";
+            document.getElementById("ctrl_layer_i").style.filter="blur(4px)";
+            document.getElementById("ctrl_st").style.filter="blur(0)";
+            document.getElementById("ctrl_edit").style.filter="blur(4px)";
+            document.getElementById("ctrl_ov").style.filter="blur(4px)";
+            document.getElementById("ctrl_zp").style.filter="blur(4px)";
+            document.getElementById("ctrl_zm").style.filter="blur(4px)";
+            document.getElementById("ctrl_rotate").style.filter="blur(4px)";
+            document.getElementById("ctrl_rotate_span").style.filter="blur(4px)";
+            if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="true"){
+                console.log("hello");
+                edit();
+            }
+            if(document.getElementById("kind_label").getAttribute("data-checked")=="false"){
+                kind_label();
+            }
+            
+            if(document.getElementById("ctrl_st").getAttribute("data-checked")=="false"){
+                stories();
+            }
+            break;
+        case 6:
+            document.getElementById("ctrl_layer_s").style.filter="blur(0)";
+            document.getElementById("ctrl_layer_l").style.filter="blur(0)";
+            document.getElementById("ctrl_layer_i").style.filter="blur(0)";
+            document.getElementById("ctrl_st").style.filter="blur(4px)";
+            document.getElementById("ctrl_edit").style.filter="blur(4px)";
+            document.getElementById("ctrl_ov").style.filter="blur(4px)";
+            document.getElementById("ctrl_zp").style.filter="blur(4px)";
+            document.getElementById("ctrl_zm").style.filter="blur(4px)";
+            document.getElementById("ctrl_rotate").style.filter="blur(4px)";
+            document.getElementById("ctrl_rotate_span").style.filter="blur(4px)";
+            if(document.getElementById("ctrl_st").getAttribute("data-checked")=="false"){
+                stories();
+                document.getElementById("stories-panel").style.display="none";
+            }
+            createStory(0);
+            break;
+        case 7:
+            document.getElementById("ctrl_layer_s").style.filter="blur(0)";
+            document.getElementById("ctrl_layer_l").style.filter="blur(0)";
+            document.getElementById("ctrl_layer_i").style.filter="blur(0)";
+            document.getElementById("ctrl_st").style.filter="blur(0)";
+            document.getElementById("ctrl_edit").style.filter="blur(0)";
+            document.getElementById("ctrl_ov").style.filter="blur(0)";
+            document.getElementById("ctrl_zp").style.filter="blur(0)";
+            document.getElementById("ctrl_zm").style.filter="blur(0)";
+            document.getElementById("ctrl_rotate").style.filter="blur(0)";
+            document.getElementById("ctrl_rotate_span").style.filter="blur(0)";
+            if(document.getElementById("ctrl_st").getAttribute("data-checked")=="true"){
+                stories();
+            }
+            document.getElementById("tut").style.display="none";
+            break;
+        case 8:
+            document.getElementById("ctrl_layer_s").style.filter="blur(0)";
+            document.getElementById("ctrl_layer_l").style.filter="blur(0)";
+            document.getElementById("ctrl_layer_i").style.filter="blur(0)";
+            document.getElementById("ctrl_st").style.filter="blur(0)";
+            document.getElementById("ctrl_edit").style.filter="blur(0)";
+            document.getElementById("ctrl_ov").style.filter="blur(0)";
+            document.getElementById("ctrl_zp").style.filter="blur(0)";
+            document.getElementById("ctrl_zm").style.filter="blur(0)";
+            document.getElementById("ctrl_rotate").style.filter="blur(0)";
+            document.getElementById("ctrl_rotate_span").style.filter="blur(0)";
+            document.getElementById("tut").style.display="none";
+            break;
+    }
+    let date = new Date();
+    date.setTime(date.getTime() + (604800000)); // 7 days
+    let expires = "expires="+ date.toUTCString();
+    document.cookie = "MRB_tutorial=/" + c + "/;" + expires;
+
+    c+=1;
+    document.getElementById("tut_nxt").setAttribute("counter",c);
+}
+function tutorial_skip(){
+    document.getElementById("tut_nxt").setAttribute("counter", "8");
+    tutorial_next();
+    document.getElementById("tut").style.display="none";
+    document.getElementById("about_bg").style.display="none";
+    document.getElementById("about").style.display="none";
+}
+
+function tutorial_start(){
+    document.getElementById("tut").style.display="inline";
+    document.getElementById("about_bg").style.display="none";
+    document.getElementById("about").style.display="none";
+    if(!cookie_tut){
+        document.getElementById("tut_nxt").setAttribute("counter", "0");
+        tutorial_next();
+    }
+}
+
+
 for(let i=0; i<arr_info_label.length;i++){
     let lbl = new L.marker([arr_info_label[i][1],arr_info_label[i][2]], {icon: emptyIcon});
     let dir="";
@@ -192,13 +393,6 @@ for(let i=0; i<arr_info_label.length;i++){
 }
 
 // load story tiles
-let curr_st=undefined;
-let curr_st_m=-1;
-let st_marker;
-let st_line;
-
-let tiles="";
-let arr_story_markers=[];
 for (let i=0;i<arr_stories.length;i++){
     tiles=tiles+"<div class='stories-panel_tiles' onClick='createStory("+i+")'><div style='height: 60%; overflow: hidden;'><img src='" + arr_stories[i].thumb + "' style='width: 100%; height:auto;'></img></div><div class='stories-panel_tiles_title'>"+arr_stories[i].title+"</div></div>";
     for(let k=0;k<arr_stories[i].marker.length;k++){
@@ -256,6 +450,7 @@ function st_marker_click(e){
 function scrollMarker(){
     for(let i=0;i<arr_stories[curr_st].marker.length;i++){
         let m="story_marker_" + i;
+        console.log(document.getElementById(m).getBoundingClientRect().y);
         let spanY=document.getElementById(m).getBoundingClientRect().y - document.getElementById("story").getBoundingClientRect().y;
         let thld=document.getElementById("story").getBoundingClientRect().height / 2;
 
@@ -290,7 +485,6 @@ function story_back(){
 // in story back to top
 function story_up(){
     document.getElementById("story").scrollTop=0;
-    scrollMarker();
 }
 
 
@@ -312,15 +506,7 @@ document.getElementById("ctrl_rotate").oninput = function() {
 
 
 // overview
-let curr_view=[0.0,0.0,0]
-let curr_pos=undefined;
-let curr_edit=false;
-let curr_layer_l="false";
-let curr_layer_i="false";
-
 function overview(){
-    document.getElementById("about").style.display="none";
-    document.getElementById("about-arrow").style.display="none";
     if(document.getElementById("ctrl_ov").getAttribute("data-checked")=="false"){
         curr_edit=document.getElementById("ctrl_edit").checked;
         document.getElementById("ctrl_edit").checked=false;
@@ -394,9 +580,6 @@ function kind_label(){
 
 // set edit depending on overview
 function edit(){
-    document.getElementById("about").style.display="none";
-    document.getElementById("about-arrow").style.display="none";
-
     if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="true"){
         if(document.getElementById("kind_note").getAttribute("data-checked")=="true"){
             pu_cancel();
@@ -429,14 +612,12 @@ function edit(){
             2,
             image_path
         ));
-        isOverflown(document.getElementById("pu_title_ld"));
+        isOverflown(document.getElementById("pu_title_ld"), "w");
     }
 }
 
 // stories
 function stories(){
-    document.getElementById("about").style.display="none";
-    document.getElementById("about-arrow").style.display="none";
     if(document.getElementById("ctrl_st").getAttribute("data-checked")=="true"){
         document.getElementById("st_angle").dir="down";
         document.getElementById("ctrl_st").setAttribute("data-checked","false");
@@ -452,12 +633,7 @@ function stories(){
 
 // MARKER -----------------------------
 // POPUP OPEN
-let curr_pu=undefined;
-let pu_flag=false;
-let hist_c=undefined;
 map.on('popupopen', function(e) {
-    document.getElementById("about").style.display="none";
-    document.getElementById("about-arrow").style.display="none";
     curr_pu = e.popup._source;
 
     if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="true"){
@@ -483,7 +659,7 @@ map.on('popupopen', function(e) {
     
     pu_flag=true;
     hist_c=0;
-    isOverflown(document.getElementById("pu_title_ld"));
+    isOverflown(document.getElementById("pu_title_ld"),"w");
 });
 
 // POPUP CLOSE
@@ -675,7 +851,7 @@ async function pu_submit(){
             image_path: image_path,
         }
     );
-    isOverflown(document.getElementById("pu_title_ld"));
+    isOverflown(document.getElementById("pu_title_ld"),"w");
 }
 
 function pu_cancel(){
@@ -747,7 +923,7 @@ function change_version(){
         2,
         image_path = image_path
     ));
-    isOverflown(document.getElementById("pu_title_ld"));
+    isOverflown(document.getElementById("pu_title_ld"),"w");
 }
 
 // ADDING MARKER FUNCTION
@@ -807,7 +983,10 @@ function label_submit(){
 }
 
 function label_cancel(){
-    map.removeLayer(label);
+    if(label){
+        map.removeLayer(label);
+    }
+    
 }
 
 function popup_style(n){
@@ -910,13 +1089,22 @@ function setIcon(ico,size){
 }
 
 // adjust fontSize to fit container
-function isOverflown(element) {
+function isOverflown(element, n) {
     let f=0;
-    do {
-        f=Number(element.style.fontSize.replace("px",""));
-        f-=1;
-        element.style.fontSize=String(f);
-    } while (element.scrollWidth > element.clientWidth)
+    if(n=="w"){
+        while (element.scrollWidth > element.clientWidth) {
+            f=Number(element.style.fontSize.replace("px",""));
+            f-=1;
+            element.style.fontSize=String(f);
+        } 
+    } else if (n=="h"){
+        while (element.scrollHeight > element.clientHeight) {
+            f=Number(element.style.fontSize.replace("px",""));
+            f-=1;
+            element.style.fontSize=String(f);
+        } 
+    }
+    
 }
 
 function chngIcon(arr, ico){
@@ -1074,3 +1262,22 @@ tippy("#kind_label", {
     content: "Create: Comment",
     placement: "bottom",
 });
+
+
+function bakeCookie_pos(){
+    let date = new Date();
+    date.setTime(date.getTime() + (604800000)); // 7 days
+    let expires = "expires="+ date.toUTCString();
+    document.cookie = "MRB_position=/" + map.getCenter().lat + "/" + map.getCenter().lng + "/" + map.getZoom() + "/;" + expires;
+}
+
+function getCookie(str){
+    if(document.cookie.indexOf(str)!=-1){
+        let index=document.cookie.indexOf(str);
+        let cookie = document.cookie.slice(index);
+        let cookie_sub=cookie.split("/");
+        return cookie_sub;
+    } else{
+        return false;
+    }
+}

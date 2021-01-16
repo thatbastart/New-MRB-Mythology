@@ -15,9 +15,11 @@
 
     --greenL: #00a104;  /* L:Light / D:Dark*/
     --greenD: #005201; 
+
     --purpleL: #7A6FDE;
     --purpleL60: rgba(122,111,222,0.6);
     --purpleD: #433D7A;
+
     --turquoise: #69C7C5; 
     --redL: #C80000;
     --redD: #960000;
@@ -70,6 +72,7 @@ h1{
     font-weight: normal;
     text-align: center;
     margin: 5px;
+    margin-left: 12px;
 }
 
 h1#title {
@@ -262,6 +265,7 @@ div.story-scroll::-webkit-scrollbar-thumb:hover {
 
 /* CONTROLS */
 .stories-outer{
+    position: relative;
     width: 19.7vw; 
     min-width: 250px;
     height: 75vh;
@@ -300,7 +304,7 @@ div.story-scroll::-webkit-scrollbar-thumb:hover {
 
 .stories-panel_tiles_title{
     height: 40%;
-    color: var(--purpleD);
+    color: var(--purpleL);
     font-family: mySlab;;
     font-size: max(max(3.5vh,2vw),30px);
     text-align: left;
@@ -310,6 +314,7 @@ div.story-scroll::-webkit-scrollbar-thumb:hover {
 }
 
 .story-outer{
+    position: relative;
     width: 35vw;  
     min-width: 400px;
     height: 75vh;
@@ -371,39 +376,65 @@ div.story-scroll::-webkit-scrollbar-thumb:hover {
 }
 
 /* About Panel */
-.about-outer{
+.tut-panel {
     position: absolute;
-    left: 0px;
-    width: 35vw; 
-    min-width: 500px;
-    height: 48vh;
-    overflow: hidden;
-    border-radius: 10px;
-    margin-left: 18px;
-    margin-top: 5px;
-    box-shadow: 0 5px 5px -5px var(--black), -5px 0 5px -5px var(--black), 5px 0 5px -5px var(--black);
-    -webkit-animation: fadeIn 0.2s;
-    animation: fadeIn 0.2s;
-}
-.about-panel {
-    position: absolute;
-    left: 0px;
+    left: 17;
+    top: 10vh;
+    height: 28vh;
+    width: 25vw;
     text-align: left;
     font-size: max(2vh,12px);
     color: var(--black);
-    padding: 2vh;
     background:var(--white80); 
-    height: 44vh;
-    overflow-y: scroll;
+    box-shadow: 0 0 5px var(--black);
+    border-radius:10px;
+    padding: 2vh;
+    margin-top: -2vh;
 }
-.about-arrow{
-    background-color: transparent;
-    width: 0; 
-    height: 0; 
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
-    border-bottom: 20px solid var(--white80);
-    margin: 0 0 -5px 100px;
+
+.tut-text{
+    color: var(--black);
+    height: 23.5vh;
+    text-align: left;
+    padding-bottom: 1vh;
+}
+
+@supports ((-webkit-backdrop-filter: blur(15px)) or (backdrop-filter: blur(15px))){
+    .tut-panel {
+        background: var(--white70); 
+        -webkit-backdrop-filter: blur(15px);
+        backdrop-filter: blur(15px);
+    }
+}
+
+.about {
+    width: 40vw; 
+    height: 50vh; 
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    margin: -25vh 0 0 -20vw; 
+    z-Index:2000;
+    font-size: max(2vh,12px);
+    color: var(--black);
+    background:var(--white90); 
+    box-shadow: 0 0 5px var(--black);
+    border-radius:10px;
+    padding: 2vh;
+}
+@supports ((-webkit-backdrop-filter: blur(15px)) or (backdrop-filter: blur(15px))){
+    .about {
+        background: var(--white70); 
+        -webkit-backdrop-filter: blur(15px);
+        backdrop-filter: blur(15px);
+    }
+}
+
+.about-text{
+    color: var(--black);
+    height: 42vh;
+    text-align: left;
+    padding-bottom: 1vh;
 }
 
 .about-panel_tiles_title{
@@ -415,23 +446,6 @@ div.story-scroll::-webkit-scrollbar-thumb:hover {
     vertical-align: middle;
     line-height: max(3.5vh,25px);
     padding-top: max(1vh,10px);
-}
-
-@supports ((-webkit-backdrop-filter: blur(15px)) or (backdrop-filter: blur(15px))){
-    .about-panel {
-        background:var(--white70); 
-        -webkit-backdrop-filter: blur(15px);
-        backdrop-filter: blur(15px);
-    }
-    .about-arrow{
-        background-color: transparent;
-        width: 0; 
-        height: 0; 
-        border-left: 20px solid transparent;
-        border-right: 20px solid transparent;
-        border-bottom: 20px solid var(--white70);
-        margin: 0 0 -5px 100px;
-    }
 }
 
 .label{
@@ -517,6 +531,23 @@ button#lbl_submit, button#lbl_cancel {
     position: absolute;
     margin: 10px;
     border: 1px solid transparent;
+}
+
+button#tut_nxt, button#tut_skp {
+    width: 5vw;
+    min-width: 60px;
+    height: 3vh;
+    min-height: 25px;
+    border: 1px solid transparent;
+    font-weight: normal;
+}
+button#tut_start {
+    width: 8vw;
+    min-width: 80px;
+    height: 4vh;
+    min-height: 35px;
+    border: 1px solid transparent;
+    font-weight: normal;
 }
 
 button#kind_sel {
@@ -732,4 +763,16 @@ select:hover {
 
 .tooltip:hover .tooltiptext {
     visibility: visible;
+}
+
+
+/* TUTORIAL */
+.tut {
+    position: absolute; 
+    background-color: #fff; 
+    z-Index: 1605;
+    top: 10%; 
+    left: 27px; 
+    width: 35vw; 
+    height: 32vh; 
 }
