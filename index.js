@@ -100,6 +100,23 @@ L.control.custom({
             "</td></tr></table></div>",
 }).addTo(map);    
 
+// https://decolonialatlas.wordpress.com/2015/01/05/native-names-for-the-mississippi-river/
+let names=["Mississippi River", "Báhat Sássin", "Beesniicíe", "Hahcicobá", "Kickaátit", "Mäse’sibowi", "Ma’xeé’ome’tää’e", "Mihcisiipiiwi", "Misi-Ziibi", "Misha Sipokni", "Mníšošethąka", "Ny-tonks", "Ohnawiiò:ke", "Uhtawiyúˀkye", "Yandawezue", "Yununu’a", "Xósáu", "Mississippi River"];
+let names_lang=["English", "Hasí:nay (Caddo)<br>“Mother of rivers”", "Hinónoʼeitíít (Arapaho)", "Kowassá:ti (Koasati)", "Paári (Pawnee)", "Meshkwahkihaki (Fox-Sauk)", "Tsėhésenėstsestȯtse (Cheyenne)<br>“Big, greasy river”", "Myaamia (Miami-Illinois)", "Anishinaabemowin (Ojibwe)<br>“Great river”", "Chahta’ (Choctaw)<br>“Beyond age”", "Dakȟótiyapi (Dakota)", "Okáxpa íe (Quapaw)<br>“Great river”", "Kanien’kéha’ (Mohawk)", "Ska:rù:rę’ (Tuscarora)", "Waⁿdat (Wyandot)", "yUdjEha (Yuchi)<br>“Great river”", "Cáuijògà (Kiowa)<br>“Standing Rocks”", "English"]
+let names_rand;
+const tippy_inst = tippy("#title", {
+    content: "About the Project",
+    allowHTML: true,
+    placement: "bottom",
+});
+
+setInterval(function(){ 
+    names_rand=parseInt(math.random(names.length));
+    document.getElementById("title").innerHTML="The New " + names[names_rand] + " Basin Mythology"; 
+    tippy_inst[0].setContent("About the Project <br>" + names_lang[names_rand]);
+}, 6000);
+
+
 function showAbout(){
     document.getElementById("about_bg").style.display="inline";
     document.getElementById("about").style.display="inline";
@@ -461,7 +478,7 @@ function createStory(id){
         .then(response => response.text())
         .then(text => {document.getElementById("story").innerHTML="<clr-icon shape='arrow' dir='left' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; top: 10px; left:10px;' onClick='story_back()'></clr-icon>"+
                         "<center><span class='stories-panel_tiles_title'>" + arr_stories[id].title + "</span></center><br>" + arr_stories[id].author + ", " + arr_stories[id].date + "<span id='story_marker_0'></span><br><br>"+
-                        "<img src='" + arr_stories[id].img + "' class='story-images' onClick='larger_image(this.src)'></img>" + arr_stories[id].img_sub + "<br><br>"+
+                        "<img src='" + arr_stories[id].img + "' class='story-images' onClick='larger_image(this.src)'></img><span style='font-size: max(1.5vh,11px);'>" + arr_stories[id].img_sub + "</span><br><br>"+
                         text + "<br><br><hr><br>" +
                         "<p style='font-weight: bold;'>If you also got a story to tell just contact us via E-Mail.</p><br><br><br>"+
                         "<clr-icon shape='arrow' dir='up' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; right:10px;' onClick='story_up()'></clr-icon><br><br>";})
@@ -896,6 +913,7 @@ function stories(){
         document.getElementById("st_angle").dir="up";
         document.getElementById("ctrl_st").setAttribute("data-checked","true");
         document.getElementById("stories-panel-outer").style.display="block";
+        document.getElementById("stories-panel").scrollTop=0;
     }
 }
 
@@ -1493,10 +1511,7 @@ function larger_image_close(){
     document.getElementById("img_container").style.display="none";
 }
 
-tippy("#title", {
-    content: "About the Project",
-    placement: "bottom",
-});
+
 
 tippy("#ctrl_layer_s", {
     content: "Layer: Stories",

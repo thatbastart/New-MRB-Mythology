@@ -18,7 +18,7 @@ arr_stories[0]=new Story(
     "Marielouis Hippler", 
     "stories/text/story_01.html", 
     "/stories/img/story_01.jpg", 
-    "much picture", 
+    "Invading Carls", 
     "/stories/thumb/story_01.jpg", 
     "16.01.2021", 
     [[44.914,-93.202,14],
@@ -56,3 +56,14 @@ arr_stories[2]=new Story(
     [31.5440, -91.4334, 12],
     [30.4291, -91.2069, 12],
     [29.9347, -90.1361, 12]]);
+
+arr_stories[3]=new Story(
+    "Floods and Levees", 
+    "Marielouis Hippler", 
+    "stories/text/story_04.html", 
+    "/stories/img/story_04.jpg", 
+    "much picture", 
+    "/stories/thumb/story_04.jpg", 
+    "17.01.2021", 
+    [[44.914,-93.202,14],
+    [44.982,-93.258,14]]);
