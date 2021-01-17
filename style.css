@@ -60,6 +60,7 @@
 
 html{
     font-family: 'Titillium Web', sans-serif !important;
+    overflow: hidden;
 }
 ::selection{
     color:var(--white);

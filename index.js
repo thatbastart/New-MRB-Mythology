@@ -449,6 +449,14 @@ function createStory(id){
         duration: 0.5
     });
     
+    document.getElementById("story").innerHTML="<clr-icon shape='arrow' dir='left' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; top: 10px; left:10px;' onClick='story_back()'></clr-icon>"+
+                        "<center><span class='stories-panel_tiles_title'>Loading...</span></center><br>Please Wait.<span id='story_marker_0'></span><br><br>"+
+                        "<img src='' class='story-images' onClick='larger_image(this.src)'></img><br><br>"+
+                        "<br><br><hr><br>" +
+                        "<p style='font-weight: bold;'>If you also got a story to tell just contact us via E-Mail.</p><br><br><br>"+
+                        "<clr-icon shape='arrow' dir='up' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; right:10px;' onClick='story_up()'></clr-icon><br><br>";
+
+
     fetch(arr_stories[id].text)
         .then(response => response.text())
         .then(text => {document.getElementById("story").innerHTML="<clr-icon shape='arrow' dir='left' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; top: 10px; left:10px;' onClick='story_back()'></clr-icon>"+
@@ -457,7 +465,7 @@ function createStory(id){
                         text + "<br><br><hr><br>" +
                         "<p style='font-weight: bold;'>If you also got a story to tell just contact us via E-Mail.</p><br><br><br>"+
                         "<clr-icon shape='arrow' dir='up' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; right:10px;' onClick='story_up()'></clr-icon><br><br>";})
-    
+    let river_commission;
     if(id==2){
         let sketch = function(sk){
 
@@ -498,7 +506,6 @@ function createStory(id){
             sk.setup = function() {
                 let canvasDiv = document.getElementById("canvas");
                 let width = canvasDiv.offsetWidth;
-                console.log(width);
                 let sketchCanvas = sk.createCanvas(width,width*1.2);
                 sketchCanvas.parent("canvas");
                 sketchCanvas.mousePressed(next);
@@ -693,7 +700,7 @@ function createStory(id){
             }
             }
  
-            let river_commission = new p5(sketch);
+            river_commission = new p5(sketch);
     }
     story_up();
 }
