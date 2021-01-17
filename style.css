@@ -48,6 +48,16 @@
       to { opacity: 1; }
 }
 
+@-webkit-keyframes c-fadeIn {
+    from { opacity: 0; }
+      to { opacity: 1; }
+}
+@keyframes c-fadeIn {
+    0% { opacity: 0; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
 html{
     font-family: 'Titillium Web', sans-serif !important;
 }
@@ -394,7 +404,7 @@ div.story-scroll::-webkit-scrollbar-thumb:hover {
 
 .tut-text{
     color: var(--black);
-    height: 23.5vh;
+    height: 19.5vh;
     text-align: left;
     padding-bottom: 1vh;
 }
@@ -677,7 +687,7 @@ select:hover {
     height: 4vh;
     min-height: 20px;
     width: 7vw;
-    min-width:50px;
+    min-width:75px;
     line-height: 4vh;
     border-radius: 5px;
     cursor: pointer;
@@ -685,6 +695,7 @@ select:hover {
     padding: 5px;
     margin: 5px 5px 5px 5px;
     font-size: max(2vh,14px);
+    display: table;
 }
 
 .btn_toggle#ctrl_edit{
@@ -719,6 +730,7 @@ select:hover {
     width: 1.5vw;
     min-width: 25px;
     height: 2.5vh;
+    min-height: 25px;
     margin: 0;
 }
 .btn_toggle#kind_note:hover, .btn_toggle#kind_label:hover{
@@ -727,6 +739,12 @@ select:hover {
 .btn_toggle#kind_note[data-checked="true"], .btn_toggle#kind_label[data-checked="true"]{
     background-color: var(--greenD);
     border: 1px solid transparent;
+}
+
+.icon-pos{
+    display: table-cell; 
+    vertical-align: middle;
+    text-align: center;
 }
 
 /* Markdown Info Tooltip */
@@ -775,4 +793,56 @@ select:hover {
     left: 27px; 
     width: 35vw; 
     height: 32vh; 
+}
+
+
+/* Caaarl animation */
+
+.carl {
+    background-color: var(--white90);
+    box-shadow: 0 0 3px var(--black);
+    position:absolute;
+    z-Index: 2001;
+    display: none;
+}
+.c1 {
+    right: 9.5vw;
+    bottom: 4.1vw;
+    width: 6px;
+    height: 6px;
+    border-radius: 6px;
+    -webkit-animation: fadeIn 0.4s;
+    animation: fadeIn 0.4s;
+}
+.c2 {
+    right: 10.05vw;
+    bottom: 4.5vw;
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    -webkit-animation: c-fadeIn 0.4s;
+    animation: c-fadeIn 0.4s;
+}
+.c3 {
+    right: 10.5vw;
+    bottom: 5.1vw;
+    width: 14px;
+    height: 14px;
+    border-radius: 14px;
+    -webkit-animation: c-fadeIn 0.7s;
+    animation: c-fadeIn 0.7s;
+}
+.c4 {
+    right: 2.5vw;
+    bottom: 6.1vw;
+    width: 12vw;
+    height: 8vw;
+    border-radius: 10px;
+    -webkit-animation: c-fadeIn 1s;
+    animation: c-fadeIn 1s;
+    padding: 10px;
+    color: var(--black);
+    text-align: left;
+    overflow: hidden;
+    display: table
 }

@@ -90,32 +90,29 @@ L.tileLayer('/Tiles/{z}/{x}/{y}.png', {
 // panel topright: title
 L.control.custom({
     position: "topleft",
-    content: "<h1 id='title'>The New Mississippi River Basin Mythology</h1>" +
+    content: "<h1 id='title' onClick='showAbout()'>The New Mississippi River Basin Mythology</h1>" +
             "<div id='tut' class='tut-panel scroll' style='display:none;'>"+
-            "<table style='width: 100%; text-align: right;'><tr><td><div id='tut_text' class='tut-text' style='font-size: 24px;'></div></td></tr>"+
+            "<table style='width: 100%; text-align: right;'>"+
+            "<tr style='text-align:left;'><td><span id='tut_title' class='about-panel_tiles_title'></span></td></tr>"+
+            "<tr><td><div id='tut_text' class='tut-text' style='font-size: 24px;'></div></td></tr>"+
             "<tr><td><button type='button' id='tut_skp' style='border-radius: 5px 0 0 5px; border-right:1px solid #005201;' onClick='tutorial_skip()'>Skip All</button>"+
             "<button type='button' id='tut_nxt' style='border-radius: 0 5px 5px 0;' onClick='tutorial_next()' counter='0'>Next</button>"+
             "</td></tr></table></div>",
 }).addTo(map);    
 
-
-
-let tut_content=["Click the zoom buttons to zoom in and out (or use the mouse wheel). Adjust the view to your perspective",
-                    "Click the map to get to the overview for better orientation. The red point is your current position.",
-                    "Do you see the green markers?",
-                    "Here you can participate and tell your own story, myth and relationship towards the river. Take your time and discover the hidden parts of the river. Just select ‚New’ and go for it. Click anywhere you want and follow the directions. Even the smallest note helps to understand the dimension of the Mississippi River Basin.",
-                    "But wait, there is more. You can also comment on the river if you want. It's a short and easy way to collect thoughts about the Mississippi. Especially if you don’t want to fill the whole marker pop-up… Just click anywhere you want and write down anything you like.",
-                    "From Minnesota to New Orleans, the Story of the Mississippi fluently curated.",
-                    "If you want to understand the Mississippi you need coherent connection lines between different stories. And this is where the story mode comes in. Just scroll through and follow the lines."];
+function showAbout(){
+    document.getElementById("about_bg").style.display="inline";
+    document.getElementById("about").style.display="inline";
+}
 
 
 // panel topright: stories, new
 L.control.custom({
     position: "topright",
-    content: "<div style='margin: 20px 20px 0 0;'><table style='margin-right: 0px; margin-left: auto;'><tr><td><div id='ctrl_st' class='btn_toggle' onclick='stories();' data-checked='false'>Stories&nbsp<clr-icon id='st_angle' shape='angle' dir='down' size='20'></clr-icon></div></td>" +
-                "<td><div id='ctrl_edit' class='btn_toggle' onclick='edit();' data-checked='false'>New</div></td>" +
-                "</tr><tr><td></td><td><div id='new_type' style='display: none;'><div id='kind_label' class='btn_toggle' data-checked='false' style='float: right; margin-right: 5px; border-radius: 0 5px 5px 0;' onClick='kind_label()'><clr-icon id='ico_label' shape='chat-bubble' size='22' style='#fff'></clr-icon></div>"+
-                "<div id='kind_note' class='btn_toggle' data-checked='true' style='float: right; margin-left: 5px; border-radius: 5px 0 0 5px; border-right: 1px solid #005201;' onClick='kind_note()'><clr-icon id='ico_note' shape='note' class='is-solid' size='22' style='#fff'></clr-icon></div></div></td></tr></table>" +
+    content: "<div style='margin: 20px 20px 0 0;'><table style='margin-right: 0px; margin-left: auto;'><tr><td><div id='ctrl_st' class='btn_toggle' onclick='stories();' data-checked='false'><span style='display: table-cell; vertical-algin:middle'>Stories&nbsp<clr-icon id='st_angle' shape='angle' dir='down' style='width: max(2vh,14px); height max(2vh,14px);'></clr-icon></span></div></td>" +
+                "<td><div id='ctrl_edit' class='btn_toggle' onclick='edit();' data-checked='false'><span style='display: table-cell; vertical-algin:middle'>New</span></div></td>" +
+                "</tr><tr><td></td><td><div id='new_type' style='display: none;'><div id='kind_label' class='btn_toggle' data-checked='false' style='float: right; margin-right: 5px; border-radius: 0 5px 5px 0;' onClick='kind_label()'><clr-icon id='ico_label' shape='chat-bubble' class='icon-pos' style='width: max(2vh,16px); height: max(2vh,16px);'></clr-icon></div>"+
+                "<div id='kind_note' class='btn_toggle' data-checked='true' style='float: right; margin-left: 5px; border-radius: 5px 0 0 5px; border-right: 1px solid #005201;' onClick='kind_note()'><clr-icon id='ico_note' shape='note' class='is-solid icon-pos' style='width: max(2vh,16px); height: max(2vh,16px);' ></clr-icon></div></div></td></tr></table>" +
                 "<br><div id='stories-panel-outer' class='stories-outer'><div id='stories-panel' class='stories-panel story-scroll'></div></div>"+
                 "<div id='story-outer' class='story-outer'><div id='story' class='story story-scroll' onScroll='scrollMarker()''></div></div></div>",
     style:
@@ -131,11 +128,11 @@ L.control.mousePosition({prefix: "Lat ", separator: " | Lng ", numDigits: 3}).ad
 L.control.custom({
     position: "bottomleft",
     content:    "<div class='nav_panel'><br><br>"+
-                "<br><button type='button' id='ctrl_layer_s' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201;' onClick='btn_layer(0)' data-checked='false'><clr-icon id='ico_layer_s' shape='file-group' size='24' style='#fff'></clr-icon></button>" +
-                "<br><button type='button' id='ctrl_layer_l' style='border-radius: 0; border-bottom:1px solid #005201;' onClick='btn_layer(1)' data-checked='false'><clr-icon id='ico_layer_l' shape='chat-bubble' size='22' style='#fff'></clr-icon></button>"+
-                "<br><button type='button' id='ctrl_layer_i' style='border-radius: 0 0 5px 5px;' onClick='btn_layer(2)' data-checked='false'><clr-icon id='ico_layer_i' shape='info-circle' size='28' style='#fff'></clr-icon></button><br><br>" +
-                "<button type='button' id='ctrl_zp' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' size='24' style='#fff'></clr-icon></button>"+
-                "<br><button type='button' id='ctrl_zm' style='border-radius: 0 0 5px 5px;' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' size='24'></clr-icon></button>" +
+                "<br><button type='button' id='ctrl_layer_s' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201;' onClick='btn_layer(0)' data-checked='false'><clr-icon id='ico_layer_s' shape='file-group' style='width: max(2.2vh,16px); height: max(2.2vh,16px);'></clr-icon></button>" +
+                "<br><button type='button' id='ctrl_layer_l' style='border-radius: 0; border-bottom:1px solid #005201;' onClick='btn_layer(1)' data-checked='false'><clr-icon id='ico_layer_l' shape='chat-bubble' style='width: max(2.2vh,16px); height: max(2.2vh,16px);'></clr-icon></button>"+
+                "<br><button type='button' id='ctrl_layer_i' style='border-radius: 0 0 5px 5px;' onClick='btn_layer(2)' data-checked='false'><clr-icon id='ico_layer_i' shape='info-circle' style='width: max(2.5vh,18px); height: max(2.5vh,18px);'></clr-icon></button><br><br>" +
+                "<button type='button' id='ctrl_zp' style='border-radius: 5px 5px 0 0; border-bottom:1px solid #005201' onClick='map.setZoom(map.getZoom() + 1)'><clr-icon shape='plus' style='width: max(2.5vh,18px); height: max(2.5vh,18px);'></clr-icon></button>"+
+                "<br><button type='button' id='ctrl_zm' style='border-radius: 0 0 5px 5px;' onClick='map.setZoom(map.getZoom() - 1)'><clr-icon shape='minus' style='width: max(2.5vh,18px); height: max(2.5vh,18px);'></clr-icon></button>" +
                 "<br><br><br><span id='ctrl_rotate_span'><input type='range' min='0' max='360' value='0' step='1' name='rotation' id='ctrl_rotate' class='ctrl_rotate'>"+
                 "<table style='margin-top: 5px; margin-bottom: 5px; table-layout: fixed; width: 100%; font-size: max(1.2vh,10px); text-shadow: 0 0 3px #000;'><colgroup><col style='width: 50%'><col style='width: 50%'></colgroup><tr><td style='text-align: left;'>0°</td><td style='text-align: right;'>360°</td></tr></table></span>" +
                 "<div id='ctrl_ov' class='ctrl_ov' onclick='overview();' data-checked='false'><div style='position: absolute; top: 0; left: 0; bottom: 0; right: 0; width: 100%;'><img id='img_ov' src='overview.jpg' style='width: 100%; height:auto;'></img><div id='ov_pos' style='position: absolute; width: 5px; height: 5px; background:#ff0000; border-radius: 2px; box-shadow: 0 0 1px #fff'></div</div></div></div>",
@@ -189,6 +186,21 @@ if(cookie_pos){
 
 }
 
+
+
+let tut_content=["Click the zoom buttons to zoom in and out (or use the mouse wheel). <br><br> Use the rotation slider to adjust the view to your perspective.",
+                    "Click the map to get to the overview for better orientation. The red point is your current position. Get back by clicking on the old location now shown in the corner or click somewhere on the overview and jump to that location.",
+                    "Do you see the green markers? Here you can participate and tell your own story, myth and relationship towards the basin. Take your time and discover the hidden parts of the rivers. <br>Just select ‘New’ and go for it. Click anywhere you want and follow the directions. Even the smallest note helps to understand the dimensions of the Mississippi River Basin.",
+                    "But wait, there is more. You can also comment on the river if you want. It's a short and easy way to collect thoughts about the basin and its rivers. Especially if you don’t want to fill the whole marker pop-up… <br>Just click anywhere you want and write down anything you like.",
+                    "From Minnesota to New Orleans, the story of the Mississippi River Basin fluently curated.",
+                    "If you want to understand the Mississippi River Basin you need coherent connection lines between different stories. And this is where the story mode comes in. Just scroll through and follow the lines."];
+let tut_titles=["Basic Navigation",
+                "Overview",
+                "Notes",
+                "Comments",
+                "Stories",
+                "Stories"];
+
 let cookie_tut=getCookie("MRB_tutorial");
 if(cookie_tut){
     document.getElementById("tut").style.display="inline";
@@ -198,6 +210,8 @@ if(cookie_tut){
 
 function tutorial_next(){
     let c=parseInt(document.getElementById("tut_nxt").getAttribute("counter"));
+    console.log(c);
+    document.getElementById("tut_title").innerHTML=tut_titles[c];
     document.getElementById("tut_text").innerHTML=tut_content[c];
     document.getElementById("tut_text").style.fontSize="24px";
     isOverflown(document.getElementById("tut_text"), "h");
@@ -234,7 +248,7 @@ function tutorial_next(){
             document.getElementById("ctrl_layer_l").style.filter="blur(4px)";
             document.getElementById("ctrl_layer_i").style.filter="blur(4px)";
             document.getElementById("ctrl_st").style.filter="blur(4px)";
-            document.getElementById("ctrl_edit").style.filter="blur(4px)";
+            document.getElementById("ctrl_edit").style.filter="blur(0)";
             document.getElementById("ctrl_ov").style.filter="blur(4px)";
             document.getElementById("ctrl_zp").style.filter="blur(4px)";
             document.getElementById("ctrl_zm").style.filter="blur(4px)";
@@ -243,23 +257,11 @@ function tutorial_next(){
             if(document.getElementById("ctrl_ov").getAttribute("data-checked")=="true"){
                 overview();
             }
-            break;
-        case 3:
-            document.getElementById("ctrl_layer_s").style.filter="blur(4px)";
-            document.getElementById("ctrl_layer_l").style.filter="blur(4px)";
-            document.getElementById("ctrl_layer_i").style.filter="blur(4px)";
-            document.getElementById("ctrl_st").style.filter="blur(4px)";
-            document.getElementById("ctrl_edit").style.filter="blur(0)";
-            document.getElementById("ctrl_ov").style.filter="blur(4px)";
-            document.getElementById("ctrl_zp").style.filter="blur(4px)";
-            document.getElementById("ctrl_zm").style.filter="blur(4px)";
-            document.getElementById("ctrl_rotate").style.filter="blur(4px)";
-            document.getElementById("ctrl_rotate_span").style.filter="blur(4px)";
             if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="false"){
                 edit();
             }
             break;
-        case 4:
+        case 3:
             document.getElementById("ctrl_layer_s").style.filter="blur(4px)";
             document.getElementById("ctrl_layer_l").style.filter="blur(4px)";
             document.getElementById("ctrl_layer_i").style.filter="blur(4px)";
@@ -277,7 +279,7 @@ function tutorial_next(){
                 kind_label();
             }
             break;
-        case 5:
+        case 4:
             document.getElementById("ctrl_layer_s").style.filter="blur(4px)";
             document.getElementById("ctrl_layer_l").style.filter="blur(4px)";
             document.getElementById("ctrl_layer_i").style.filter="blur(4px)";
@@ -300,7 +302,7 @@ function tutorial_next(){
                 stories();
             }
             break;
-        case 6:
+        case 5:
             document.getElementById("ctrl_layer_s").style.filter="blur(0)";
             document.getElementById("ctrl_layer_l").style.filter="blur(0)";
             document.getElementById("ctrl_layer_i").style.filter="blur(0)";
@@ -317,7 +319,7 @@ function tutorial_next(){
             }
             createStory(0);
             break;
-        case 7:
+        case 6:
             document.getElementById("ctrl_layer_s").style.filter="blur(0)";
             document.getElementById("ctrl_layer_l").style.filter="blur(0)";
             document.getElementById("ctrl_layer_i").style.filter="blur(0)";
@@ -333,19 +335,6 @@ function tutorial_next(){
             }
             document.getElementById("tut").style.display="none";
             break;
-        case 8:
-            document.getElementById("ctrl_layer_s").style.filter="blur(0)";
-            document.getElementById("ctrl_layer_l").style.filter="blur(0)";
-            document.getElementById("ctrl_layer_i").style.filter="blur(0)";
-            document.getElementById("ctrl_st").style.filter="blur(0)";
-            document.getElementById("ctrl_edit").style.filter="blur(0)";
-            document.getElementById("ctrl_ov").style.filter="blur(0)";
-            document.getElementById("ctrl_zp").style.filter="blur(0)";
-            document.getElementById("ctrl_zm").style.filter="blur(0)";
-            document.getElementById("ctrl_rotate").style.filter="blur(0)";
-            document.getElementById("ctrl_rotate_span").style.filter="blur(0)";
-            document.getElementById("tut").style.display="none";
-            break;
     }
     let date = new Date();
     date.setTime(date.getTime() + (604800000)); // 7 days
@@ -356,7 +345,7 @@ function tutorial_next(){
     document.getElementById("tut_nxt").setAttribute("counter",c);
 }
 function tutorial_skip(){
-    document.getElementById("tut_nxt").setAttribute("counter", "8");
+    document.getElementById("tut_nxt").setAttribute("counter", "6");
     tutorial_next();
     document.getElementById("tut").style.display="none";
     document.getElementById("about_bg").style.display="none";
@@ -367,7 +356,7 @@ function tutorial_start(){
     document.getElementById("tut").style.display="inline";
     document.getElementById("about_bg").style.display="none";
     document.getElementById("about").style.display="none";
-    if(!cookie_tut){
+    if(!cookie_tut || parseInt(cookie_tut[1])>7){
         document.getElementById("tut_nxt").setAttribute("counter", "0");
         tutorial_next();
     }
@@ -438,7 +427,7 @@ function createStory(id){
 }
 
 function st_marker_click(e){
-    if(document.getElementById("story-outer").style.display=="none" || document.getElementById("story-outer").style.display==""){
+    if(document.getElementById("ctrl_ov").getAttribute("data-checked")=="false" && (document.getElementById("story-outer").style.display=="none" || document.getElementById("story-outer").style.display=="")){
         story_back();
         btn_layer(0);
         stories();
@@ -450,10 +439,8 @@ function st_marker_click(e){
 function scrollMarker(){
     for(let i=0;i<arr_stories[curr_st].marker.length;i++){
         let m="story_marker_" + i;
-        console.log(document.getElementById(m).getBoundingClientRect().y);
         let spanY=document.getElementById(m).getBoundingClientRect().y - document.getElementById("story").getBoundingClientRect().y;
         let thld=document.getElementById("story").getBoundingClientRect().height / 2;
-
         if(spanY<thld && spanY>0 && i!=curr_st_m){
             map.flyTo([arr_stories[curr_st].marker[i][0],arr_stories[curr_st].marker[i][1]], arr_stories[curr_st].marker[i][2], {
                 animate: true,
@@ -508,6 +495,7 @@ document.getElementById("ctrl_rotate").oninput = function() {
 // overview
 function overview(){
     if(document.getElementById("ctrl_ov").getAttribute("data-checked")=="false"){
+        document.getElementById("map").style.cursor="crosshair";
         curr_edit=document.getElementById("ctrl_edit").checked;
         document.getElementById("ctrl_edit").checked=false;
         curr_view[0]=map.getCenter().lat;
@@ -545,6 +533,7 @@ function overview(){
         }
         document.getElementById("ctrl_ov").setAttribute("data-checked", "true");
     } else {
+        document.getElementById("map").style.cursor="grab";
         document.getElementById("ctrl_edit").checked=curr_edit;
         map.removeLayer(curr_pos);
 
@@ -593,7 +582,7 @@ function edit(){
     } else {
         btn_tgl("ctrl_edit");
         if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="true"){
-            document.getElementById("map").style.cursor="pointer";
+            document.getElementById("map").style.cursor="crosshair";
         } else {
             document.getElementById("map").style.cursor="grab";
         }
@@ -635,31 +624,34 @@ function stories(){
 // POPUP OPEN
 map.on('popupopen', function(e) {
     curr_pu = e.popup._source;
-
-    if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="true"){
-        if(document.getElementById("kind_note").getAttribute("data-checked")=="true"){
-            popup_style("note");
-            view_reset(curr_pu._latlng.lat,curr_pu._latlng.lng);
-        } else {
-            if(curr_pu.kind=="note"){
+    if(document.getElementById("ctrl_ov").getAttribute("data-checked")=="false"){
+        if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="true"){
+            if(document.getElementById("kind_note").getAttribute("data-checked")=="true"){
                 popup_style("note");
                 view_reset(curr_pu._latlng.lat,curr_pu._latlng.lng);
             } else {
-                popup_style("label");
-                document.getElementById("label_text").focus();
-                map.flyTo([curr_pu._latlng.lat, curr_pu._latlng.lng], map.getZoom(), {
-                animate: true,
-                duration: 0.25
-            });
+                if(curr_pu.kind=="note"){
+                    popup_style("note");
+                    view_reset(curr_pu._latlng.lat,curr_pu._latlng.lng);
+                } else {
+                    popup_style("label");
+                    document.getElementById("label_text").focus();
+                    map.flyTo([curr_pu._latlng.lat, curr_pu._latlng.lng], map.getZoom(), {
+                    animate: true,
+                    duration: 0.25
+                });
+                }
             }
+        } else {
+            view_reset(curr_pu._latlng.lat,curr_pu._latlng.lng);
         }
+        
+        pu_flag=true;
+        hist_c=0;
+        isOverflown(document.getElementById("pu_title_ld"),"w");
     } else {
-        view_reset(curr_pu._latlng.lat,curr_pu._latlng.lng);
+        curr_pu.closePopup();
     }
-    
-    pu_flag=true;
-    hist_c=0;
-    isOverflown(document.getElementById("pu_title_ld"),"w");
 });
 
 // POPUP CLOSE
@@ -1034,6 +1026,10 @@ map.on('click', function(e){
             });
             add_label(e.latlng);
         }
+    } else if (document.getElementById("ctrl_ov").getAttribute("data-checked")=="true"){
+        curr_view[0]=e.latlng.lat;
+        curr_view[1]=e.latlng.lng;
+        overview();
     }
 });
 
@@ -1151,7 +1147,16 @@ function btn_tgl(btn1, btn2, ico1, ico2){
 
 function css_getClass(name) {
     let rules = {};
-    let cssRules = document.styleSheets[4].cssRules;
+    let cssRules;
+    let sheets = document.styleSheets;
+    
+    for(let i in document.styleSheets){
+        if( sheets[i].href && sheets[i].href.indexOf("style.css") > -1 ) {
+            cssRules = sheets[i].cssRules;
+            break;
+        }
+    }
+
     for (let j=0; j<cssRules.length; ++j){
         rules[cssRules[j].selectorText] = cssRules[j];
     }
@@ -1279,5 +1284,44 @@ function getCookie(str){
         return cookie_sub;
     } else{
         return false;
+    }
+}
+
+
+let carl_text=["The Mississippi River is 2,340 miles long.",
+                "It takes 90 days for a drop of water to travel the entire length of the Mississippi River.",
+                "The Great River Road runs through about 110 counties and parishes.",
+                "In the year A.D. 1250, the ancient metropolis of Cahokia, Illinois, was home to more people than London.",
+                "Waterskiing was invented on Lake Pepin, located between Minnesota and Wisconsin.",
+                "The Mississippi River is home to 360 species of fish, 326 species of birds, 145 species of amphibians and 50 species of mammals.",
+                "The deepest place on the Mississippi River is 200-feet deep and is located near Algiers Point in New Orleans.",
+                "Mississippi’s catfish farms produce the majority of the nation’s farm-raised catfish.",
+                "Louisiana was named after the Fourteenth King of France.",
+                "Missouri is known as the “Show Me” state.",
+                "Illinois has the largest population of all the states located along the Mississippi River.",
+                "Better fish than fash.",
+                "The Mississippi River also contains over 240 different fish species, which is 25% of all the fish species that can be found in North America.",
+                "Power to the fish stick it to the men.",
+                "The oppressed are allowed once every few years to decide which particular representatives of the oppressing class are to represent and repress them.",
+                "'The old world is dying, and the new world struggles to be born: now is the time of monsters.' Antonio Gramsci"];
+
+function caaaarl(){
+    if(document.getElementById("carl").getAttribute("closed")=="true"){
+        document.getElementById("c1").style.display="block";
+        document.getElementById("c2").style.display="block";
+        document.getElementById("c3").style.display="block";
+        document.getElementById("c4").style.display="block";
+        document.getElementById("carl").src="howmuchami.png";
+        document.getElementById("carl").setAttribute("closed","false");
+        let ci=parseInt(math.random(carl_text.length-1));
+        document.getElementById("c4").innerHTML="<b>Carl the Carp says:</b><br><div id='carl_txt' style='width: 100%; height: 85%; overflow: hidden; font-size: 24px; margin-top: 5px;'>" + carl_text[ci] + "</div>";
+        isOverflown(document.getElementById("carl_txt"),"h");
+    } else {
+        document.getElementById("c1").style.display="none";
+        document.getElementById("c2").style.display="none";
+        document.getElementById("c3").style.display="none";
+        document.getElementById("c4").style.display="none";
+        document.getElementById("carl").src="howmuchami_closed.png";
+        document.getElementById("carl").setAttribute("closed","true");
     }
 }
