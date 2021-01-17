@@ -193,20 +193,16 @@ let tut_content=["Click the zoom buttons to zoom in and out (or use the mouse wh
                     "Do you see the green markers? Here you can participate and tell your own story, myth and relationship towards the basin. Take your time and discover the hidden parts of the rivers. <br>Just select ‘New’ and go for it. Click anywhere you want and follow the directions. Even the smallest note helps to understand the dimensions of the Mississippi River Basin.",
                     "But wait, there is more. You can also comment on the river if you want. It's a short and easy way to collect thoughts about the basin and its rivers. Especially if you don’t want to fill the whole marker pop-up… <br>Just click anywhere you want and write down anything you like.",
                     "From Minnesota to New Orleans, the story of the Mississippi River Basin fluently curated.",
-                    "If you want to understand the Mississippi River Basin you need coherent connection lines between different stories. And this is where the story mode comes in. Just scroll through and follow the lines."];
+                    "If you want to understand the Mississippi River Basin you need coherent connection lines between different stories. And this is where the story mode comes in. Just scroll through and follow the lines.",
+                    "Layer Stuff"];
 let tut_titles=["Basic Navigation",
                 "Overview",
                 "Notes",
                 "Comments",
                 "Stories",
-                "Stories"];
+                "Stories",
+                "Layers"];
 
-let cookie_tut=getCookie("MRB_tutorial");
-if(cookie_tut){
-    document.getElementById("tut").style.display="inline";
-    document.getElementById("tut_nxt").setAttribute("counter", cookie_tut[1]);
-    tutorial_next();
-}
 
 function tutorial_next(){
     let c=parseInt(document.getElementById("tut_nxt").getAttribute("counter"));
@@ -260,6 +256,9 @@ function tutorial_next(){
             if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="false"){
                 edit();
             }
+            if(document.getElementById("kind_note").getAttribute("data-checked")=="false"){
+                kind_note();
+            }
             break;
         case 3:
             document.getElementById("ctrl_layer_s").style.filter="blur(4px)";
@@ -278,6 +277,9 @@ function tutorial_next(){
             if(document.getElementById("kind_label").getAttribute("data-checked")=="false"){
                 kind_label();
             }
+            if(document.getElementById("ctrl_layer_l").getAttribute("data-checked")=="false"){
+                btn_layer(1);
+            }
             break;
         case 4:
             document.getElementById("ctrl_layer_s").style.filter="blur(4px)";
@@ -291,28 +293,36 @@ function tutorial_next(){
             document.getElementById("ctrl_rotate").style.filter="blur(4px)";
             document.getElementById("ctrl_rotate_span").style.filter="blur(4px)";
             if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="true"){
-                console.log("hello");
                 edit();
             }
-            if(document.getElementById("kind_label").getAttribute("data-checked")=="false"){
-                kind_label();
+            if(document.getElementById("kind_note").getAttribute("data-checked")=="false"){
+                kind_note();
             }
-            
+            if(document.getElementById("ctrl_layer_l").getAttribute("data-checked")=="true"){
+                btn_layer(1);
+            }
             if(document.getElementById("ctrl_st").getAttribute("data-checked")=="false"){
                 stories();
             }
             break;
         case 5:
-            document.getElementById("ctrl_layer_s").style.filter="blur(0)";
-            document.getElementById("ctrl_layer_l").style.filter="blur(0)";
-            document.getElementById("ctrl_layer_i").style.filter="blur(0)";
-            document.getElementById("ctrl_st").style.filter="blur(4px)";
+            document.getElementById("ctrl_layer_s").style.filter="blur(4px)";
+            document.getElementById("ctrl_layer_l").style.filter="blur(4px)";
+            document.getElementById("ctrl_layer_i").style.filter="blur(4px)";
+            document.getElementById("ctrl_st").style.filter="blur(0)";
             document.getElementById("ctrl_edit").style.filter="blur(4px)";
             document.getElementById("ctrl_ov").style.filter="blur(4px)";
             document.getElementById("ctrl_zp").style.filter="blur(4px)";
             document.getElementById("ctrl_zm").style.filter="blur(4px)";
             document.getElementById("ctrl_rotate").style.filter="blur(4px)";
             document.getElementById("ctrl_rotate_span").style.filter="blur(4px)";
+            if(document.getElementById("ctrl_edit").getAttribute("data-checked")=="true"){
+                edit();
+            }
+            if(document.getElementById("kind_label").getAttribute("data-checked")=="false"){
+                kind_label();
+            }
+            
             if(document.getElementById("ctrl_st").getAttribute("data-checked")=="false"){
                 stories();
                 document.getElementById("stories-panel").style.display="none";
@@ -323,6 +333,31 @@ function tutorial_next(){
             document.getElementById("ctrl_layer_s").style.filter="blur(0)";
             document.getElementById("ctrl_layer_l").style.filter="blur(0)";
             document.getElementById("ctrl_layer_i").style.filter="blur(0)";
+            document.getElementById("ctrl_st").style.filter="blur(4px)";
+            document.getElementById("ctrl_edit").style.filter="blur(4px)";
+            document.getElementById("ctrl_ov").style.filter="blur(4px)";
+            document.getElementById("ctrl_zp").style.filter="blur(4px)";
+            document.getElementById("ctrl_zm").style.filter="blur(4px)";
+            document.getElementById("ctrl_rotate").style.filter="blur(4px)";
+            document.getElementById("ctrl_rotate_span").style.filter="blur(4px)";
+            if(document.getElementById("ctrl_st").getAttribute("data-checked")=="true"){
+                stories();
+            }
+            if(document.getElementById("ctrl_layer_s").getAttribute("data-checked")=="false"){
+                btn_layer(0);
+            }
+            if(document.getElementById("ctrl_layer_l").getAttribute("data-checked")=="false"){
+                btn_layer(1);
+            }
+            if(document.getElementById("ctrl_layer_i").getAttribute("data-checked")=="false"){
+                btn_layer(2);
+            }
+
+            break;
+        case 7:
+            document.getElementById("ctrl_layer_s").style.filter="blur(0)";
+            document.getElementById("ctrl_layer_l").style.filter="blur(0)";
+            document.getElementById("ctrl_layer_i").style.filter="blur(0)";
             document.getElementById("ctrl_st").style.filter="blur(0)";
             document.getElementById("ctrl_edit").style.filter="blur(0)";
             document.getElementById("ctrl_ov").style.filter="blur(0)";
@@ -330,22 +365,23 @@ function tutorial_next(){
             document.getElementById("ctrl_zm").style.filter="blur(0)";
             document.getElementById("ctrl_rotate").style.filter="blur(0)";
             document.getElementById("ctrl_rotate_span").style.filter="blur(0)";
-            if(document.getElementById("ctrl_st").getAttribute("data-checked")=="true"){
-                stories();
+            if(document.getElementById("ctrl_layer_s").getAttribute("data-checked")=="true"){
+                btn_layer(0);
+            }
+            if(document.getElementById("ctrl_layer_l").getAttribute("data-checked")=="true"){
+                btn_layer(1);
+            }
+            if(document.getElementById("ctrl_layer_i").getAttribute("data-checked")=="true"){
+                btn_layer(2);
             }
             document.getElementById("tut").style.display="none";
             break;
     }
-    let date = new Date();
-    date.setTime(date.getTime() + (604800000)); // 7 days
-    let expires = "expires="+ date.toUTCString();
-    document.cookie = "MRB_tutorial=/" + c + "/;" + expires;
-
     c+=1;
     document.getElementById("tut_nxt").setAttribute("counter",c);
 }
 function tutorial_skip(){
-    document.getElementById("tut_nxt").setAttribute("counter", "6");
+    document.getElementById("tut_nxt").setAttribute("counter", "7");
     tutorial_next();
     document.getElementById("tut").style.display="none";
     document.getElementById("about_bg").style.display="none";
@@ -356,10 +392,8 @@ function tutorial_start(){
     document.getElementById("tut").style.display="inline";
     document.getElementById("about_bg").style.display="none";
     document.getElementById("about").style.display="none";
-    if(!cookie_tut || parseInt(cookie_tut[1])>7){
-        document.getElementById("tut_nxt").setAttribute("counter", "0");
-        tutorial_next();
-    }
+    document.getElementById("tut_nxt").setAttribute("counter", "0");
+    tutorial_next();
 }
 
 
@@ -1303,14 +1337,15 @@ let carl_text=["The Mississippi River is 2,340 miles long.",
                 "The Mississippi River also contains over 240 different fish species, which is 25% of all the fish species that can be found in North America.",
                 "Power to the fish stick it to the men.",
                 "The oppressed are allowed once every few years to decide which particular representatives of the oppressing class are to represent and repress them.",
-                "'The old world is dying, and the new world struggles to be born: now is the time of monsters.' Antonio Gramsci"];
+                "The old world is dying, and the new world struggles to be born: Now is the time of monsters.",
+                "zzzzzzz"];
 
 function caaaarl(){
     if(document.getElementById("carl").getAttribute("closed")=="true"){
         document.getElementById("c1").style.display="block";
         document.getElementById("c2").style.display="block";
         document.getElementById("c3").style.display="block";
-        document.getElementById("c4").style.display="block";
+        document.getElementById("c4").style.display="table";
         document.getElementById("carl").src="howmuchami.png";
         document.getElementById("carl").setAttribute("closed","false");
         let ci=parseInt(math.random(carl_text.length-1));
