@@ -16,7 +16,7 @@ arr_stories=[];
 arr_stories[0]=new Story(
     "Invasion of the Carps", 
     "Marielouis Hippler", 
-    "stories/text/story_01.txt", 
+    "stories/text/story_01.html", 
     "/stories/img/story_01.jpg", 
     "much picture", 
     "/stories/thumb/story_01.jpg", 
@@ -27,7 +27,7 @@ arr_stories[0]=new Story(
 arr_stories[1]=new Story(
     "The UnRiver", 
     "Tilmann Finner", 
-    "stories/text/story_02.txt", 
+    "stories/text/story_02.html", 
     "/stories/img/story_02.png", 
     "UnReality at Lock and Dam Number 3", 
     "/stories/thumb/story_02.jpg", 
@@ -40,9 +40,19 @@ arr_stories[1]=new Story(
 arr_stories[2]=new Story(
     "Unknown Pressures", 
     "Tilmann Finner", 
-    "hi there", 
+    "stories/text/story_03.html", 
     "/stories/img/story_03.jpg", 
     "cat", 
     "/stories/thumb/story_03.jpg", 
     "17.01.2021", 
-    [[43.16,-91.15,10]]);
+    [[36.5809, -89.5474, 12],
+    [36.1941, -89.6527, 12],
+    [35.6568, -89.9277, 12],
+    [35.1230, -90.0774, 12],
+    [34.5166, -90.5841, 12],
+    [33.5515, -91.2383, 12],
+    [33.2895, -91.1610, 12],
+    [32.3118, -90.9023, 12],
+    [31.5440, -91.4334, 12],
+    [30.4291, -91.2069, 12],
+    [29.9347, -90.1361, 12]]);

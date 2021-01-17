@@ -194,7 +194,7 @@ let tut_content=["Click the zoom buttons to zoom in and out (or use the mouse wh
                     "But wait, there is more. You can also comment on the river if you want. It's a short and easy way to collect thoughts about the basin and its rivers. Especially if you don’t want to fill the whole marker pop-up… <br>Just click anywhere you want and write down anything you like.",
                     "From Minnesota to New Orleans, the story of the Mississippi River Basin fluently curated.",
                     "If you want to understand the Mississippi River Basin you need coherent connection lines between different stories. And this is where the story mode comes in. Just scroll through and follow the lines.",
-                    "Layer Stuff"];
+                    "And finally here we have the layer section. If you want to activate or hide the different layers click the buttons. You can choose between the stories, comments and an additional info layer."];
 let tut_titles=["Basic Navigation",
                 "Overview",
                 "Notes",
@@ -457,6 +457,244 @@ function createStory(id){
                         text + "<br><br><hr><br>" +
                         "<p style='font-weight: bold;'>If you also got a story to tell just contact us via E-Mail.</p><br><br><br>"+
                         "<clr-icon shape='arrow' dir='up' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; right:10px;' onClick='story_up()'></clr-icon><br><br>";})
+    
+    if(id==2){
+        let sketch = function(sk){
+
+            let sel=10;
+            let gage_pos;
+            
+            let tbl_org=[], hell, loc;
+            let tbl = [];
+            let mx = [];
+            let a_mx=[];
+            let x, y, p, prev, rf=false, ry=0, ri=0;
+            
+            for(let i=0;i<11; i++){
+              tbl.push([]);
+              for(let k=0;k<21; k++){
+                tbl[i].push([]);
+              }
+            }
+            
+            
+            
+            sk.preload = function() {
+                tbl_org[0] = sk.loadTable("/stories/text/story_03_data/00-New Orleans.csv", "ssv", "header");
+                tbl_org[1] = sk.loadTable("/stories/text/story_03_data/01-Baton Rouge.csv", "ssv", "header");
+                tbl_org[2] = sk.loadTable("/stories/text/story_03_data/02-Natchez.csv", "ssv", "header");
+                tbl_org[3] = sk.loadTable("/stories/text/story_03_data/03-Vicksburg.csv", "ssv", "header");
+                tbl_org[4] = sk.loadTable("/stories/text/story_03_data/04-Greenville.csv", "ssv", "header");
+                tbl_org[5] = sk.loadTable("/stories/text/story_03_data/05-Arkansas City.csv", "ssv", "header");
+                tbl_org[6] = sk.loadTable("/stories/text/story_03_data/06-Helena.csv", "ssv", "header");
+                tbl_org[7] = sk.loadTable("/stories/text/story_03_data/07-Memphis.csv", "ssv", "header");
+                tbl_org[8] = sk.loadTable("/stories/text/story_03_data/08-Osceola.csv", "ssv", "header");
+                tbl_org[9] = sk.loadTable("/stories/text/story_03_data/09-Caruthersville.csv", "ssv", "header");
+                tbl_org[10] = sk.loadTable("/stories/text/story_03_data/10-New Madrid.csv", "ssv", "header");
+                
+                hell = sk.loadFont("/stories/text/story_03_data/HelveticaLTStd-Roman.otf");
+            }
+            
+            sk.setup = function() {
+                let canvasDiv = document.getElementById("canvas");
+                let width = canvasDiv.offsetWidth;
+                console.log(width);
+                let sketchCanvas = sk.createCanvas(width,width*1.2);
+                sketchCanvas.parent("canvas");
+                sketchCanvas.mousePressed(next);
+
+                sk.frameRate(12);
+                
+                for(let p=0;p<tbl.length;p++){
+                let date = "",
+                    elevation = 0.0,
+                    Y = 0,
+                    Ystr="",
+                    M = 0,
+                    D = 0;
+            
+                for (let i = 0; i < tbl_org[p].getRowCount(); i++) {
+                    date = tbl_org[p].get(i, 0);
+                    
+                    Y = sk.int(sk.split(date, "/")[2]);
+                    M = sk.int(sk.split(date, "/")[0]);
+                    D = sk.int(sk.split(date, "/")[1]);
+            
+            
+                    elevation = sk.float(tbl_org[p].get(i, 1));
+                    tbl[p][Y].push(elevation);
+                }
+            
+                for (let i=0;i<tbl[p].length;i++){
+                    a_mx[i] = sk.max(tbl[p][i]);
+                }
+                mx[p]=sk.max(a_mx);
+                } 
+            }
+            
+            
+            
+            
+            sk.draw = function() {
+                sk.background(0);
+                
+                x = sk.width/7.4;
+                y = sk.height/5;
+                p = 0;
+                
+            
+                rf=false;
+                for (let i = 0; i < tbl[0].length; i++) {
+                x = sk.width/7.4;
+                y += sk.height/32.4;
+                sk.fill(0);
+                sk.stroke(0);
+                sk.strokeWeight(sk.width/400);
+                sk.beginShape();
+                for(let k=0;k<tbl[sel][i].length;k++){
+                    x += sk.width/500;
+                    p = sk.map(tbl[sel][i][k], 0, mx[sel], 0, sk.height/9.6);
+                    sk.vertex(x, y - p);
+                }
+                sk.vertex(x+sk.width/500,p)
+                sk.vertex(x,y+sk.height/9.6);
+                sk.vertex(sk.width/7.4,y+sk.height/9.6);
+                sk.endShape(sk.CLOSE);
+                
+                x=sk.width/7.4;
+                
+                if (sk.mouseY<y && sk.mouseY>y-sk.height/32.4 && sk.mouseX>sk.width/7.4 && sk.mouseX<(sk.width-sk.width/7.4)){
+                    ry=y;
+                    rf=true;
+                    ri=i;
+                }
+                
+                if(rf==true && i==ri){
+                    sk.stroke(200,0,0);
+                    sk.noFill();
+                } else {
+                    sk.noFill();
+                    sk.stroke(255);
+                }
+                
+                sk.beginShape();
+                for(let k=0;k<tbl[sel][i].length;k++){
+                    x += sk.width/500;
+                    p = sk.map(tbl[sel][i][k], 0, mx[sel], 0, sk.height/9.6);
+                    sk.vertex(x, y - p);
+                }
+                sk.endShape();
+                }
+                
+                if(rf==true){
+                sk.stroke(200,0,0,100);
+                sk.noFill();
+                x=sk.width/7.4;
+                sk.beginShape();
+                for(let k=0;k<tbl[sel][ri].length;k++){
+                    x += sk.width/500;
+                    p = sk.map(tbl[sel][ri][k], 0, mx[sel], 0, sk.height/9.6);
+                    sk.vertex(x, ry - p);
+                }
+                sk.endShape();
+                
+                sk.push();
+                sk.textSize(sk.width/40);
+                sk.textAlign(sk.RIGHT);
+                sk.textFont(hell);
+                sk.noStroke();
+                sk.fill(200,0,0);
+                sk.text(2000+ri,sk.width/8.3,ry);
+                sk.textAlign(sk.LEFT);
+                sk.textSize(sk.width/50);
+                sk.text("gage zero", (sk.width-sk.width/8.3), ry);
+                sk.text(sk.round(mx[sel])+" ft", (sk.width-sk.width/8.3), ry-sk.height/9.6);
+                sk.noFill();
+                    
+                sk.stroke(200,0,0);
+                sk.strokeWeight(sk.width/500);
+                sk.stroke(200,0,0);
+                sk.line(sk.width/7.4,ry, (sk.width-sk.width/7.4),ry);
+                sk.line((sk.width-sk.width/7),ry-sk.height/9.6, (sk.width-sk.width/7.4),ry-sk.height/9.6);
+                sk.pop();
+                }
+            
+                sk.textAlign(sk.CENTER);
+                sk.textFont(hell);
+                sk.fill(255);
+                sk.noStroke();
+                sk.textSize(sk.width/13.3);
+                sk.text("RIVER COMMISSION", sk.width / 2, sk.height/8.57);
+                sk.textSize(sk.width/15.87);
+                sk.text("UNKNOWN PRESSURES", sk.width / 2, (sk.height-sk.height/9.6));
+                sk.textSize(sk.width/66.66);
+        
+                switch(sel){
+                case 0:
+                    gage_pos=[[36.5809, -89.5474],10];
+                    loc="NEW ORLEANS";
+                    break;
+                case 1:
+                    gage_pos=[[29.9347, -90.1361],10];
+                    loc="BATON ROUGE";
+                    break;
+                case 2:
+                    gage_pos=[[30.4291, -91.2069],10];
+                    loc="NATCHEZ";
+                    break;
+                case 3:
+                    gage_pos=[[31.5440, -91.4334],10];
+                    loc="VICKSBURG";
+                    break;
+                case 4:
+                    gage_pos=[[32.3118, -90.9023],10];
+                    loc="GREENVILLE";
+                    break;
+                case 5:
+                    gage_pos=[[33.2895, -91.1610],10];
+                    loc="ARKANSAS CITY";
+                    break;
+                case 6:
+                    gage_pos=[[33.5515, -91.2383],10];
+                    loc="HELENA";
+                    break;
+                case 7:
+                    gage_pos=[[34.5166, -90.5841],10];
+                    loc="MEMPHIS";
+                    break;
+                case 8:
+                    gage_pos=[[35.1230, -90.0774],10];
+                    loc="OSCEOLA";
+                    break;
+                case 9:
+                    gage_pos=[[35.6568, -89.9277],10];
+                    loc="CARUTHERSVILLE";
+                    break;
+                case 10:
+                    gage_pos=[[36.1941, -89.6527],10];
+                    loc="NEW MADRID";
+                    break;
+                }
+                sk.text(loc, sk.width / 2, (sk.height-sk.height/60));
+            
+            }
+            
+            
+            let next = function() {
+                if(sel==0){
+                    sel=tbl.length-1;
+                } else {
+                    sel-=1;
+                }
+                map.flyTo(gage_pos[0], 11, {
+                    animate: true,
+                    duration: 1.0
+                });
+            }
+            }
+ 
+            let river_commission = new p5(sketch);
+    }
     story_up();
 }
 
