@@ -430,6 +430,8 @@ div.story-scroll::-webkit-scrollbar-thumb:hover {
 .about {
     width: 40vw; 
     height: 50vh; 
+    min-width: 400px;
+    min-height: 300px;
     position: absolute; 
     top: 50%; 
     left: 50%; 
@@ -441,6 +443,7 @@ div.story-scroll::-webkit-scrollbar-thumb:hover {
     box-shadow: 0 0 5px var(--black);
     border-radius:10px;
     padding: 2vh;
+    overflow: hidden;
 }
 @supports ((-webkit-backdrop-filter: blur(15px)) or (backdrop-filter: blur(15px))){
     .about {
@@ -568,6 +571,7 @@ button#tut_start {
     min-height: 35px;
     border: 1px solid transparent;
     font-weight: normal;
+    margin: 10px;
 }
 
 button#kind_sel {
