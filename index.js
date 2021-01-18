@@ -207,7 +207,7 @@ if(cookie_pos){
 
 let tut_content=["Click the zoom buttons to zoom in and out (or use the mouse wheel). <br><br> Use the rotation slider to adjust the view to your perspective.",
                     "Click the map to get to the overview for better orientation. The red point is your current position. Get back by clicking on the old location now shown in the corner or click somewhere on the overview and jump to that location.",
-                    "Do you see the green markers? Here you can participate and tell your own story, myth and relationship towards the basin. Take your time and discover the hidden parts of the rivers. <br>Just select ‘New’ and go for it. Click anywhere you want and follow the directions. Even the smallest note helps to understand the dimensions of the Mississippi River Basin.",
+                    "Do you see the green markers? Here you can participate and tell your own story, myth and relationship towards the basin. Take your time and discover the hidden parts of the rivers. <br> Just select <i>New</i> and go for it. Click anywhere you want and follow the directions. Even the smallest note helps to understand the dimensions of the Mississippi River Basin.",
                     "But wait, there is more. You can also comment on the river if you want. It's a short and easy way to collect thoughts about the basin and its rivers. Especially if you don’t want to fill the whole marker pop-up… <br>Just click anywhere you want and write down anything you like.",
                     "From Minnesota to New Orleans, the story of the Mississippi River Basin fluently curated.",
                     "If you want to understand the Mississippi River Basin you need coherent connection lines between different stories. And this is where the story mode comes in. Just scroll through and follow the lines.",
@@ -401,6 +401,7 @@ function tutorial_skip(){
     document.getElementById("tut").style.display="none";
     document.getElementById("about_bg").style.display="none";
     document.getElementById("about").style.display="none";
+    btn_layer(1);
 }
 
 function tutorial_start(){
@@ -468,7 +469,7 @@ function createStory(id){
                         "<center><span class='stories-panel_tiles_title'>Loading...</span></center><br>Please Wait.<span id='story_marker_0'></span><br><br>"+
                         "<img src='' class='story-images' onClick='larger_image(this.src)'></img><br><br>"+
                         "<br><br><hr><br>" +
-                        "<p style='font-weight: bold;'>If you also got a story to tell just contact us via E-Mail.</p><br><br><br>"+
+                        "<p style='font-weight: bold;'>If you also got a story to tell just contact us via <a href='mailto:mississippi@erictapen.name'>E-Mail</a>.</p><br><br><br>"+
                         "<clr-icon shape='arrow' dir='up' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; right:10px;' onClick='story_up()'></clr-icon><br><br>";
 
 
@@ -478,243 +479,10 @@ function createStory(id){
                         "<center><span class='stories-panel_tiles_title'>" + arr_stories[id].title + "</span></center><br>" + arr_stories[id].author + ", " + arr_stories[id].date + "<span id='story_marker_0'></span><br><br>"+
                         "<img src='" + arr_stories[id].img + "' class='story-images' onClick='larger_image(this.src)'></img><span style='font-size: max(1.5vh,11px);'>" + arr_stories[id].img_sub + "</span><br><br>"+
                         text + "<br><br><hr><br>" +
-                        "<p style='font-weight: bold;'>If you also got a story to tell just contact us via E-Mail.</p><br><br><br>"+
+                        "<p style='font-weight: bold;'>If you also got a story to tell just contact us via <a href='mailto:mississippi@erictapen.name'>E-Mail</a>.</p><br><br><br>"+
                         "<clr-icon shape='arrow' dir='up' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; right:10px;' onClick='story_up()'></clr-icon><br><br>";})
     let river_commission;
     if(id==2){
-        let sketch = function(sk){
-
-            let sel=10;
-            let gage_pos;
-            
-            let tbl_org=[], hell, loc;
-            let tbl = [];
-            let mx = [];
-            let a_mx=[];
-            let x, y, p, prev, rf=false, ry=0, ri=0;
-            
-            for(let i=0;i<11; i++){
-              tbl.push([]);
-              for(let k=0;k<21; k++){
-                tbl[i].push([]);
-              }
-            }
-            
-            
-            
-            sk.preload = function() {
-                tbl_org[0] = sk.loadTable("/stories/text/story_03_data/00-New Orleans.csv", "ssv", "header");
-                tbl_org[1] = sk.loadTable("/stories/text/story_03_data/01-Baton Rouge.csv", "ssv", "header");
-                tbl_org[2] = sk.loadTable("/stories/text/story_03_data/02-Natchez.csv", "ssv", "header");
-                tbl_org[3] = sk.loadTable("/stories/text/story_03_data/03-Vicksburg.csv", "ssv", "header");
-                tbl_org[4] = sk.loadTable("/stories/text/story_03_data/04-Greenville.csv", "ssv", "header");
-                tbl_org[5] = sk.loadTable("/stories/text/story_03_data/05-Arkansas City.csv", "ssv", "header");
-                tbl_org[6] = sk.loadTable("/stories/text/story_03_data/06-Helena.csv", "ssv", "header");
-                tbl_org[7] = sk.loadTable("/stories/text/story_03_data/07-Memphis.csv", "ssv", "header");
-                tbl_org[8] = sk.loadTable("/stories/text/story_03_data/08-Osceola.csv", "ssv", "header");
-                tbl_org[9] = sk.loadTable("/stories/text/story_03_data/09-Caruthersville.csv", "ssv", "header");
-                tbl_org[10] = sk.loadTable("/stories/text/story_03_data/10-New Madrid.csv", "ssv", "header");
-                
-                hell = sk.loadFont("/stories/text/story_03_data/HelveticaLTStd-Roman.otf");
-            }
-            
-            sk.setup = function() {
-                let canvasDiv = document.getElementById("canvas");
-                let width = canvasDiv.offsetWidth;
-                let sketchCanvas = sk.createCanvas(width,width*1.2);
-                sketchCanvas.parent("canvas");
-                sketchCanvas.mousePressed(next);
-
-                sk.frameRate(12);
-                
-                for(let p=0;p<tbl.length;p++){
-                let date = "",
-                    elevation = 0.0,
-                    Y = 0,
-                    Ystr="",
-                    M = 0,
-                    D = 0;
-            
-                for (let i = 0; i < tbl_org[p].getRowCount(); i++) {
-                    date = tbl_org[p].get(i, 0);
-                    
-                    Y = sk.int(sk.split(date, "/")[2]);
-                    M = sk.int(sk.split(date, "/")[0]);
-                    D = sk.int(sk.split(date, "/")[1]);
-            
-            
-                    elevation = sk.float(tbl_org[p].get(i, 1));
-                    tbl[p][Y].push(elevation);
-                }
-            
-                for (let i=0;i<tbl[p].length;i++){
-                    a_mx[i] = sk.max(tbl[p][i]);
-                }
-                mx[p]=sk.max(a_mx);
-                } 
-            }
-            
-            
-            
-            
-            sk.draw = function() {
-                sk.background(0);
-                
-                x = sk.width/7.4;
-                y = sk.height/5;
-                p = 0;
-                
-            
-                rf=false;
-                for (let i = 0; i < tbl[0].length; i++) {
-                x = sk.width/7.4;
-                y += sk.height/32.4;
-                sk.fill(0);
-                sk.stroke(0);
-                sk.strokeWeight(sk.width/400);
-                sk.beginShape();
-                for(let k=0;k<tbl[sel][i].length;k++){
-                    x += sk.width/500;
-                    p = sk.map(tbl[sel][i][k], 0, mx[sel], 0, sk.height/9.6);
-                    sk.vertex(x, y - p);
-                }
-                sk.vertex(x+sk.width/500,p)
-                sk.vertex(x,y+sk.height/9.6);
-                sk.vertex(sk.width/7.4,y+sk.height/9.6);
-                sk.endShape(sk.CLOSE);
-                
-                x=sk.width/7.4;
-                
-                if (sk.mouseY<y && sk.mouseY>y-sk.height/32.4 && sk.mouseX>sk.width/7.4 && sk.mouseX<(sk.width-sk.width/7.4)){
-                    ry=y;
-                    rf=true;
-                    ri=i;
-                }
-                
-                if(rf==true && i==ri){
-                    sk.stroke(200,0,0);
-                    sk.noFill();
-                } else {
-                    sk.noFill();
-                    sk.stroke(255);
-                }
-                
-                sk.beginShape();
-                for(let k=0;k<tbl[sel][i].length;k++){
-                    x += sk.width/500;
-                    p = sk.map(tbl[sel][i][k], 0, mx[sel], 0, sk.height/9.6);
-                    sk.vertex(x, y - p);
-                }
-                sk.endShape();
-                }
-                
-                if(rf==true){
-                sk.stroke(200,0,0,100);
-                sk.noFill();
-                x=sk.width/7.4;
-                sk.beginShape();
-                for(let k=0;k<tbl[sel][ri].length;k++){
-                    x += sk.width/500;
-                    p = sk.map(tbl[sel][ri][k], 0, mx[sel], 0, sk.height/9.6);
-                    sk.vertex(x, ry - p);
-                }
-                sk.endShape();
-                
-                sk.push();
-                sk.textSize(sk.width/40);
-                sk.textAlign(sk.RIGHT);
-                sk.textFont(hell);
-                sk.noStroke();
-                sk.fill(200,0,0);
-                sk.text(2000+ri,sk.width/8.3,ry);
-                sk.textAlign(sk.LEFT);
-                sk.textSize(sk.width/50);
-                sk.text("gage zero", (sk.width-sk.width/8.3), ry);
-                sk.text(sk.round(mx[sel])+" ft", (sk.width-sk.width/8.3), ry-sk.height/9.6);
-                sk.noFill();
-                    
-                sk.stroke(200,0,0);
-                sk.strokeWeight(sk.width/500);
-                sk.stroke(200,0,0);
-                sk.line(sk.width/7.4,ry, (sk.width-sk.width/7.4),ry);
-                sk.line((sk.width-sk.width/7),ry-sk.height/9.6, (sk.width-sk.width/7.4),ry-sk.height/9.6);
-                sk.pop();
-                }
-            
-                sk.textAlign(sk.CENTER);
-                sk.textFont(hell);
-                sk.fill(255);
-                sk.noStroke();
-                sk.textSize(sk.width/13.3);
-                sk.text("RIVER COMMISSION", sk.width / 2, sk.height/8.57);
-                sk.textSize(sk.width/15.87);
-                sk.text("UNKNOWN PRESSURES", sk.width / 2, (sk.height-sk.height/9.6));
-                sk.textSize(sk.width/66.66);
-        
-                switch(sel){
-                case 0:
-                    gage_pos=[[36.5809, -89.5474],10];
-                    loc="NEW ORLEANS";
-                    break;
-                case 1:
-                    gage_pos=[[29.9347, -90.1361],10];
-                    loc="BATON ROUGE";
-                    break;
-                case 2:
-                    gage_pos=[[30.4291, -91.2069],10];
-                    loc="NATCHEZ";
-                    break;
-                case 3:
-                    gage_pos=[[31.5440, -91.4334],10];
-                    loc="VICKSBURG";
-                    break;
-                case 4:
-                    gage_pos=[[32.3118, -90.9023],10];
-                    loc="GREENVILLE";
-                    break;
-                case 5:
-                    gage_pos=[[33.2895, -91.1610],10];
-                    loc="ARKANSAS CITY";
-                    break;
-                case 6:
-                    gage_pos=[[33.5515, -91.2383],10];
-                    loc="HELENA";
-                    break;
-                case 7:
-                    gage_pos=[[34.5166, -90.5841],10];
-                    loc="MEMPHIS";
-                    break;
-                case 8:
-                    gage_pos=[[35.1230, -90.0774],10];
-                    loc="OSCEOLA";
-                    break;
-                case 9:
-                    gage_pos=[[35.6568, -89.9277],10];
-                    loc="CARUTHERSVILLE";
-                    break;
-                case 10:
-                    gage_pos=[[36.1941, -89.6527],10];
-                    loc="NEW MADRID";
-                    break;
-                }
-                sk.text(loc, sk.width / 2, (sk.height-sk.height/60));
-            
-            }
-            
-            
-            let next = function() {
-                if(sel==0){
-                    sel=tbl.length-1;
-                } else {
-                    sel-=1;
-                }
-                map.flyTo(gage_pos[0], 11, {
-                    animate: true,
-                    duration: 1.0
-                });
-            }
-            }
- 
             river_commission = new p5(sketch);
     }
     story_up();
@@ -1324,6 +1092,7 @@ map.on('click', function(e){
     } else if (document.getElementById("ctrl_ov").getAttribute("data-checked")=="true"){
         curr_view[0]=e.latlng.lat;
         curr_view[1]=e.latlng.lng;
+        curr_view[2]=10;
         overview();
     }
 });
@@ -1518,8 +1287,8 @@ function move_image(event){
     console.log(mouseDown);
     let z=document.getElementById("large_img").getAttribute("zoom-level");
     if(mouseDown && z>0){
-        let x=mapRange(event.clientX,0, screen.width,-50, 50);
-        let y=mapRange(event.clientY,0, screen.height,-50,50);
+        let x=mapRange(event.clientX,0, screen.width,-35, 35);
+        let y=mapRange(event.clientY,0, screen.height,-35,35);
         document.getElementById("large_img").style.transform="translate("+x+"%, "+y+"%)";
     }
 }
@@ -1660,3 +1429,242 @@ function caaaarl(){
         document.getElementById("carl").setAttribute("closed","true");
     }
 }
+
+
+
+
+
+
+
+let sketch = function(sk){
+
+    let sel=10;
+    let gage_pos;
+    
+    let tbl_org=[], hell, loc;
+    let tbl = [];
+    let mx = [];
+    let a_mx=[];
+    let x, y, p, prev, rf=false, ry=0, ri=0;
+    
+    for(let i=0;i<11; i++){
+      tbl.push([]);
+      for(let k=0;k<21; k++){
+        tbl[i].push([]);
+      }
+    }
+    
+    
+    
+    sk.preload = function() {
+        tbl_org[0] = sk.loadTable("/stories/text/story_03_data/00-New Orleans.csv", "ssv", "header");
+        tbl_org[1] = sk.loadTable("/stories/text/story_03_data/01-Baton Rouge.csv", "ssv", "header");
+        tbl_org[2] = sk.loadTable("/stories/text/story_03_data/02-Natchez.csv", "ssv", "header");
+        tbl_org[3] = sk.loadTable("/stories/text/story_03_data/03-Vicksburg.csv", "ssv", "header");
+        tbl_org[4] = sk.loadTable("/stories/text/story_03_data/04-Greenville.csv", "ssv", "header");
+        tbl_org[5] = sk.loadTable("/stories/text/story_03_data/05-Arkansas City.csv", "ssv", "header");
+        tbl_org[6] = sk.loadTable("/stories/text/story_03_data/06-Helena.csv", "ssv", "header");
+        tbl_org[7] = sk.loadTable("/stories/text/story_03_data/07-Memphis.csv", "ssv", "header");
+        tbl_org[8] = sk.loadTable("/stories/text/story_03_data/08-Osceola.csv", "ssv", "header");
+        tbl_org[9] = sk.loadTable("/stories/text/story_03_data/09-Caruthersville.csv", "ssv", "header");
+        tbl_org[10] = sk.loadTable("/stories/text/story_03_data/10-New Madrid.csv", "ssv", "header");
+        
+        hell = sk.loadFont("/stories/text/story_03_data/HelveticaLTStd-Roman.otf");
+    }
+    
+    sk.setup = function() {
+        let canvasDiv = document.getElementById("canvas");
+        let width = canvasDiv.offsetWidth;
+        let sketchCanvas = sk.createCanvas(width,width*1.2);
+        sketchCanvas.parent("canvas");
+        sketchCanvas.mousePressed(next);
+
+        sk.frameRate(12);
+        
+        for(let p=0;p<tbl.length;p++){
+        let date = "",
+            elevation = 0.0,
+            Y = 0,
+            Ystr="",
+            M = 0,
+            D = 0;
+    
+        for (let i = 0; i < tbl_org[p].getRowCount(); i++) {
+            date = tbl_org[p].get(i, 0);
+            
+            Y = sk.int(sk.split(date, "/")[2]);
+            M = sk.int(sk.split(date, "/")[0]);
+            D = sk.int(sk.split(date, "/")[1]);
+    
+    
+            elevation = sk.float(tbl_org[p].get(i, 1));
+            tbl[p][Y].push(elevation);
+        }
+    
+        for (let i=0;i<tbl[p].length;i++){
+            a_mx[i] = sk.max(tbl[p][i]);
+        }
+        mx[p]=sk.max(a_mx);
+        } 
+    }
+    
+    
+    
+    
+    sk.draw = function() {
+        sk.background(0);
+        
+        x = sk.width/7.4;
+        y = sk.height/5;
+        p = 0;
+        
+    
+        rf=false;
+        for (let i = 0; i < tbl[0].length; i++) {
+        x = sk.width/7.4;
+        y += sk.height/32.4;
+        sk.fill(0);
+        sk.stroke(0);
+        sk.strokeWeight(sk.width/400);
+        sk.beginShape();
+        for(let k=0;k<tbl[sel][i].length;k++){
+            x += sk.width/500;
+            p = sk.map(tbl[sel][i][k], 0, mx[sel], 0, sk.height/9.6);
+            sk.vertex(x, y - p);
+        }
+        sk.vertex(x+sk.width/500,p)
+        sk.vertex(x,y+sk.height/9.6);
+        sk.vertex(sk.width/7.4,y+sk.height/9.6);
+        sk.endShape(sk.CLOSE);
+        
+        x=sk.width/7.4;
+        
+        if (sk.mouseY<y && sk.mouseY>y-sk.height/32.4 && sk.mouseX>sk.width/7.4 && sk.mouseX<(sk.width-sk.width/7.4)){
+            ry=y;
+            rf=true;
+            ri=i;
+        }
+        
+        if(rf==true && i==ri){
+            sk.stroke(200,0,0);
+            sk.noFill();
+        } else {
+            sk.noFill();
+            sk.stroke(255);
+        }
+        
+        sk.beginShape();
+        for(let k=0;k<tbl[sel][i].length;k++){
+            x += sk.width/500;
+            p = sk.map(tbl[sel][i][k], 0, mx[sel], 0, sk.height/9.6);
+            sk.vertex(x, y - p);
+        }
+        sk.endShape();
+        }
+        
+        if(rf==true){
+        sk.stroke(200,0,0,100);
+        sk.noFill();
+        x=sk.width/7.4;
+        sk.beginShape();
+        for(let k=0;k<tbl[sel][ri].length;k++){
+            x += sk.width/500;
+            p = sk.map(tbl[sel][ri][k], 0, mx[sel], 0, sk.height/9.6);
+            sk.vertex(x, ry - p);
+        }
+        sk.endShape();
+        
+        sk.push();
+        sk.textSize(sk.width/40);
+        sk.textAlign(sk.RIGHT);
+        sk.textFont(hell);
+        sk.noStroke();
+        sk.fill(200,0,0);
+        sk.text(2000+ri,sk.width/8.3,ry);
+        sk.textAlign(sk.LEFT);
+        sk.textSize(sk.width/50);
+        sk.text("gage zero", (sk.width-sk.width/8.3), ry);
+        sk.text(sk.round(mx[sel])+" ft", (sk.width-sk.width/8.3), ry-sk.height/9.6);
+        sk.noFill();
+            
+        sk.stroke(200,0,0);
+        sk.strokeWeight(sk.width/500);
+        sk.stroke(200,0,0);
+        sk.line(sk.width/7.4,ry, (sk.width-sk.width/7.4),ry);
+        sk.line((sk.width-sk.width/7),ry-sk.height/9.6, (sk.width-sk.width/7.4),ry-sk.height/9.6);
+        sk.pop();
+        }
+    
+        sk.textAlign(sk.CENTER);
+        sk.textFont(hell);
+        sk.fill(255);
+        sk.noStroke();
+        sk.textSize(sk.width/13.3);
+        sk.text("RIVER COMMISSION", sk.width / 2, sk.height/8.57);
+        sk.textSize(sk.width/15.87);
+        sk.text("UNKNOWN PRESSURES", sk.width / 2, (sk.height-sk.height/9.6));
+        sk.textSize(sk.width/66.66);
+
+        switch(sel){
+        case 0:
+            gage_pos=[[36.5809, -89.5474],10];
+            loc="NEW ORLEANS";
+            break;
+        case 1:
+            gage_pos=[[29.9347, -90.1361],10];
+            loc="BATON ROUGE";
+            break;
+        case 2:
+            gage_pos=[[30.4291, -91.2069],10];
+            loc="NATCHEZ";
+            break;
+        case 3:
+            gage_pos=[[31.5440, -91.4334],10];
+            loc="VICKSBURG";
+            break;
+        case 4:
+            gage_pos=[[32.3118, -90.9023],10];
+            loc="GREENVILLE";
+            break;
+        case 5:
+            gage_pos=[[33.2895, -91.1610],10];
+            loc="ARKANSAS CITY";
+            break;
+        case 6:
+            gage_pos=[[33.5515, -91.2383],10];
+            loc="HELENA";
+            break;
+        case 7:
+            gage_pos=[[34.5166, -90.5841],10];
+            loc="MEMPHIS";
+            break;
+        case 8:
+            gage_pos=[[35.1230, -90.0774],10];
+            loc="OSCEOLA";
+            break;
+        case 9:
+            gage_pos=[[35.6568, -89.9277],10];
+            loc="CARUTHERSVILLE";
+            break;
+        case 10:
+            gage_pos=[[36.1941, -89.6527],10];
+            loc="NEW MADRID";
+            break;
+        }
+        sk.text(loc, sk.width / 2, (sk.height-sk.height/60));
+    
+    }
+    
+    
+    let next = function() {
+        if(sel==0){
+            sel=tbl.length-1;
+        } else {
+            sel-=1;
+        }
+        map.flyTo(gage_pos[0], 11, {
+            animate: true,
+            duration: 1.0
+        });
+    }
+    }

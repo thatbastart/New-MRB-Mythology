@@ -397,24 +397,25 @@ div.story-scroll::-webkit-scrollbar-thumb:hover {
     position: absolute;
     left: 17;
     top: 10vh;
-    height: 28vh;
-    width: 25vw;
+    height: 33vh;
+    width: 32vw;
     text-align: left;
     font-size: max(2vh,12px);
     color: var(--black);
     background:var(--white80); 
     box-shadow: 0 0 5px var(--black);
     border-radius:10px;
-    padding: 2vh;
+    padding: 1vh 2vh 2vh 2vh;
     margin-top: -2vh;
 }
 
 .tut-text{
     color: var(--black);
-    height: 20.5vh;
+    height: 25.5vh;
     text-align: left;
     padding-bottom: 1vh;
-    font-size: max(1.9vh,12px);
+    font-size: max(2.5vh,14px);
+    line-height:max(3vh,16px);
     display: table-cell;
     vertical-align: middle;
 }
@@ -429,13 +430,12 @@ div.story-scroll::-webkit-scrollbar-thumb:hover {
 
 .about {
     width: 40vw; 
-    height: 50vh; 
     min-width: 400px;
     min-height: 300px;
     position: absolute; 
     top: 50%; 
     left: 50%; 
-    margin: -25vh 0 0 -20vw; 
+    margin: -30vh 0 0 -20vw; 
     z-Index:2000;
     font-size: max(2vh,12px);
     color: var(--black);
