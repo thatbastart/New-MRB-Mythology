@@ -94,7 +94,7 @@ L.control.custom({
             "<div id='tut' class='tut-panel scroll' style='display:none;'>"+
             "<table style='width: 100%; text-align: right;'>"+
             "<tr style='text-align:left;'><td><span id='tut_title' class='about-panel_tiles_title'></span></td></tr>"+
-            "<tr><td><div id='tut_text' class='tut-text' style='font-size: 24px;'></div></td></tr>"+
+            "<tr><td><div id='tut_text' class='tut-text'></div></td></tr>"+
             "<tr><td><button type='button' id='tut_skp' style='border-radius: 5px 0 0 5px; border-right:1px solid #005201;' onClick='tutorial_skip()'>Skip All</button>"+
             "<button type='button' id='tut_nxt' style='border-radius: 0 5px 5px 0;' onClick='tutorial_next()' counter='0'>Next</button>"+
             "</td></tr></table></div>",
@@ -114,7 +114,7 @@ setInterval(function(){
     names_rand=parseInt(math.random(names.length));
     document.getElementById("title").innerHTML="The New " + names[names_rand] + " Basin Mythology"; 
     tippy_inst[0].setContent("About the Project <br>" + names_lang[names_rand]);
-}, 6000);
+}, 90000);
 
 
 function showAbout(){
@@ -126,7 +126,7 @@ function showAbout(){
 // panel topright: stories, new
 L.control.custom({
     position: "topright",
-    content: "<div style='margin: 20px 20px 0 0;'><table style='margin-right: 0px; margin-left: auto;'><tr><td><div id='ctrl_st' class='btn_toggle' onclick='stories();' data-checked='false'><span style='display: table-cell; vertical-algin:middle'>Stories&nbsp<clr-icon id='st_angle' shape='angle' dir='down' style='width: max(2vh,14px); height max(2vh,14px);'></clr-icon></span></div></td>" +
+    content: "<div style='margin: 20px 20px 0 0;'><table style='margin-right: 0px; margin-left: auto;'><tr><td><div id='ctrl_st' class='btn_toggle' onclick='stories();' data-checked='false'><span style='display: table-cell; vertical-algin:middle'>Stories&nbsp<clr-icon id='st_angle' shape='angle' dir='down' style='width: max(2vh,14px); height: max(2vh,14px);'></clr-icon></span></div></td>" +
                 "<td><div id='ctrl_edit' class='btn_toggle' onclick='edit();' data-checked='false'><span style='display: table-cell; vertical-algin:middle'>New</span></div></td>" +
                 "</tr><tr><td></td><td><div id='new_type' style='display: none;'><div id='kind_label' class='btn_toggle' data-checked='false' style='float: right; margin-right: 5px; border-radius: 0 5px 5px 0;' onClick='kind_label()'><clr-icon id='ico_label' shape='chat-bubble' class='icon-pos' style='width: max(2vh,16px); height: max(2vh,16px);'></clr-icon></div>"+
                 "<div id='kind_note' class='btn_toggle' data-checked='true' style='float: right; margin-left: 5px; border-radius: 5px 0 0 5px; border-right: 1px solid #005201;' onClick='kind_note()'><clr-icon id='ico_note' shape='note' class='is-solid icon-pos' style='width: max(2vh,16px); height: max(2vh,16px);' ></clr-icon></div></div></td></tr></table>" +
@@ -226,8 +226,6 @@ function tutorial_next(){
     console.log(c);
     document.getElementById("tut_title").innerHTML=tut_titles[c];
     document.getElementById("tut_text").innerHTML=tut_content[c];
-    document.getElementById("tut_text").style.fontSize="24px";
-    isOverflown(document.getElementById("tut_text"), "h");
     switch(c){
         case 0:
             document.getElementById("ctrl_layer_s").style.filter="blur(4px)";
@@ -1503,15 +1501,57 @@ function mapRange (value, a, b, c, d) {
 }
 
 function larger_image(img){
+    document.getElementById("larger_img_close").style.display="block";
     document.getElementById("img_container").style.display="flex";
-    document.getElementById("img_container").innerHTML="<img src='" + img + "' style='max-width: 95%; max-height: 95%; width: auto; height: auto;'></img>";
+    document.getElementById("img_container").innerHTML="<img id='large_img' src='" + img + "' style='max-width: 95%; max-height: 95%; width: auto; height: auto; pointer-events: none; transition: transform 0.25s;' zoom-level='0'></img>";
+}
+
+let mouseDown = 0;
+document.body.onmousedown = function() { 
+  mouseDown=1;
+}
+document.body.onmouseup = function() {
+  mouseDown=0;
+}
+
+function move_image(event){
+    console.log(mouseDown);
+    let z=document.getElementById("large_img").getAttribute("zoom-level");
+    if(mouseDown && z>0){
+        let x=mapRange(event.clientX,0, screen.width,-50, 50);
+        let y=mapRange(event.clientY,0, screen.height,-50,50);
+        document.getElementById("large_img").style.transform="translate("+x+"%, "+y+"%)";
+    }
 }
 
 function larger_image_close(){
+    document.getElementById("img_container").style.transform="scale(1)";
+    document.getElementById("larger_img_close").style.display="none";
     document.getElementById("img_container").style.display="none";
+    document.getElementById("img").style.display="none";
 }
 
-
+function zoom_image(){
+    let z=document.getElementById("large_img").getAttribute("zoom-level");
+    if(z==0){
+        z++;
+        document.getElementById("img_container").style.transform="scale(1.5)";
+        document.getElementById("large_img").setAttribute("zoom-level", z);
+    } else if(z==1){
+        z++;
+        document.getElementById("img_container").style.transform="scale(2.0)";
+        document.getElementById("large_img").setAttribute("zoom-level", z);
+    } else if(z==2){
+        z++;
+        document.getElementById("img_container").style.transform="scale(2.5)";
+        document.getElementById("large_img").setAttribute("zoom-level", z);
+    } else {
+        z=0;
+        document.getElementById("img_container").style.transform="scale(1)";
+        document.getElementById("large_img").setAttribute("zoom-level", z);
+        document.getElementById("large_img").style.transform="translate(0%, 0%)";
+    }
+}
 
 tippy("#ctrl_layer_s", {
     content: "Layer: Stories",

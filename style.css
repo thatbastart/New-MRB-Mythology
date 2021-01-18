@@ -375,7 +375,13 @@ div.story-scroll::-webkit-scrollbar-thumb:hover {
     align-items: center;
     justify-content: center;
     display: none;
-    cursor: pointer;
+    cursor: grab;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    transition: transform 1s;
 }
 
 @supports ((-webkit-backdrop-filter: blur(15px)) or (backdrop-filter: blur(15px))){
@@ -405,9 +411,12 @@ div.story-scroll::-webkit-scrollbar-thumb:hover {
 
 .tut-text{
     color: var(--black);
-    height: 19.5vh;
+    height: 20.5vh;
     text-align: left;
     padding-bottom: 1vh;
+    font-size: max(1.9vh,12px);
+    display: table-cell;
+    vertical-align: middle;
 }
 
 @supports ((-webkit-backdrop-filter: blur(15px)) or (backdrop-filter: blur(15px))){
