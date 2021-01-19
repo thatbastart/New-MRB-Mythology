@@ -75,3 +75,13 @@ arr_stories[3]=new Story(
     [37.0091, -89.1784, 14],
     [38.9701, -90.4354, 14],
     [38.9944, -90.7393, 14]]);
+
+arr_stories[4]=new Story(
+    "The Shape of a River: Mississippi", 
+    "Kerstin Humm, Marielouis Hippler, Tilmann Finner", 
+    "stories/text/story_05.html", 
+    "/stories/img/story_05.png", 
+    "", 
+    "/stories/thumb/story_05.jpg", 
+    "19.01.2021", 
+    [[42.857, -97.831, 12]]);

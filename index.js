@@ -295,6 +295,10 @@ function tutorial_next(){
             if(document.getElementById("ctrl_layer_l").getAttribute("data-checked")=="false"){
                 btn_layer(1);
             }
+            map.flyTo([42.847, -97.667], 11, {
+                animate: true,
+                duration: 0.5
+            });
             break;
         case 4:
             document.getElementById("ctrl_layer_s").style.filter="blur(4px)";
@@ -467,7 +471,7 @@ function createStory(id){
     
     document.getElementById("story").innerHTML="<clr-icon shape='arrow' dir='left' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; top: 10px; left:10px;' onClick='story_back()'></clr-icon>"+
                         "<center><span class='stories-panel_tiles_title'>Loading...</span></center><br>Please Wait.<span id='story_marker_0'></span><br><br>"+
-                        "<img src='' class='story-images' onClick='larger_image(this.src)'></img><br><br>"+
+                        "<img src='' class='story-images' onClick='larger_image(this)'></img><br><br>"+
                         "<br><br><hr><br>" +
                         "<p style='font-weight: bold;'>If you also got a story to tell just contact us via <a href='mailto:mississippi@erictapen.name'>E-Mail</a>.</p><br><br><br>"+
                         "<clr-icon shape='arrow' dir='up' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; right:10px;' onClick='story_up()'></clr-icon><br><br>";
@@ -477,7 +481,7 @@ function createStory(id){
         .then(response => response.text())
         .then(text => {document.getElementById("story").innerHTML="<clr-icon shape='arrow' dir='left' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; top: 10px; left:10px;' onClick='story_back()'></clr-icon>"+
                         "<center><span class='stories-panel_tiles_title'>" + arr_stories[id].title + "</span></center><br><span style='font-size: max(1.5vh,11px);'>" + arr_stories[id].author + ", " + arr_stories[id].date + "</span><span id='story_marker_0'></span><br><br>"+
-                        "<img src='" + arr_stories[id].img + "' class='story-images' onClick='larger_image(this.src)'></img><span style='font-size: max(1.5vh,11px);'>" + arr_stories[id].img_sub + "</span><br><br>"+
+                        "<img src='" + arr_stories[id].img + "' class='story-images' onClick='larger_image(this)'></img><span style='font-size: max(1.5vh,11px);'>" + arr_stories[id].img_sub + "</span><br><br>"+
                         text + "<br><br><hr><br>" +
                         "<p style='font-weight: bold;'>If you also got a story to tell just contact us via <a href='mailto:mississippi@erictapen.name'>E-Mail</a>.</p><br><br><br>"+
                         "<clr-icon shape='arrow' dir='up' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; right:10px;' onClick='story_up()'></clr-icon><br><br>";})
@@ -928,7 +932,7 @@ function popupString(title, content, n, image_path){ // n1: edit layout; n2: fin
         case 2:
             return "<h1 id='pu_title_ld' class='title' style='font-size: 30'>" + title + "</h1><br>" +
                 "<div id='pu_content_ld' class='content scroll'>" +    
-                ((image_path) ? "<div style='max-height: 55%; margin-top: 10px; margin-bottom: 10px; overflow: hidden;'><img src='" + image_path + "' style='width: 100%; height:auto; cursor: nesw-resize;' onClick='larger_image(this.src)'></div>" : "") +
+                ((image_path) ? "<div style='max-height: 55%; margin-top: 10px; margin-bottom: 10px; overflow: hidden;'><img src='" + image_path + "' style='width: 100%; height:auto; cursor: nesw-resize;' onClick='larger_image(this)'></div>" : "") +
                 content +"</div><br>" +
                 "<div style='position: relative;'><button id='pu_btn' type='button' id='btn_edit' style='border-radius: 5px 0 0 5px; border-right: 1px solid #005201;' onClick='invoke_pu_edit()' ><clr-icon shape='pencil' size='18'></clr-icon></button>" +
                 "<button id='pu_btn' type='button' id='btn_history' onClick='show_history()' style='border-radius: 0 5px 5px 0;'><clr-icon shape='history' size='18'></clr-icon></button>" +
@@ -1271,11 +1275,31 @@ function mapRange (value, a, b, c, d) {
     return c + value * (d - c);
 }
 
-function larger_image(img){
+function larger_image(el){
+    ci=parseInt(el.id.split("_")[1]);
+    let img=el.src;
     document.getElementById("larger_img_close").style.display="block";
     document.getElementById("larger_img_close_blur").style.display="block";
     document.getElementById("img_container").style.display="flex";
     document.getElementById("img_container").innerHTML="<img id='large_img' src='" + img + "' style='max-width: 95%; max-height: 95%; width: auto; height: auto; pointer-events: none; transition: transform 0.25s;' zoom-level='0'></img>";
+}
+
+let ci=0;
+document.onkeydown = function(e) {
+    let key_press = e.key;
+    if(document.getElementById("img_container").style.display!="none" && key_press=="ArrowRight"){
+        ci++;
+    } else if(document.getElementById("img_container").style.display!="none" && key_press=="ArrowLeft"){
+        ci--;
+    } 
+    if(ci<0){
+        ci=0;
+    } else if (ci>13){
+        ci=13;
+    }
+    document.getElementById("img_container").style.transform="scale(1)";
+    document.getElementById("large_img").style.transform="translate(0%, 0%)";
+    larger_image(document.getElementById("pr_"+ci));
 }
 
 let mouseDown = 0;
@@ -1293,7 +1317,6 @@ document.body.onmouseup = function() {
 }
 
 function move_image(event){
-    console.log(mouseDown);
     let z=document.getElementById("large_img").getAttribute("zoom-level");
     if(mouseDown && z>0){
         let x=mapRange(event.clientX,0, screen.width,-35, 35);
@@ -1690,3 +1713,4 @@ let sketch = function(sk){
         });
     }
     }
+
