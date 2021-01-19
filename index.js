@@ -1282,6 +1282,7 @@ function larger_image(el){
     catch(e){
         console.log(e);
     }
+    console.log(el);
     let img=el.src;
     document.getElementById("larger_img_close").style.display="block";
     document.getElementById("larger_img_close_blur").style.display="block";
