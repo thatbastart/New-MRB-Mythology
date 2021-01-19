@@ -129,9 +129,9 @@ L.control.custom({
     content: "<div style='margin: 20px 20px 0 0;'>"+
                 "<table style='margin-right: 0px; margin-left: auto;'><tr><td><div id='ctrl_st' class='btn_toggle' onclick='stories();' data-checked='false'><div style='width: 100%; height: 100%; display: table;'><span style='display: table-cell; vertical-align: middle; text-align: center;'>Stories&nbsp<clr-icon id='st_angle' shape='angle' dir='down' style='width: max(2vh,14px); height: max(2vh,14px);'></clr-icon></span></div></div></td>" +
                 "<td><div id='ctrl_edit' class='btn_toggle' onclick='edit();' data-checked='false'><div style='width: 100%; height: 100%; display: table;'><span style='display: table-cell; vertical-align: middle; text-align: center;'>New</span></div></div></td>" +
-                "</tr><tr><td></td><td><div id='new_type' style='display: none;'><div id='kind_label' class='btn_toggle' data-checked='false' style='float: right; margin-right: 5px; border-radius: 0 5px 5px 0;' onClick='kind_label()'><clr-icon id='ico_label' shape='chat-bubble' class='icon-pos' style='width: max(2vh,16px); height: max(2vh,16px);'></clr-icon></div>"+
-                "<div id='kind_note' class='btn_toggle' data-checked='true' style='float: right; margin-left: 5px; border-radius: 5px 0 0 5px; border-right: 1px solid #005201;' onClick='kind_note()'><clr-icon id='ico_note' shape='note' class='is-solid icon-pos' style='width: max(2vh,16px); height: max(2vh,16px);' ></clr-icon></div></div></td></tr></table>" +
-                "<br><div id='stories-panel-outer' class='stories-outer'><div id='stories-panel' class='stories-panel story-scroll'></div></div>"+
+                "</tr><tr><td></td><td><div id='new_type' style='display: none;'><div id='kind_label' class='btn_toggle' data-checked='false' style='float: right; margin-right: 5px; border-radius: 0 5px 5px 0; display: table;' onClick='kind_label()'><span style='display: table-cell; text-align: center; vertical-align: middle'><clr-icon id='ico_label' shape='chat-bubble' class='icon-pos' style='width: max(2vh,16px); height: max(2vh,16px);'></clr-icon></span></div>"+
+                "<div id='kind_note' class='btn_toggle' data-checked='true' style='float: right; margin-left: 5px; border-radius: 5px 0 0 5px; border-right: 1px solid #005201; display: table;' onClick='kind_note()'><span style='display: table-cell; text-align: center; vertical-align: middle'><clr-icon id='ico_note' shape='note' class='is-solid icon-pos' style='width: max(2vh,16px); height: max(2vh,16px);' ></clr-icon></span></div></div></td></tr></table>" +
+                "<div id='stories-panel-outer' class='stories-outer'><div id='stories-panel' class='stories-panel story-scroll'></div></div>"+
                 "<div id='story-outer' class='story-outer'><div id='story' class='story story-scroll' onScroll='scrollMarker()''></div><div style='position: absolute; left: 0; top: 50%; width: 5px; border: 2px solid #7A6FDE; border-radius: 0 2px 2px 0;'></div></div></div>",
     style:
     {
@@ -1273,6 +1273,7 @@ function mapRange (value, a, b, c, d) {
 
 function larger_image(img){
     document.getElementById("larger_img_close").style.display="block";
+    document.getElementById("larger_img_close_blur").style.display="block";
     document.getElementById("img_container").style.display="flex";
     document.getElementById("img_container").innerHTML="<img id='large_img' src='" + img + "' style='max-width: 95%; max-height: 95%; width: auto; height: auto; pointer-events: none; transition: transform 0.25s;' zoom-level='0'></img>";
 }
@@ -1280,9 +1281,15 @@ function larger_image(img){
 let mouseDown = 0;
 document.body.onmousedown = function() { 
   mouseDown=1;
+  if(document.getElementById("large_img").getAttribute("zoom-level")==0){
+    document.getElementById("img_container").style.cursor="not-allowed";
+  } else {
+    document.getElementById("img_container").style.cursor="grab";
+  }
 }
 document.body.onmouseup = function() {
   mouseDown=0;
+  document.getElementById("img_container").style.cursor="nesw-resize";
 }
 
 function move_image(event){
@@ -1298,6 +1305,7 @@ function move_image(event){
 function larger_image_close(){
     document.getElementById("img_container").style.transform="scale(1)";
     document.getElementById("larger_img_close").style.display="none";
+    document.getElementById("larger_img_close_blur").style.display="none";
     document.getElementById("img_container").style.display="none";
     document.getElementById("img").style.display="none";
 }
@@ -1372,6 +1380,18 @@ tippy("#kind_label", {
     content: "Create: Comment",
     placement: "bottom",
 });
+
+//tippy("#img_container", {
+//    content: "Zoom in: Double Click <br> Navigate: Mouse Drag",
+//    allowHTML: true,
+//    followCursor: "default",
+//    delay: 500,
+//    onShow(instance) {
+//        setTimeout(() => {
+//          instance.hide();
+//        }, 5000);
+//    }
+//});
 
 
 function bakeCookie_pos(){
