@@ -58,7 +58,7 @@
                 in
                 ''
                   ln -s ${pkgs.google-fonts}/share/fonts fonts/google-fonts
-                  sed -i 's|VERSIONVERSIONVERSION|${gitRevision}|g' index.js
+                  sed -i 's|VERSIONVERSIONVERSION|${gitRevision}|g' index.html
                 '';
             };
           backend =
