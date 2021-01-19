@@ -1276,7 +1276,12 @@ function mapRange (value, a, b, c, d) {
 }
 
 function larger_image(el){
-    ci=parseInt(el.id.split("_")[1]);
+    try{
+        ci=parseInt(el.id.split("_")[1]);
+    }
+    catch(e){
+        console.log(e);
+    }
     let img=el.src;
     document.getElementById("larger_img_close").style.display="block";
     document.getElementById("larger_img_close_blur").style.display="block";
