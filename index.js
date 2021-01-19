@@ -126,12 +126,13 @@ function showAbout(){
 // panel topright: stories, new
 L.control.custom({
     position: "topright",
-    content: "<div style='margin: 20px 20px 0 0;'><table style='margin-right: 0px; margin-left: auto;'><tr><td><div id='ctrl_st' class='btn_toggle' onclick='stories();' data-checked='false'><span style='display: table-cell; vertical-algin:middle'>Stories&nbsp<clr-icon id='st_angle' shape='angle' dir='down' style='width: max(2vh,14px); height: max(2vh,14px);'></clr-icon></span></div></td>" +
-                "<td><div id='ctrl_edit' class='btn_toggle' onclick='edit();' data-checked='false'><span style='display: table-cell; vertical-algin:middle'>New</span></div></td>" +
+    content: "<div style='margin: 20px 20px 0 0;'>"+
+                "<table style='margin-right: 0px; margin-left: auto;'><tr><td><div id='ctrl_st' class='btn_toggle' onclick='stories();' data-checked='false'><div style='width: 100%; height: 100%; display: table;'><span style='display: table-cell; vertical-align: middle; text-align: center;'>Stories&nbsp<clr-icon id='st_angle' shape='angle' dir='down' style='width: max(2vh,14px); height: max(2vh,14px);'></clr-icon></span></div></div></td>" +
+                "<td><div id='ctrl_edit' class='btn_toggle' onclick='edit();' data-checked='false'><div style='width: 100%; height: 100%; display: table;'><span style='display: table-cell; vertical-align: middle; text-align: center;'>New</span></div></div></td>" +
                 "</tr><tr><td></td><td><div id='new_type' style='display: none;'><div id='kind_label' class='btn_toggle' data-checked='false' style='float: right; margin-right: 5px; border-radius: 0 5px 5px 0;' onClick='kind_label()'><clr-icon id='ico_label' shape='chat-bubble' class='icon-pos' style='width: max(2vh,16px); height: max(2vh,16px);'></clr-icon></div>"+
                 "<div id='kind_note' class='btn_toggle' data-checked='true' style='float: right; margin-left: 5px; border-radius: 5px 0 0 5px; border-right: 1px solid #005201;' onClick='kind_note()'><clr-icon id='ico_note' shape='note' class='is-solid icon-pos' style='width: max(2vh,16px); height: max(2vh,16px);' ></clr-icon></div></div></td></tr></table>" +
                 "<br><div id='stories-panel-outer' class='stories-outer'><div id='stories-panel' class='stories-panel story-scroll'></div></div>"+
-                "<div id='story-outer' class='story-outer'><div id='story' class='story story-scroll' onScroll='scrollMarker()''></div></div></div>",
+                "<div id='story-outer' class='story-outer'><div id='story' class='story story-scroll' onScroll='scrollMarker()''></div><div style='position: absolute; left: 0; top: 50%; width: 5px; border: 2px solid #7A6FDE; border-radius: 0 2px 2px 0;'></div></div></div>",
     style:
     {
         margin: "0",
@@ -223,7 +224,6 @@ let tut_titles=["Basic Navigation",
 
 function tutorial_next(){
     let c=parseInt(document.getElementById("tut_nxt").getAttribute("counter"));
-    console.log(c);
     document.getElementById("tut_title").innerHTML=tut_titles[c];
     document.getElementById("tut_text").innerHTML=tut_content[c];
     switch(c){
@@ -476,7 +476,7 @@ function createStory(id){
     fetch(arr_stories[id].text)
         .then(response => response.text())
         .then(text => {document.getElementById("story").innerHTML="<clr-icon shape='arrow' dir='left' style='cursor: pointer; width: 20px; height: 20px; color: #000; position: absolute; top: 10px; left:10px;' onClick='story_back()'></clr-icon>"+
-                        "<center><span class='stories-panel_tiles_title'>" + arr_stories[id].title + "</span></center><br>" + arr_stories[id].author + ", " + arr_stories[id].date + "<span id='story_marker_0'></span><br><br>"+
+                        "<center><span class='stories-panel_tiles_title'>" + arr_stories[id].title + "</span></center><br><span style='font-size: max(1.5vh,11px);'>" + arr_stories[id].author + ", " + arr_stories[id].date + "</span><span id='story_marker_0'></span><br><br>"+
                         "<img src='" + arr_stories[id].img + "' class='story-images' onClick='larger_image(this.src)'></img><span style='font-size: max(1.5vh,11px);'>" + arr_stories[id].img_sub + "</span><br><br>"+
                         text + "<br><br><hr><br>" +
                         "<p style='font-weight: bold;'>If you also got a story to tell just contact us via <a href='mailto:mississippi@erictapen.name'>E-Mail</a>.</p><br><br><br>"+
@@ -565,11 +565,13 @@ function overview(){
         curr_view[2]=map.getZoom();
         curr_pos=L.marker([curr_view[0], curr_view[1]], {icon: redIcon}).addTo(map);
         for (let i=curr_view[2]; i>=5; i--){
-            let tilefile=getTileURL(curr_view[0], curr_view[1], i);
-            let img=new Image();
-            img.src="/Tiles/" + tilefile + ".png";
-            if (img.height!=0){
-                document.getElementById("img_ov").src=img.src;
+            let tilefile="/Tiles/" + getTileURL(curr_view[0], curr_view[1], i) + ".png";
+            let http = new XMLHttpRequest();
+            http.open('HEAD', window.location.href + tilefile, false);
+            http.send();
+
+            if (http.status != 404){
+                document.getElementById("img_ov").src=tilefile;
                 break;
             }
         }
@@ -1603,7 +1605,7 @@ let sketch = function(sk){
         sk.text("RIVER COMMISSION", sk.width / 2, sk.height/8.57);
         sk.textSize(sk.width/15.87);
         sk.text("UNKNOWN PRESSURES", sk.width / 2, (sk.height-sk.height/9.6));
-        sk.textSize(sk.width/66.66);
+        sk.textSize(sk.width/50);
 
         switch(sel){
         case 0:

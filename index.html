@@ -40,8 +40,6 @@
         <!-- p5.js -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.js"></script>
 
-        <script src="stories/text/story_03_data/sketch.js"></script>
-
     </head>
 
     <body style="background: #000000; color: #ffffff; text-align: center; margin: 0;">  
@@ -49,7 +47,7 @@
         <div id="map" style="height: 100%; width: 100%; background: #000000; z-Index: 1000;"></div>
         <div id="img_container" class="larger-img" onDblClick="zoom_image()" onmousemove="move_image(event)"></div><clr-icon id='larger_img_close' shape='times' style='display: none; width: max(5vh,18px); height: max(5vh,18px); position: absolute; right: 1.5%; top: 1.5%; color: #fff; z-index: 1605; cursor: pointer;' onClick="larger_image_close()"></clr-icon>
         
-        <div id="about_bg" style="width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); position: absolute; top:0; left: 0; z-Index: 1999;" onClick="tutorial_skip()"></div>
+        <div id="about_bg" style="width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); position: absolute; top:0; left: 0; z-Index: 1999; cursor: pointer;" onClick="tutorial_skip()"></div>
         
         <div id="about" class="about"><center>
             <span class='about-panel_tiles_title'>About</span><br><br><span style="font-size: max(2.5vh,14px);">Join us to collectively travel along the Mississippi River and its tributaries, dive deep in to the stories and content produced from all the people who are related to the land and water.<br><br> Use the rivers to navigate yourself through the basin, comment on the river, set markers or read the stories surrounding it.</span><br><br>
@@ -57,7 +55,7 @@
             <a href='https://erictapen.name/'>Kerstin Humm</a>, 
             <a href=''>Marielouis Hippler</a> and 
             <a href='https://www.instagram.com/thatbastart/'>Tilmann Finner</a><br>
-            You can contact us via <a href='mailto:mississippi@erictapen.name'>E-Mail</a>.</span><br><br>
+            If you got a story to tell, want to give feedback or have a bug to report: Contact us via <a href='mailto:mississippi@erictapen.name'>E-Mail</a>.</span><br><br>
             <button type='button' id='tut_start' onClick='tutorial_start()' counter='0'>Start Tutorial</button><br>
             <img src="howmuchami_closed.png" style="width: 7vw; height: auto; margin: 20px;"></img>
         </center></div>

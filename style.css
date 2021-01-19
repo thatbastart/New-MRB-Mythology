@@ -32,11 +32,25 @@
 }
 
 @font-face {
-  font-family: 'Titillium Web';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url(/fonts/google-fonts/truetype/TitilliumWeb-Regular.ttf) format('truetype');
+    font-family: 'Titillium Web';
+    font-style: normal;
+    font-weight: normal;
+    font-display: swap;
+    src: url(/fonts/google-fonts/truetype/TitilliumWeb-Regular.ttf) format('truetype');
+}
+@font-face {
+    font-family: 'Titillium Web';
+    font-style: italic;
+    font-weight: normal;
+    font-display: swap;
+    src: url(/fonts/google-fonts/truetype/TitilliumWeb-Italic.ttf) format('truetype');
+}
+@font-face {
+    font-family: 'Titillium Web';
+    font-style: normal;
+    font-weight: bold;
+    font-display: swap;
+    src: url(/fonts/google-fonts/truetype/TitilliumWeb-Bold.ttf) format('truetype');
 }
 
 @-webkit-keyframes fadeIn {
@@ -398,7 +412,7 @@ div.story-scroll::-webkit-scrollbar-thumb:hover {
     left: 17;
     top: 10vh;
     height: 33vh;
-    width: 32vw;
+    width: 30vw;
     text-align: left;
     font-size: max(2vh,12px);
     color: var(--black);
@@ -702,14 +716,12 @@ select:hover {
     min-height: 20px;
     width: 7vw;
     min-width: 100px;
-    line-height: 4vh;
     border-radius: 5px;
     cursor: pointer;
     text-align: center; 
     padding: 5px;
-    margin: 10px;
+    margin: 5px;
     font-size: max(2vh,14px);
-    display: table;
 }
 
 .btn_toggle#ctrl_edit{
@@ -859,4 +871,5 @@ select:hover {
     text-align: left;
     overflow: hidden;
     display: none;
+    line-height: 1.2;
 }

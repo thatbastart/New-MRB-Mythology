@@ -22,6 +22,7 @@ arr_stories[0]=new Story(
     "/stories/thumb/story_01.jpg", 
     "16.01.2021", 
     [[44.914,-93.202,14],
+    [44.914,-93.202,14],
     [44.982,-93.258,14]]);
 
 arr_stories[1]=new Story(
@@ -41,8 +42,8 @@ arr_stories[2]=new Story(
     "Unknown Pressures", 
     "Tilmann Finner", 
     "stories/text/story_03.html", 
-    "/stories/img/story_03.jpg", 
-    "cat", 
+    "/stories/img/story_03.png", 
+    "Arkansas City 2011", 
     "/stories/thumb/story_03.jpg", 
     "17.01.2021", 
     [[36.5809, -89.5474, 12],
@@ -58,12 +59,19 @@ arr_stories[2]=new Story(
     [29.9347, -90.1361, 12]]);
 
 arr_stories[3]=new Story(
-    "Floods and Levees", 
+    "Levee War", 
     "Marielouis Hippler", 
     "stories/text/story_04.html", 
-    "/stories/img/story_04.jpg", 
-    "much picture", 
+    "/stories/img/story_04.png", 
+    "", 
     "/stories/thumb/story_04.jpg", 
     "17.01.2021", 
-    [[44.914,-93.202,14],
-    [44.982,-93.258,14]]);
+    [[29.9448, -90.0769, 13],
+    [29.9448, -90.0769, 13],
+    [30.164, -90.978, 10],
+    [35.1477, -90.0522, 13],
+    [36.8818, -89.1843, 12],
+    [30.0019, -90.44, 14],
+    [37.0091, -89.1784, 14],
+    [38.9701, -90.4354, 14],
+    [38.9944, -90.7393, 14]]);
