@@ -146,7 +146,7 @@ fn get_notes(db: State<'_, DbConnection>) -> Json<Vec<Note>> {
 
     // Iterate over KdTree and build clusters of points, that are not father away from each other
     // than a certain distance.
-    const EPSILON_DISTANCE: f64 = 0.00001;
+    const EPSILON_DISTANCE: f64 = 0.0000001;
     for (_, (kind, _, id)) in notes_locations
         .nearest(&[0.0, 0.0], usize::MAX, &squared_euclidean)
         .unwrap()
