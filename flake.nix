@@ -18,7 +18,46 @@
     in
     rec {
 
-      nixosModules.backend = import ./backend/module.nix;
+      nixosModules.module =
+        { config, ... }:
+        let
+          mrbPkgs = self.packages.${config.nixpkgs.localSystem.system};
+          # random port
+          port = "37937";
+          stateDir = "/var/lib/mrb-mythology-backend";
+        in
+        {
+
+          systemd.services.mrb-mythology-backend = {
+            description = "MRB Mythology Backend";
+            after = [ "network.target" ];
+            wantedBy = [ "multi-user.target" ];
+
+            serviceConfig = {
+              Type = "simple";
+              ExecStart = ''
+                ${mrbPkgs.backend}/bin/mrb-mythology-backend \
+                  --db ${stateDir}/db.sqlite \
+                  --port ${port}
+              '';
+              Restart = "always";
+              StateDirectory = "mrb-mythology-backend";
+            };
+
+          };
+
+          services.nginx.virtualHosts."mississippi.erictapen.name" = {
+            locations."/".root = "${mrbPkgs.homepage}/lib/node_modules/interactive_test/";
+            locations."/stories/".root = "${mrbPkgs.static}";
+            locations."/Tiles/".root = "${stateDir}/tiles/";
+            locations."/images/".root = "${stateDir}/images/";
+            locations."/api/".proxyPass =
+              "http://[::1]:${port}";
+            enableACME = true;
+            forceSSL = true;
+          };
+
+        };
 
       packages = forAllSystems (system:
         let
@@ -42,9 +81,11 @@
                   (type != "directory" || baseNameOf path != ".git") &&
                   (type != "directory" || baseNameOf path != "Tiles") &&
                   (type != "directory" || baseNameOf path != "backend") &&
+                  (type != "directory" || baseNameOf path != "stories") &&
                   (type != "regular" || baseNameOf path != "flake.nix") &&
                   (type != "regular" || baseNameOf path != "node-packages.nix") &&
                   (type != "regular" || baseNameOf path != "node-env.nix") &&
+                  (type != "regular" || baseNameOf path != "module.nix") &&
                   (type != "symlink")
                 )
                 ./.;
@@ -61,6 +102,12 @@
                   sed -i 's|VERSIONVERSIONVERSION|${gitRevision}|g' index.html
                 '';
             };
+          static = pkgs.linkFarm "static" [
+            {
+              name = "stories";
+              path = [ (pkgs.copyPathToStore ./stories) ];
+            }
+          ];
           backend =
             let
               crates = import ./backend/Cargo.nix { inherit pkgs; };
