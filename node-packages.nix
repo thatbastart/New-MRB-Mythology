@@ -4,13 +4,13 @@
 
 let
   sources = {
-    "@clr/icons-4.0.9" = {
+    "@clr/icons-4.0.10" = {
       name = "_at_clr_slash_icons";
       packageName = "@clr/icons";
-      version = "4.0.9";
+      version = "4.0.10";
       src = fetchurl {
-        url = "https://registry.npmjs.org/@clr/icons/-/icons-4.0.9.tgz";
-        sha512 = "YDyNwmPsdiw78fdVcPtk8LTqsiO1saVmMaNapSiyfLBmSRJ7hYoWNko1EQKKPxEAlcLEIKLgb53PWOz/lLFvwg==";
+        url = "https://registry.npmjs.org/@clr/icons/-/icons-4.0.10.tgz";
+        sha512 = "EZF2+aq487VpEPqMX8ZU61SvfOmZgkTC46/lLrFxmCQseET/zMp4JyIM61yfda4vB8x7sIZxqwd38mZgwfPw1A==";
       };
     };
     "@popperjs/core-2.6.0" = {
@@ -31,13 +31,13 @@ let
         sha512 = "wE2v81i4C4Ol09RtsWFAqg3BUitWbHSpSlIo+bNdsCJijO9sjme+zm+73ZMCa/qMC8UEERxzGbvmr1cffo2SiQ==";
       };
     };
-    "@types/leaflet-1.5.19" = {
+    "@types/leaflet-1.5.21" = {
       name = "_at_types_slash_leaflet";
       packageName = "@types/leaflet";
-      version = "1.5.19";
+      version = "1.5.21";
       src = fetchurl {
-        url = "https://registry.npmjs.org/@types/leaflet/-/leaflet-1.5.19.tgz";
-        sha512 = "ZAKqfvdU/+KFoCpf8aUba09F8mfSc8R2esq++Cha3E2DgwS5K/I/4eJ+0JylrVHZivgY7PSAeXFv/izP+81/MQ==";
+        url = "https://registry.npmjs.org/@types/leaflet/-/leaflet-1.5.21.tgz";
+        sha512 = "b+BOkwJDq6DK4m+jFUOHNCFinIkO4CF1MjnOwYgZFX+oElpYpXCCIsxZ3+zQWIRSLVUbRXvaQq2K935jGIyp7A==";
       };
     };
     "@webcomponents/custom-elements-1.4.3" = {
@@ -256,6 +256,15 @@ let
         sha512 = "R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==";
       };
     };
+    "p5-1.2.0" = {
+      name = "p5";
+      packageName = "p5";
+      version = "1.2.0";
+      src = fetchurl {
+        url = "https://registry.npmjs.org/p5/-/p5-1.2.0.tgz";
+        sha512 = "om9CSZXjw+BdC/u474nUtrVXAqeSRHNBDteDpIhQqgypziE+hh9BUc/YNl3RT5rX3kNtQlLes2S2sRqFU+S+JA==";
+      };
+    };
     "path-exists-3.0.0" = {
       name = "path-exists";
       packageName = "path-exists";
@@ -416,10 +425,10 @@ let
     version = "1.0.0";
     src = ./.;
     dependencies = [
-      sources."@clr/icons-4.0.9"
+      sources."@clr/icons-4.0.10"
       sources."@popperjs/core-2.6.0"
       sources."@types/geojson-7946.0.7"
-      sources."@types/leaflet-1.5.19"
+      sources."@types/leaflet-1.5.21"
       sources."@webcomponents/custom-elements-1.4.3"
       sources."ansi-regex-4.1.0"
       sources."ansi-styles-3.2.1"
@@ -444,6 +453,7 @@ let
       sources."p-limit-2.3.0"
       sources."p-locate-3.0.0"
       sources."p-try-2.2.0"
+      sources."p5-1.2.0"
       sources."path-exists-3.0.0"
       sources."require-directory-2.1.1"
       sources."require-main-filename-2.0.0"

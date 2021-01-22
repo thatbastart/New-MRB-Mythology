@@ -10,7 +10,8 @@
     "leaflet-rotate-map": "^0.2.2",
     "mathjs": "^8.1.0",
     "showdown-htmlescape": "^0.1.9",
-    "tippy.js": "^6.2.7"
+    "tippy.js": "^6.2.7",
+    "p5": "^1.1.9"
   },
   "devDependencies": {
     "http-server": "^0.12.3",
