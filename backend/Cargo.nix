@@ -335,9 +335,9 @@ rec {
       };
       "bumpalo" = rec {
         crateName = "bumpalo";
-        version = "3.4.0";
+        version = "3.5.0";
         edition = "2018";
-        sha256 = "082qig1vxlklb9qwkg3j4hpfxb4b5blm59ln21njfc2p01zhi31f";
+        sha256 = "0n8dfj0caarpq409anz4d62idqgz9nlvc1q3pshkj93hiilacyph";
         authors = [
           "Nick Fitzgerald <fitzgen@gmail.com>"
         ];
@@ -499,7 +499,7 @@ rec {
           }
           {
             name = "time";
-            packageId = "time 0.2.24";
+            packageId = "time 0.2.25";
             usesDefaultFeatures = false;
             features = [ "std" ];
           }
@@ -1833,17 +1833,13 @@ rec {
       };
       "jpeg-decoder" = rec {
         crateName = "jpeg-decoder";
-        version = "0.1.20";
+        version = "0.1.21";
         edition = "2015";
-        sha256 = "18vgbxqw8cpp5s74hdkw35pdg4wkk552kxm61kzvi0zhqpd7lyfc";
+        sha256 = "1y0bd36hk9xw1v1z9glwgp1fgxasiy9phyxf5ci3lv313317s66n";
         authors = [
           "Ulf Nilsson <kaksmet@gmail.com>"
         ];
         dependencies = [
-          {
-            name = "byteorder";
-            packageId = "byteorder";
-          }
           {
             name = "rayon";
             packageId = "rayon";
@@ -3183,7 +3179,7 @@ rec {
           }
           {
             name = "time";
-            packageId = "time 0.2.24";
+            packageId = "time 0.2.25";
           }
           {
             name = "tokio";
@@ -3398,7 +3394,7 @@ rec {
           }
           {
             name = "time";
-            packageId = "time 0.2.24";
+            packageId = "time 0.2.25";
           }
           {
             name = "tokio";
@@ -3577,9 +3573,9 @@ rec {
       };
       "serde" = rec {
         crateName = "serde";
-        version = "1.0.120";
+        version = "1.0.122";
         edition = "2015";
-        sha256 = "1aqaqfm148wyi6c739gay87fp7rni4yb3r2q9bsvm08k0r4j6sqn";
+        sha256 = "0b56fgnw1h23fspr0j4vb6lnizw1812rar9kkdchg9fq5ayz2klp";
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -3605,9 +3601,9 @@ rec {
       };
       "serde_derive" = rec {
         crateName = "serde_derive";
-        version = "1.0.120";
+        version = "1.0.122";
         edition = "2015";
-        sha256 = "0xaprf386crlji08v4rdfv6cwlxmnxjkfpj3jlxrxkh5b35si8hc";
+        sha256 = "05wf294rrz1xvcmjk1vylr7lcwn478mi3c7c831qm3431wq1zvld";
         procMacro = true;
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
@@ -3625,7 +3621,6 @@ rec {
           {
             name = "syn";
             packageId = "syn";
-            features = [ "visit" ];
           }
         ];
         features = {
@@ -3971,9 +3966,9 @@ rec {
       };
       "syn" = rec {
         crateName = "syn";
-        version = "1.0.58";
+        version = "1.0.60";
         edition = "2018";
-        sha256 = "1m85bvywsm6cf17d534c5ma73zch0cgwqc6q2bblqnd67vbs6q6c";
+        sha256 = "1080gw6mlja7yl26crya3k403wjdp7v3wx9mxcmpcnlar9z5j067";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -4004,16 +3999,16 @@ rec {
       };
       "thread_local" = rec {
         crateName = "thread_local";
-        version = "1.1.0";
-        edition = "2015";
-        sha256 = "0iyl5jby55q6mv6j69csjpdw57pw9x9qb7cxn6r7c7nms29c16xv";
+        version = "1.1.2";
+        edition = "2018";
+        sha256 = "05b94g3giadny554wpwzlqwclj7wp3952sfpbgfiicqw3qrql86q";
         authors = [
           "Amanieu d'Antras <amanieu@gmail.com>"
         ];
         dependencies = [
           {
-            name = "lazy_static";
-            packageId = "lazy_static";
+            name = "once_cell";
+            packageId = "once_cell";
           }
         ];
         
@@ -4087,11 +4082,11 @@ rec {
         ];
         
       };
-      "time 0.2.24" = rec {
+      "time 0.2.25" = rec {
         crateName = "time";
-        version = "0.2.24";
+        version = "0.2.25";
         edition = "2018";
-        sha256 = "1xsq83n90nx4sa9ssvs688nh85dmizafhr9ndc6ln9na9pa3wg97";
+        sha256 = "1xs2l59b1dxjm9w9si37l21k7cqkakw9b4skq9a188icji3b158i";
         authors = [
           "Jacob Pratt <the.z.cuber@gmail.com>"
         ];
@@ -4206,9 +4201,9 @@ rec {
       };
       "tokio" = rec {
         crateName = "tokio";
-        version = "1.0.2";
+        version = "1.1.0";
         edition = "2018";
-        sha256 = "1v7nrwwnmlv3f6xlhd4xwzjq7h8aysc5gdjph1ilqizjdzn4r80c";
+        sha256 = "15a17amr41b0y71796g3nbkfx3wmbik1fqbmizdwvaqpdw4b5ylf";
         authors = [
           "Tokio Contributors <team@tokio.rs>"
         ];
@@ -4436,9 +4431,9 @@ rec {
       };
       "tower-service" = rec {
         crateName = "tower-service";
-        version = "0.3.0";
+        version = "0.3.1";
         edition = "2018";
-        sha256 = "0q4q53w82w1wd71x7vbspg2l3jicb6al2w1qdwxmnjrz8jzvd1z9";
+        sha256 = "1iih764s3f6vlkspfmr72fkrs2lw1v3wiqmc6bd5zq1hdlfzs39n";
         authors = [
           "Tower Maintainers <team@tower-rs.com>"
         ];
