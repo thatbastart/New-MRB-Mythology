@@ -977,7 +977,7 @@ function show_history(){
 
 // changes the version after dropdown select
 function change_version(){
-    let { title, content, image_path } = curr_pu.noteVersions[document.getElementById("dd_ver").value];
+    let { title, content, image_path } = curr_pu.noteVersions[document.getElementById("dd_ver").selectedIndex];
     curr_pu.bindPopup(popupString(
         title,
         content,
@@ -1410,17 +1410,17 @@ tippy("#kind_label", {
     placement: "bottom",
 });
 
-//tippy("#img_container", {
-//    content: "Zoom in: Double Click <br> Navigate: Mouse Drag",
-//    allowHTML: true,
-//    followCursor: "default",
-//    delay: 500,
-//    onShow(instance) {
-//        setTimeout(() => {
-//          instance.hide();
-//        }, 5000);
-//    }
-//});
+tippy("#img_container", {
+    content: "Zoom in: Double Click <br> Navigate: Mouse Drag",
+    allowHTML: true,
+    followCursor: "default",
+    delay: 500,
+    onShow(instance) {
+        setTimeout(() => {
+          instance.hide();
+        }, 5000);
+    }
+});
 
 
 function bakeCookie_pos(){
