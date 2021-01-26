@@ -1,4 +1,5 @@
-let arr_info_label=[ //Mississippi
+let arr_info_label=[ 
+// Mississippi
     ["Lock and Dam 1", 44.9138, -93.19703, "R"],
     ["Lock and Dam 2", 44.76311, -92.86235, "R"],
     ["Lock and Dam 3", 44.61418, -92.61036, "C"],
@@ -26,7 +27,7 @@ let arr_info_label=[ //Mississippi
     ["Lock and Dam 25", 39.00768, -90.67082, "R"],
     ["Melvin Price Lock and Dam", 38.87349, -90.14963, "R"],
     ["Lock and Dam 27", 38.74849, -90.17166, "R"],
-    //Missouri
+// Missouri
     ["Toston Dam", 46.122, -111.406, "R"],
     ["Canyon Ferry Dam", 46.647, -111.731, "L"],
     ["Hauser Dam", 46.767, -111.886, "R"],

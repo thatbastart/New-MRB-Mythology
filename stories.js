@@ -13,6 +13,7 @@ class Story {
 
 arr_stories=[];
 
+// Invasion of the Carps
 arr_stories[0]=new Story(
     "Invasion of the Carps", 
     "Marielouis Hippler", 
@@ -25,6 +26,7 @@ arr_stories[0]=new Story(
     [44.914,-93.202,14],
     [44.982,-93.258,14]]);
 
+// The UnRiver
 arr_stories[1]=new Story(
     "The UnRiver", 
     "Tilmann Finner", 
@@ -38,6 +40,7 @@ arr_stories[1]=new Story(
     [44.0,-91.438,13],
     [43.213,-91.1,14]]);
 
+// Unknown Pressures
 arr_stories[2]=new Story(
     "Unknown Pressures", 
     "Tilmann Finner", 
@@ -58,6 +61,7 @@ arr_stories[2]=new Story(
     [30.4291, -91.2069, 12],
     [29.9347, -90.1361, 12]]);
 
+// Levee War
 arr_stories[3]=new Story(
     "Levee War", 
     "Marielouis Hippler", 
@@ -76,6 +80,7 @@ arr_stories[3]=new Story(
     [38.9701, -90.4354, 14],
     [38.9944, -90.7393, 14]]);
 
+// The Shape of a River: Mississippi
 arr_stories[4]=new Story(
     "The Shape of a River: Mississippi", 
     "Kerstin Humm, Marielouis Hippler, Tilmann Finner", 
