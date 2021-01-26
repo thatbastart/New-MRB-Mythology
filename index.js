@@ -1376,7 +1376,8 @@ function show_history(){
 
 // changes the version after dropdown select
 function change_version(){
-    let { title, content, image_path } = curr_pu.noteVersions[document.getElementById("dd_ver").selectedIndex];
+    let sel=document.getElementById("dd_ver");
+    let { title, content, image_path } = curr_pu.noteVersions[parseInt(sel.value)];
     curr_pu.bindPopup(popupString(
         title,
         content,
