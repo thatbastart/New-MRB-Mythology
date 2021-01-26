@@ -1353,8 +1353,6 @@ function invoke_pu_edit(){
 // shows the versions dropdown
 function show_history(){
     let sel=document.getElementById("dd_ver");
-    console.log(sel);
-    console.log(curr_pu);
     sel.innerHTML="";
     if(document.getElementById("btn_history").getAttribute("data-checked")=="false"){
         for(let i=curr_pu.noteVersions.length-1;i>=0;i--){
