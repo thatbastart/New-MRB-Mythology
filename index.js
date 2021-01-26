@@ -1376,15 +1376,18 @@ function show_history(){
 
 // changes the version after dropdown select
 function change_version(){
+    let curr_ver=parseInt(sel.value);
     let sel=document.getElementById("dd_ver");
-    let { title, content, image_path } = curr_pu.noteVersions[parseInt(sel.value)];
+    let { title, text, image_path } = curr_pu.noteVersions[curr_ver];
     curr_pu.bindPopup(popupString(
         title,
-        content,
+        text,
         2,
         image_path = image_path
     ));
     isOverflown(document.getElementById("pu_title_ld"),"w");
+    show_history();
+    sel.value=curr_ver;
 }
 
 
