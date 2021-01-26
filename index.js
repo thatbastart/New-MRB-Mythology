@@ -1353,6 +1353,8 @@ function invoke_pu_edit(){
 // shows the versions dropdown
 function show_history(){
     let sel=document.getElementById("dd_ver");
+    console.log(sel);
+    console.log(curr_pu);
     if(document.getElementById("btn_history").getAttribute("data-checked")=="false"){
         for(let i=curr_pu.noteVersions.length-1;i>=0;i--){
             let opt=document.createElement("option");
@@ -1563,35 +1565,41 @@ function larger_image(el){
 let ci=0; // current image for presentation mode
 // presentation mode; navigate with left/right arrow
 document.onkeydown = function(e) {
-    let key_press = e.key;
-    if(document.getElementById("img_container").style.display!="none" && key_press=="ArrowRight"){
-        ci++;
-    } else if(document.getElementById("img_container").style.display!="none" && key_press=="ArrowLeft"){
-        ci--;
-    } 
-    if(ci<0){
-        ci=0;
-    } else if (ci>13){
-        ci=13;
+    if(document.getElementById("img_container").style.display!="none"){
+        let key_press = e.key;
+        if(key_press=="ArrowRight"){
+            ci++;
+        } else if(key_press=="ArrowLeft"){
+            ci--;
+        } 
+        if(ci<0){
+            ci=0;
+        } else if (ci>13){
+            ci=13;
+        }
+        document.getElementById("img_container").style.transform="scale(1)";
+        document.getElementById("large_img").style.transform="translate(0%, 0%)";
+        larger_image(document.getElementById("pr_"+ci));
     }
-    document.getElementById("img_container").style.transform="scale(1)";
-    document.getElementById("large_img").style.transform="translate(0%, 0%)";
-    larger_image(document.getElementById("pr_"+ci));
 }
 
 let mouseDown = 0;
 // change cursor styles
 document.body.onmousedown = function() { 
-  mouseDown=1;
-  if(document.getElementById("large_img").getAttribute("zoom-level")==0){
-    document.getElementById("img_container").style.cursor="not-allowed";
-  } else {
-    document.getElementById("img_container").style.cursor="grab";
-  }
+    if(document.getElementById("img_container").style.display!="none"){
+        mouseDown=1;
+        if(document.getElementById("large_img").getAttribute("zoom-level")==0){
+            document.getElementById("img_container").style.cursor="not-allowed";
+        } else {
+            document.getElementById("img_container").style.cursor="grab";
+        }
+    }
 }
 document.body.onmouseup = function() {
-  mouseDown=0;
-  document.getElementById("img_container").style.cursor="nesw-resize";
+    if(document.getElementById("img_container").style.display!="none"){
+        mouseDown=0;
+        document.getElementById("img_container").style.cursor="nesw-resize";
+    }
 }
 
 // navigate image by mouse dragging
