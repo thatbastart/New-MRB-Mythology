@@ -325,15 +325,14 @@ div.story-scroll::-webkit-scrollbar-thumb:hover {
 .stories-panel_tiles{
     width: 17.73vw;
     min-width: 225px;
-    height: 15vw;
-    min-height: 200px;
+    height: auto;
     margin: 5%;
     overflow: hidden;
     cursor: pointer;
 }
 
 .stories-panel_tiles_title{
-    height: 40%;
+    height: auto;
     color: var(--purpleL);
     font-family: mySlab;;
     font-size: max(max(3.5vh,2vw),30px);
@@ -341,6 +340,7 @@ div.story-scroll::-webkit-scrollbar-thumb:hover {
     vertical-align: middle;
     line-height: max(3.5vh,25px);
     padding-top: max(1vh,10px);
+    margin-bottom: 25px;
 }
 
 .story-outer{

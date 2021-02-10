@@ -90,3 +90,16 @@ arr_stories[4]=new Story(
     "/stories/thumb/story_05.jpg", 
     "19.01.2021", 
     [[42.857, -97.831, 12]]);
+
+// The effects of the oil and gas fracking industry on social and environmental health in western part of North Dakota
+arr_stories[5]=new Story(
+    "The effects of the oil and gas fracking industry on social and environmental health in western part of North Dakota", 
+    "Sophia von Wassenberg, Florica Gay", 
+    "stories/text/story_06.html", 
+    "/stories/img/story_06a.jpg", 
+    "", 
+    "/stories/thumb/story_06.jpg", 
+    "09.02.2021", 
+    [[38.815886, -90.122420, 11],
+    [38.815886, -90.122420, 11],
+    [47.722, -102.283, 10]]);

@@ -577,7 +577,7 @@ function stories(){
 for (let i=0; i<arr_stories.length; i++){
     tiles = tiles + 
                     "<div class='stories-panel_tiles' onClick='createStory("+i+")'>"+
-                        "<div style='height: 60%; overflow: hidden;'>"+
+                        "<div>"+
                             "<img src='" + arr_stories[i].thumb + "' style='width: 100%; height:auto;'></img>"+
                         "</div>"+
                         "<div class='stories-panel_tiles_title'>"+
