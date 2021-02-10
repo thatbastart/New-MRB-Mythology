@@ -66,13 +66,9 @@
         {
           homepage =
             let
-              node = import ./node-packages.nix
+              node = pkgs.callPackage ./node-packages.nix
                 {
-                  inherit (pkgs) fetchurl fetchgit;
-                  nodeEnv = import ./node-env.nix {
-                    inherit (pkgs) stdenv python2 utillinux runCommand writeTextFile nodejs;
-                    libtool = null;
-                  };
+                  nodeEnv = pkgs.callPackage ./node-env.nix { };
                 };
             in
             node.package.override {
