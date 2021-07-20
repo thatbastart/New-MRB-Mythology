@@ -1,8 +1,6 @@
 {
   description = "The New MRB Mythology";
 
-  inputs.nixpkgs.url = "github:NixOS/Nixpkgs/nixos-unstable";
-
   outputs =
     { self
     , nixpkgs
