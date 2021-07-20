@@ -5,8 +5,7 @@ authors = ["Kerstin Humm <kerstin@erictapen.name>"]
 edition = "2018"
 
 [dependencies]
-rocket = { version = "0.5.0-dev", git = "https://github.com/SergioBenitez/Rocket", branch = "master" }
-rocket_contrib = { version = "0.5.0-dev", git = "https://github.com/SergioBenitez/Rocket", branch = "master" }
+rocket = { version = "0.5.0-rc.1", features = [ "json" ] }
 rusqlite = { version = "*", features = [ "chrono" ] }
 serde_derive = "*"
 serde = { version = "*", features = [ "derive" ] }

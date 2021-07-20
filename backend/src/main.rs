@@ -1,16 +1,14 @@
 #[macro_use]
 extern crate rocket;
 #[macro_use]
-extern crate rocket_contrib;
-#[macro_use]
 extern crate log;
 
 use docopt::Docopt;
 use kdtree::distance::squared_euclidean;
 use kdtree::KdTree;
 use rocket::Data;
-use rocket::{Rocket, State};
-use rocket_contrib::json::{Json, JsonValue};
+use rocket::{Rocket, State, Build};
+use rocket::serde::json::{Json, Value, json};
 use rusqlite::{params, Connection};
 use serde::{Deserialize, Serialize};
 use std::net::{IpAddr, Ipv6Addr};
@@ -52,11 +50,11 @@ struct Note {
     versions: Vec<NoteContent>,
 }
 
-type ApiResult = Result<JsonValue, JsonValue>;
+type ApiResult = Result<Value, Value>;
 
 /// Add a new note, or a revision of an existing note.
 #[post("/", data = "<msg>")]
-fn add_note(db: State<'_, DbConnection>, msg: Json<Note>) -> ApiResult {
+fn add_note(db: &State<DbConnection>, msg: Json<Note>) -> ApiResult {
     let Note {
         versions,
         lat,
@@ -90,7 +88,7 @@ fn add_note(db: State<'_, DbConnection>, msg: Json<Note>) -> ApiResult {
 
 /// Get all notes in the database.
 #[get("/")]
-fn get_notes(db: State<'_, DbConnection>) -> Json<Vec<Note>> {
+fn get_notes(db: &State<DbConnection>) -> Json<Vec<Note>> {
     let db_conn = db.lock().expect("db connection lock");
     let mut query = db_conn
         .prepare("SELECT creation_date, title, content, lat, lon, kind, image_path FROM notes")
@@ -193,7 +191,7 @@ fn get_notes(db: State<'_, DbConnection>) -> Json<Vec<Note>> {
 
 /// Upload an image file.
 #[post("/", data = "<data>")]
-async fn upload_image(_state: State<'_, DbConnection>, data: Data) -> ApiResult {
+async fn upload_image(_state: &State<DbConnection>, data: Data<'_>) -> ApiResult {
     use data_url::DataUrl;
     use image::io::Reader;
     use image::ImageFormat;
@@ -201,7 +199,7 @@ async fn upload_image(_state: State<'_, DbConnection>, data: Data) -> ApiResult 
     use std::io::Cursor;
 
     let url_str = {
-        if let Ok(url_str) = data.open(50_i32.mebibytes()).stream_to_string().await {
+        if let Ok(url_str) = data.open(50_i32.mebibytes()).into_string().await {
             url_str
         } else {
             return ApiResult::Err(json!("Wrong encoding."));
@@ -258,7 +256,7 @@ fn write_image(data: Vec<u8>, file_extension: &str) -> ApiResult {
 }
 
 #[launch]
-fn rocket() -> Rocket {
+fn rocket() -> Rocket<Build> {
     let args: CliArgs = Docopt::new(USAGE)
         .and_then(|d| d.deserialize())
         .unwrap_or_else(|e| e.exit());
