@@ -4,40 +4,40 @@
 
 let
   sources = {
-    "@clr/icons-4.0.10" = {
+    "@clr/icons-4.0.16" = {
       name = "_at_clr_slash_icons";
       packageName = "@clr/icons";
-      version = "4.0.10";
+      version = "4.0.16";
       src = fetchurl {
-        url = "https://registry.npmjs.org/@clr/icons/-/icons-4.0.10.tgz";
-        sha512 = "EZF2+aq487VpEPqMX8ZU61SvfOmZgkTC46/lLrFxmCQseET/zMp4JyIM61yfda4vB8x7sIZxqwd38mZgwfPw1A==";
+        url = "https://registry.npmjs.org/@clr/icons/-/icons-4.0.16.tgz";
+        sha512 = "SgPkIemUZXXdeWVMzKNOrWKpfXlI+2mRtrZe4sQtBTT3TRMh8CSYAhSWuJTrtLRyttILAIXtYtcIQ7E7UGKz6A==";
       };
     };
-    "@popperjs/core-2.6.0" = {
+    "@popperjs/core-2.11.2" = {
       name = "_at_popperjs_slash_core";
       packageName = "@popperjs/core";
-      version = "2.6.0";
+      version = "2.11.2";
       src = fetchurl {
-        url = "https://registry.npmjs.org/@popperjs/core/-/core-2.6.0.tgz";
-        sha512 = "cPqjjzuFWNK3BSKLm0abspP0sp/IGOli4p5I5fKFAzdS8fvjdOwDCfZqAaIiXd9lPkOWi3SUUfZof3hEb7J/uw==";
+        url = "https://registry.npmjs.org/@popperjs/core/-/core-2.11.2.tgz";
+        sha512 = "92FRmppjjqz29VMJ2dn+xdyXZBrMlE42AV6Kq6BwjWV7CNUW1hs2FtxSNLQE+gJhaZ6AAmYuO9y8dshhcBl7vA==";
       };
     };
-    "@types/geojson-7946.0.7" = {
+    "@types/geojson-7946.0.8" = {
       name = "_at_types_slash_geojson";
       packageName = "@types/geojson";
-      version = "7946.0.7";
+      version = "7946.0.8";
       src = fetchurl {
-        url = "https://registry.npmjs.org/@types/geojson/-/geojson-7946.0.7.tgz";
-        sha512 = "wE2v81i4C4Ol09RtsWFAqg3BUitWbHSpSlIo+bNdsCJijO9sjme+zm+73ZMCa/qMC8UEERxzGbvmr1cffo2SiQ==";
+        url = "https://registry.npmjs.org/@types/geojson/-/geojson-7946.0.8.tgz";
+        sha512 = "1rkryxURpr6aWP7R786/UQOkJ3PcpQiWkAXBmdWc7ryFWqN6a4xfK7BtjXvFBKO9LjQ+MWQSWxYeZX1OApnArA==";
       };
     };
-    "@types/leaflet-1.5.21" = {
+    "@types/leaflet-1.7.9" = {
       name = "_at_types_slash_leaflet";
       packageName = "@types/leaflet";
-      version = "1.5.21";
+      version = "1.7.9";
       src = fetchurl {
-        url = "https://registry.npmjs.org/@types/leaflet/-/leaflet-1.5.21.tgz";
-        sha512 = "b+BOkwJDq6DK4m+jFUOHNCFinIkO4CF1MjnOwYgZFX+oElpYpXCCIsxZ3+zQWIRSLVUbRXvaQq2K935jGIyp7A==";
+        url = "https://registry.npmjs.org/@types/leaflet/-/leaflet-1.7.9.tgz";
+        sha512 = "H8vPgD49HKzqM41ArHGZM70g/tfhp8W+JcPxfnF+5H/Xvp+xiP+KQOUNWU8U89fqS1Jj3cpRY/+nbnaHFzwnFA==";
       };
     };
     "@webcomponents/custom-elements-1.4.3" = {
@@ -103,13 +103,13 @@ let
         sha1 = "a7d0558bd89c42f795dd42328f740831ca53bc25";
       };
     };
-    "complex.js-2.0.11" = {
+    "complex.js-2.0.15" = {
       name = "complex.js";
       packageName = "complex.js";
-      version = "2.0.11";
+      version = "2.0.15";
       src = fetchurl {
-        url = "https://registry.npmjs.org/complex.js/-/complex.js-2.0.11.tgz";
-        sha512 = "6IArJLApNtdg1P1dFtn3dnyzoZBEF0MwMnrfF1exSBRpZYoy4yieMkpZhQDC0uwctw48vii0CFVyHfpgZ/DfGw==";
+        url = "https://registry.npmjs.org/complex.js/-/complex.js-2.0.15.tgz";
+        sha512 = "gDBvQU8IG139ZBQTSo2qvDFP+lANMGluM779csXOr6ny1NUtA3wkUnCFjlDNH/moAVfXtvClYt6G0zarFbtz5w==";
       };
     };
     "decamelize-1.2.0" = {
@@ -121,13 +121,13 @@ let
         sha1 = "f6534d15148269b20352e7bee26f501f9a191290";
       };
     };
-    "decimal.js-10.2.1" = {
+    "decimal.js-10.3.1" = {
       name = "decimal.js";
       packageName = "decimal.js";
-      version = "10.2.1";
+      version = "10.3.1";
       src = fetchurl {
-        url = "https://registry.npmjs.org/decimal.js/-/decimal.js-10.2.1.tgz";
-        sha512 = "KaL7+6Fw6i5A2XSnsbhm/6B+NuEA7TZ4vqxnd5tXz9sbKtrN9Srj8ab4vKVdK8YAqZO9P1kg45Y6YLoduPf+kw==";
+        url = "https://registry.npmjs.org/decimal.js/-/decimal.js-10.3.1.tgz";
+        sha512 = "V0pfhfr8suzyPGOx3nmq4aHqabehUZn6Ch9kyFpV79TGDTWFmHqUqXdabR7QHqxzrYolF4+tVmJhUG4OURg5dQ==";
       };
     };
     "emoji-regex-7.0.3" = {
@@ -157,13 +157,13 @@ let
         sha512 = "1yD6RmLI1XBfxugvORwlck6f75tYL+iR0jqwsOrOxMZyGYqUuDhJ0l4AXdO1iX/FTs9cBAMEk1gWSEx1kSbylg==";
       };
     };
-    "fraction.js-4.0.13" = {
+    "fraction.js-4.1.3" = {
       name = "fraction.js";
       packageName = "fraction.js";
-      version = "4.0.13";
+      version = "4.1.3";
       src = fetchurl {
-        url = "https://registry.npmjs.org/fraction.js/-/fraction.js-4.0.13.tgz";
-        sha512 = "E1fz2Xs9ltlUp+qbiyx9wmt2n9dRzPsS11Jtdb8D2o+cC7wr9xkkKsVKJuBX0ST+LVS+LhLO+SbLJNtfWcJvXA==";
+        url = "https://registry.npmjs.org/fraction.js/-/fraction.js-4.1.3.tgz";
+        sha512 = "pUHWWt6vHzZZiQJcM6S/0PXfS+g6FM4BF5rj9wZyreivhQPdsh5PpE25VtSNxq80wHS5RfY51Ii+8Z0Zl/pmzg==";
       };
     };
     "get-caller-file-2.0.5" = {
@@ -202,13 +202,13 @@ let
         sha512 = "/xwPEBidtg69Q3HlqPdU3DnrXQOvQU/CCHA1tcDQVzOwm91YMYaILjNp7L4Eaw5Z4sOYdbBz6koWyibppd8Zqw==";
       };
     };
-    "leaflet-rotate-map-0.2.3" = {
+    "leaflet-rotate-map-0.2.6" = {
       name = "leaflet-rotate-map";
       packageName = "leaflet-rotate-map";
-      version = "0.2.3";
+      version = "0.2.6";
       src = fetchurl {
-        url = "https://registry.npmjs.org/leaflet-rotate-map/-/leaflet-rotate-map-0.2.3.tgz";
-        sha512 = "6mGZSN9HbFpB9tAUQ9nbgDSOqG0aAUIqe/iLWEMR3hy1PImQRyVDUbaHTXgWvbvc3OWBMhozYLCiCgVZ7L622A==";
+        url = "https://registry.npmjs.org/leaflet-rotate-map/-/leaflet-rotate-map-0.2.6.tgz";
+        sha512 = "RjA8h8SjXNU8ZZEv2iFUdH9mUw1JzyzU+vSnBuhOHuXas2HJzDN/7PakJnyyn7JGeCc8IuRHTlS+bmyrV4NYGw==";
       };
     };
     "locate-path-3.0.0" = {
@@ -256,13 +256,13 @@ let
         sha512 = "R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==";
       };
     };
-    "p5-1.2.0" = {
+    "p5-1.4.1" = {
       name = "p5";
       packageName = "p5";
-      version = "1.2.0";
+      version = "1.4.1";
       src = fetchurl {
-        url = "https://registry.npmjs.org/p5/-/p5-1.2.0.tgz";
-        sha512 = "om9CSZXjw+BdC/u474nUtrVXAqeSRHNBDteDpIhQqgypziE+hh9BUc/YNl3RT5rX3kNtQlLes2S2sRqFU+S+JA==";
+        url = "https://registry.npmjs.org/p5/-/p5-1.4.1.tgz";
+        sha512 = "3/X+qb0bK2Cg8nuZNpZZvzxkeUSRghOf0S+l8c+U8yIkUTVSbbcV0R8y96rx3InVBVhk8cH9kFC93VlZZElqSw==";
       };
     };
     "path-exists-3.0.0" = {
@@ -355,13 +355,13 @@ let
         sha512 = "NB6Dk1A9xgQPMoGqC5CVXn123gWyte215ONT5Pp5a0yt4nlEoO1ZWeCwpncaekPHXO60i47ihFnZPiRPjRMq4Q==";
       };
     };
-    "tippy.js-6.2.7" = {
+    "tippy.js-6.3.7" = {
       name = "tippy.js";
       packageName = "tippy.js";
-      version = "6.2.7";
+      version = "6.3.7";
       src = fetchurl {
-        url = "https://registry.npmjs.org/tippy.js/-/tippy.js-6.2.7.tgz";
-        sha512 = "k+kWF9AJz5xLQHBi3K/XlmJiyu+p9gsCyc5qZhxxGaJWIW8SMjw1R+C7saUnP33IM8gUhDA2xX//ejRSwqR0tA==";
+        url = "https://registry.npmjs.org/tippy.js/-/tippy.js-6.3.7.tgz";
+        sha512 = "E1d3oP2emgJ9dRQZdf3Kkn0qJgI6ZLpyS5z6ZkY1DF3kaQaBsGZsndEpHwx+eC+tYM41HaSNvNtLx8tU57FzTQ==";
       };
     };
     "typed-function-2.0.0" = {
@@ -391,13 +391,13 @@ let
         sha512 = "QC1/iN/2/RPVJ5jYK8BGttj5z83LmSKmvbvrXPNCLZSEb32KKVDJDl/MOt2N01qU2H/FkzEa9PKto1BqDjtd7Q==";
       };
     };
-    "y18n-4.0.1" = {
+    "y18n-4.0.3" = {
       name = "y18n";
       packageName = "y18n";
-      version = "4.0.1";
+      version = "4.0.3";
       src = fetchurl {
-        url = "https://registry.npmjs.org/y18n/-/y18n-4.0.1.tgz";
-        sha512 = "wNcy4NvjMYL8gogWWYAO7ZFWFfHcbdbE57tZO8e4cbpj8tfUcwrwqSl3ad8HxpYWCdXcJUCeKKZS62Av1affwQ==";
+        url = "https://registry.npmjs.org/y18n/-/y18n-4.0.3.tgz";
+        sha512 = "JKhqTOwSrqNA1NY5lSztJ1GrBiUodLMmIZuLiDaMRJ+itFd+ABVE8XBjOvIWL+rSqNDC74LCSFmlb/U4UZ4hJQ==";
       };
     };
     "yargs-14.2.3" = {
@@ -409,13 +409,13 @@ let
         sha512 = "ZbotRWhF+lkjijC/VhmOT9wSgyBQ7+zr13+YLkhfsSiTriYsMzkTUFP18pFhWwBeMa5gUc1MzbhrO6/VB7c9Xg==";
       };
     };
-    "yargs-parser-15.0.1" = {
+    "yargs-parser-15.0.3" = {
       name = "yargs-parser";
       packageName = "yargs-parser";
-      version = "15.0.1";
+      version = "15.0.3";
       src = fetchurl {
-        url = "https://registry.npmjs.org/yargs-parser/-/yargs-parser-15.0.1.tgz";
-        sha512 = "0OAMV2mAZQrs3FkNpDQcBk1x5HXb8X4twADss4S0Iuk+2dGnLOE/fRHrsYm542GduMveyA77OF4wrNJuanRCWw==";
+        url = "https://registry.npmjs.org/yargs-parser/-/yargs-parser-15.0.3.tgz";
+        sha512 = "/MVEVjTXy/cGAjdtQf8dW3V9b97bPN7rNn8ETj6BmAQL7ibC7O1Q9SPJbGjgh3SlwoBNXMzj/ZGIj8mBgl12YA==";
       };
     };
   };
@@ -425,10 +425,10 @@ let
     version = "1.0.0";
     src = ./.;
     dependencies = [
-      sources."@clr/icons-4.0.10"
-      sources."@popperjs/core-2.6.0"
-      sources."@types/geojson-7946.0.7"
-      sources."@types/leaflet-1.5.21"
+      sources."@clr/icons-4.0.16"
+      sources."@popperjs/core-2.11.2"
+      sources."@types/geojson-7946.0.8"
+      sources."@types/leaflet-1.7.9"
       sources."@webcomponents/custom-elements-1.4.3"
       sources."ansi-regex-4.1.0"
       sources."ansi-styles-3.2.1"
@@ -436,24 +436,24 @@ let
       sources."cliui-5.0.0"
       sources."color-convert-1.9.3"
       sources."color-name-1.1.3"
-      sources."complex.js-2.0.11"
+      sources."complex.js-2.0.15"
       sources."decamelize-1.2.0"
-      sources."decimal.js-10.2.1"
+      sources."decimal.js-10.3.1"
       sources."emoji-regex-7.0.3"
       sources."escape-latex-1.2.0"
       sources."find-up-3.0.0"
-      sources."fraction.js-4.0.13"
+      sources."fraction.js-4.1.3"
       sources."get-caller-file-2.0.5"
       sources."is-fullwidth-code-point-2.0.0"
       sources."javascript-natural-sort-0.7.1"
       sources."leaflet-1.7.1"
-      sources."leaflet-rotate-map-0.2.3"
+      sources."leaflet-rotate-map-0.2.6"
       sources."locate-path-3.0.0"
       sources."mathjs-8.1.1"
       sources."p-limit-2.3.0"
       sources."p-locate-3.0.0"
       sources."p-try-2.2.0"
-      sources."p5-1.2.0"
+      sources."p5-1.4.1"
       sources."path-exists-3.0.0"
       sources."require-directory-2.1.1"
       sources."require-main-filename-2.0.0"
@@ -464,13 +464,13 @@ let
       sources."string-width-3.1.0"
       sources."strip-ansi-5.2.0"
       sources."tiny-emitter-2.1.0"
-      sources."tippy.js-6.2.7"
+      sources."tippy.js-6.3.7"
       sources."typed-function-2.0.0"
       sources."which-module-2.0.0"
       sources."wrap-ansi-5.1.0"
-      sources."y18n-4.0.1"
+      sources."y18n-4.0.3"
       sources."yargs-14.2.3"
-      sources."yargs-parser-15.0.1"
+      sources."yargs-parser-15.0.3"
     ];
     buildInputs = globalBuildInputs;
     meta = {
