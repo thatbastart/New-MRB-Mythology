@@ -1,6 +1,8 @@
 {
   description = "The New MRB Mythology";
 
+  inputs.nixpkgs.url = "github:NixOS/Nixpkgs/nixos-unstable";
+
   outputs =
     { self
     , nixpkgs
@@ -66,7 +68,9 @@
             let
               node = pkgs.callPackage ./node-packages.nix
                 {
-                  nodeEnv = pkgs.callPackage ./node-env.nix { };
+                  nodeEnv = pkgs.callPackage ./node-env.nix {
+                    nodejs = pkgs.nodejs-14_x;
+                  };
                 };
             in
             node.package.override {
@@ -123,6 +127,7 @@
             cargo
             rustfmt
             sqlite
+            nodejs
           ];
         }
       );
