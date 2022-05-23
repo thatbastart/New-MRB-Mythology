@@ -103,7 +103,7 @@
           static = pkgs.linkFarm "static" [
             {
               name = "stories";
-              path = [ (pkgs.copyPathToStore ./stories) ];
+              path = pkgs.copyPathToStore ./stories;
             }
           ];
           backend =
