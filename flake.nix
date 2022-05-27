@@ -96,7 +96,8 @@
                     else "dirty checkout";
                 in
                 ''
-                  ln -s ${pkgs.google-fonts}/share/fonts fonts/google-fonts
+                  mkdir -p fonts/google-fonts/truetype
+                  cp ${pkgs.google-fonts}/share/fonts/truetype/TitilliumWeb-* fonts/google-fonts/truetype/
                   sed -i 's|VERSIONVERSIONVERSION|${gitRevision}|g' index.html
                 '';
             };
