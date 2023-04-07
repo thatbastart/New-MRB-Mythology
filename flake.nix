@@ -2,10 +2,13 @@
   description = "The New MRB Mythology";
 
   inputs.nixpkgs.url = "github:NixOS/Nixpkgs/nixos-unstable";
+  # We needed latest crate2nix for now.
+  inputs.nixpkgs-crate2nix.url = "github:erictapen/nixpkgs/crate2nix";
 
   outputs =
     { self
     , nixpkgs
+    , nixpkgs-crate2nix
     }:
     let
       forAllSystems = f: nixpkgs.lib.genAttrs
@@ -129,6 +132,7 @@
             rustfmt
             sqlite
             nodejs
+            (import nixpkgs-crate2nix { inherit system; }).crate2nix
           ];
         }
       );
