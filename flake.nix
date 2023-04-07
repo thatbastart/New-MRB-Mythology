@@ -45,9 +45,19 @@
               '';
               Restart = "always";
               StateDirectory = "mrb-mythology-backend";
+              User = "mrb-mythology";
+              Group = "mrb-mythology";
             };
 
           };
+
+          users.users.mrb-mythology = {
+            isSystemUser = true;
+            home = stateDir;
+            group = "mrb-mythology";
+          };
+          users.groups.mrb-mythology = { };
+          users.users.nginx.extraGroups = [ "mrb-mythology" ];
 
           services.nginx.virtualHosts."mississippi.erictapen.name" = {
             locations."/".root = "${mrbPkgs.homepage}/lib/node_modules/interactive_test/";
