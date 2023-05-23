@@ -82,7 +82,7 @@
               node = pkgs.callPackage ./node-packages.nix
                 {
                   nodeEnv = pkgs.callPackage ./node-env.nix {
-                    nodejs = pkgs.nodejs-14_x;
+                    nodejs = pkgs.nodejs_18;
                   };
                 };
             in
