@@ -124,25 +124,31 @@
             crates.workspaceMembers.mrb-mythology-backend.build;
         });
 
-      devShell = forAllSystems (
-        system:
-        let
-          pkgs = nixpkgsFor.${system};
-        in
-        pkgs.mkShell {
-          buildInputs = with pkgs; [
-            darkhttpd
-            lighttpd
-            nodePackages.node2nix
-            rustc
-            cargo
-            rustfmt
-            sqlite
-            nodejs
-            crate2nix
-          ];
-        }
-      );
+      checks = forAllSystems (system: self.packages."${system}");
+
+      devShells = forAllSystems
+        (
+          system:
+          let
+            pkgs = nixpkgsFor.${system};
+          in
+          {
+            default = pkgs.mkShell
+              {
+                buildInputs = with pkgs; [
+                  darkhttpd
+                  lighttpd
+                  nodePackages.node2nix
+                  rustc
+                  cargo
+                  rustfmt
+                  sqlite
+                  nodejs
+                  crate2nix
+                ];
+              };
+          }
+        );
 
     };
 
