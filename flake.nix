@@ -19,9 +19,9 @@
     rec {
 
       nixosModules.module =
-        { config, ... }:
+        { config, pkgs, ... }:
         let
-          mrbPkgs = self.packages.${config.nixpkgs.localSystem.system};
+          mrbPkgs = self.packages.${pkgs.stdenv.hostPlatform.system};
           # random port
           port = "37937";
           stateDir = "/var/lib/mrb-mythology-backend";
