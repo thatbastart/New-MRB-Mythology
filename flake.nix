@@ -74,6 +74,7 @@
           pkgs = nixpkgsFor.${system};
         in
         {
+          default = self.packages.${system}.backend;
           homepage =
             let
               node = pkgs.callPackage ./node-packages.nix
