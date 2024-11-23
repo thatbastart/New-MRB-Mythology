@@ -193,7 +193,7 @@ fn get_notes(db: &State<DbConnection>) -> Json<Vec<Note>> {
 #[post("/", data = "<data>")]
 async fn upload_image(_state: &State<DbConnection>, data: Data<'_>) -> ApiResult {
     use data_url::DataUrl;
-    use image::io::Reader;
+    use image::ImageReader;
     use image::ImageFormat;
     use rocket::data::ToByteUnit;
     use std::io::Cursor;
@@ -220,7 +220,7 @@ async fn upload_image(_state: &State<DbConnection>, data: Data<'_>) -> ApiResult
 
     println!("Image mime type: {}", mime_type);
 
-    let image_reader = Reader::new(Cursor::new(&data_body))
+    let image_reader = ImageReader::new(Cursor::new(&data_body))
         .with_guessed_format()
         .expect("This doesn't fail");
 
