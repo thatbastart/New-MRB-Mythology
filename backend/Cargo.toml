@@ -13,5 +13,5 @@ docopt = "*"
 kdtree = { git = "https://github.com/mrhooray/kdtree-rs", branch = "master" }
 log = "*"
 data-url = "*"
-image = "*"
+image = { version = "*", default-features = false, features = [ "gif", "jpeg", "png", "tiff", "webp" ] }
 sha2 = "*"
